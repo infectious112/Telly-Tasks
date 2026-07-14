@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#176b54">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Telly Tasks">
+  <title>Telly Tasks</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg:#f4f7f5; --surface:#ffffff; --surface-2:#edf4f1; --text:#17201d; --muted:#6f7f79;
+      --accent:#176b54; --accent-2:#dcefe7; --border:#dbe5e1; --danger:#b64b4b; --shadow:0 10px 30px rgba(25,54,45,.08);
+      --radius:20px; --font-scale:1;
+    }
+    [data-theme="emerald-dark"] { --bg:#101714; --surface:#18231f; --surface-2:#20302a; --text:#f2f7f5; --muted:#a7b8b1; --accent:#50c59b; --accent-2:#173d31; --border:#2a4038; --danger:#ff8f8f; --shadow:0 12px 34px rgba(0,0,0,.28); color-scheme:dark; }
+    [data-theme="sand"] { --bg:#f7f3ea; --surface:#fffdf8; --surface-2:#efe7d8; --text:#2b2720; --muted:#7c7468; --accent:#8b6a3f; --accent-2:#eee0c9; --border:#e5dac9; --shadow:0 10px 30px rgba(76,57,32,.08); }
+    [data-theme="midnight"] { --bg:#10141b; --surface:#171d27; --surface-2:#202938; --text:#f3f6fb; --muted:#aab4c4; --accent:#7fa8ff; --accent-2:#22365d; --border:#2b3546; --shadow:0 12px 34px rgba(0,0,0,.28); color-scheme:dark; }
+    *{box-sizing:border-box} html{font-size:calc(16px * var(--font-scale)); background:var(--bg)}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh}
+    button,input,select{font:inherit} button{cursor:pointer}
+    .app{max-width:760px;margin:0 auto;min-height:100dvh;padding:env(safe-area-inset-top) 16px calc(98px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;justify-content:space-between;padding:22px 4px 14px}
+    .eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+    h1{font-size:2rem;margin:4px 0 0;letter-spacing:-.04em}.header-actions{display:flex;gap:8px}
+    .icon-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+    .view{display:none}.view.active{display:block}
+    .hero{background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--border);border-radius:28px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
+    .hero-icon{width:58px;height:58px;border-radius:18px;background:var(--accent-2);display:grid;place-items:center;color:var(--accent);font-size:1.7rem;margin-bottom:18px}
+    .hero h2{font-size:1.5rem;margin:0 0 8px;letter-spacing:-.03em}.hero p{margin:0;color:var(--muted);line-height:1.55}
+    .primary{border:0;background:var(--accent);color:white;padding:14px 18px;border-radius:15px;font-weight:700}
+    .secondary{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:13px 17px;border-radius:15px;font-weight:650}
+    .hero .primary{width:100%;margin-top:20px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:24px 4px 10px}.section-title h3{margin:0;font-size:1rem}.section-title span{color:var(--muted);font-size:.86rem}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .row{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--border)}.row:last-child{border-bottom:0}
+    .row-icon{width:40px;height:40px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
+    .row-main{flex:1;min-width:0}.row-title{font-weight:700}.row-sub{font-size:.86rem;color:var(--muted);margin-top:3px;line-height:1.35}.chev{color:var(--muted)}
+    .empty{padding:28px;text-align:center;color:var(--muted)}
+    .settings-block{margin-bottom:18px}.settings-block h3{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 4px 8px}
+    .setting{display:flex;align-items:center;gap:14px;padding:15px 16px;border-bottom:1px solid var(--border)}.setting:last-child{border-bottom:0}
+    .setting label{flex:1}.setting small{display:block;color:var(--muted);margin-top:3px}
+    select{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:12px;padding:9px 11px;max-width:46%}
+    .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--border);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}
+    .tab{border:0;background:transparent;color:var(--muted);padding:7px 2px;border-radius:13px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.7rem;font-weight:650}.tab .ico{font-size:1.25rem;line-height:1}.tab.active{color:var(--accent);background:var(--accent-2)}.tab.disabled{opacity:.45;cursor:default}
+    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:16px}.modal-wrap.open{display:flex}
+    .modal{background:var(--surface);color:var(--text);width:min(600px,100%);max-height:88dvh;overflow:auto;border-radius:26px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+    .modal h2{margin:0 0 8px;font-size:1.45rem}.modal p{color:var(--muted);line-height:1.5}.modal-actions{display:flex;gap:10px;margin-top:20px}.modal-actions>*{flex:1}
+    .release{border-left:3px solid transparent;padding:8px 0 8px 14px;margin:10px 0}.release.current{border-left-color:var(--accent)}.release h4{margin:0 0 4px}.release p{margin:0;font-size:.9rem}
+    .version-card{text-align:center;padding:24px}.app-mark{width:72px;height:72px;margin:0 auto 14px;border-radius:22px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:2rem}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.meta div{background:var(--surface-2);border-radius:14px;padding:12px}.meta strong{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+    .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:.2s;z-index:60;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(min-width:680px){.modal-wrap{align-items:center}.hero{padding:30px}}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div><div class="eyebrow">Telly Journal Lab</div><h1 data-i18n="tasksTitle">Taken</h1></div>
+    <div class="header-actions"><button class="icon-btn" id="infoBtn" aria-label="Info">ⓘ</button></div>
+  </header>
+
+  <main>
+    <section id="tasksView" class="view active">
+      <div class="hero">
+        <div class="hero-icon">✓</div>
+        <h2 data-i18n="emptyTitle">Je taken beginnen hier</h2>
+        <p data-i18n="emptyText">In de volgende fase voeg je hoofdtaken toe, plan je ze en rond je ze af. Deze eerste build legt de visuele en technische basis.</p>
+        <button class="primary" id="newTaskPreview" data-i18n="newTask">Nieuwe taak</button>
+      </div>
+      <div class="section-title"><h3 data-i18n="today">Vandaag</h3><span>0</span></div>
+      <div class="card"><div class="empty" data-i18n="noTasks">Nog geen taken voor vandaag.</div></div>
+      <div class="section-title"><h3 data-i18n="later">Later</h3><span>0</span></div>
+      <div class="card"><div class="empty" data-i18n="noLaterTasks">Nog geen taken voor later.</div></div>
+    </section>
+
+    <section id="settingsView" class="view">
+      <div class="settings-block"><h3 data-i18n="appearance">Weergave</h3><div class="card">
+        <div class="setting"><label><b data-i18n="theme">Thema</b><small data-i18n="themeHelp">Kies de uitstraling van de app.</small></label><select id="themeSelect"><option value="emerald-lite">Emerald Lite</option><option value="emerald-dark">Emerald Dark</option><option value="sand">Sand</option><option value="midnight">Midnight</option></select></div>
+        <div class="setting"><label><b data-i18n="interfaceSize">Interfacegrootte</b><small data-i18n="sizeHelp">Pas tekst en bediening aan.</small></label><select id="sizeSelect"><option value="0.92" data-i18n="small">Klein</option><option value="1" data-i18n="standard">Standaard</option><option value="1.1" data-i18n="large">Groot</option></select></div>
+      </div></div>
+      <div class="settings-block"><h3 data-i18n="language">Taal</h3><div class="card">
+        <div class="setting"><label><b data-i18n="appLanguage">App-taal</b><small data-i18n="languageHelp">Automatisch gebruikt de taal van je apparaat.</small></label><select id="languageSelect"><option value="auto" data-i18n="automatic">Automatisch</option><option value="nl">Nederlands</option><option value="en">English</option></select></div>
+      </div></div>
+      <div class="settings-block"><h3 data-i18n="resources">Bronnen</h3><div class="card">
+        <button class="row" id="whatsNewBtn" style="width:100%;text-align:left;border-left:0;border-right:0;border-top:0;background:none;color:inherit"><span class="row-icon">✦</span><span class="row-main"><span class="row-title" data-i18n="whatsNew">Nieuw in deze versie</span><span class="row-sub" data-i18n="viewChanges">Bekijk wat er is veranderd.</span></span><span class="chev">›</span></button>
+        <button class="row" id="historyBtn" style="width:100%;text-align:left;border:0;background:none;color:inherit"><span class="row-icon">↺</span><span class="row-main"><span class="row-title" data-i18n="history">Versiegeschiedenis</span><span class="row-sub" data-i18n="historyHelp">Bekijk eerdere builds.</span></span><span class="chev">›</span></button>
+      </div></div>
+      <div class="settings-block"><h3 data-i18n="about">Over</h3><div class="card">
+        <button class="row" id="versionBtn" style="width:100%;text-align:left;border:0;background:none;color:inherit"><span class="row-icon">i</span><span class="row-main"><span class="row-title" data-i18n="version">Versie</span><span class="row-sub">0.1.0-alpha.1 · 20260714-TT01</span></span><span class="chev">›</span></button>
+      </div></div>
+    </section>
+  </main>
+</div>
+
+<nav class="nav" aria-label="Hoofdnavigatie">
+  <button class="tab disabled" aria-disabled="true"><span class="ico">◉</span><span data-i18n="counters">Counters</span></button>
+  <button class="tab active" data-view="tasksView"><span class="ico">✓</span><span data-i18n="tasks">Taken</span></button>
+  <button class="tab disabled" aria-disabled="true"><span class="ico">≡</span><span data-i18n="journal">Logboek</span></button>
+  <button class="tab" data-view="settingsView"><span class="ico">⚙</span><span data-i18n="settings">Instellingen</span></button>
+</nav>
+
+<div class="modal-wrap" id="modalWrap"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const APP={name:'Telly Tasks',version:'0.1.0-alpha.1',release:'Eerste stap',build:'20260714-TT01',status:'Alpha',date:'14 juli 2026'};
+const translations={
+ nl:{tasksTitle:'Taken',emptyTitle:'Je taken beginnen hier',emptyText:'In de volgende fase voeg je hoofdtaken toe, plan je ze en rond je ze af. Deze eerste build legt de visuele en technische basis.',newTask:'Nieuwe taak',today:'Vandaag',later:'Later',noTasks:'Nog geen taken voor vandaag.',noLaterTasks:'Nog geen taken voor later.',appearance:'Weergave',theme:'Thema',themeHelp:'Kies de uitstraling van de app.',interfaceSize:'Interfacegrootte',sizeHelp:'Pas tekst en bediening aan.',small:'Klein',standard:'Standaard',large:'Groot',language:'Taal',appLanguage:'App-taal',languageHelp:'Automatisch gebruikt de taal van je apparaat.',automatic:'Automatisch',resources:'Bronnen',whatsNew:'Nieuw in deze versie',viewChanges:'Bekijk wat er is veranderd.',history:'Versiegeschiedenis',historyHelp:'Bekijk eerdere builds.',about:'Over',version:'Versie',counters:'Counters',tasks:'Taken',journal:'Logboek',settings:'Instellingen',notYet:'Taakfunctionaliteit volgt in Fase 1.',close:'Sluiten',continue:'Doorgaan',whatsNewTitle:'Nieuw in deze versie',intro:'De zelfstandige testomgeving voor de Taken-module is klaar.',foundation:'Technische basis',foundationText:'PWA, lokale instellingen, thema’s en tweetaligheid zijn voorbereid.',navigation:'Navigatievoorbeeld',navigationText:'De onderste balk toont hoe Taken later naast Counters en Logboek staat.',testStatus:'Teststatus',testStatusText:'Dit is een eerste alpha-build zonder echte taakfunctionaliteit.',historyTitle:'Versiegeschiedenis',current:'Huidige versie',versionTitle:'Versie-informatie',released:'Uitgebracht',build:'Build',status:'Status',release:'Releasenaam',updateTitle:'Update beschikbaar',updateText:'Er staat een nieuwe versie klaar.',updateNow:'Nu bijwerken',laterButton:'Later'},
+ en:{tasksTitle:'Tasks',emptyTitle:'Your tasks start here',emptyText:'In the next phase you will add, schedule and complete main tasks. This first build establishes the visual and technical foundation.',newTask:'New task',today:'Today',later:'Later',noTasks:'No tasks for today yet.',noLaterTasks:'No tasks for later yet.',appearance:'Appearance',theme:'Theme',themeHelp:'Choose the look of the app.',interfaceSize:'Interface size',sizeHelp:'Adjust text and controls.',small:'Small',standard:'Standard',large:'Large',language:'Language',appLanguage:'App language',languageHelp:'Automatic uses your device language.',automatic:'Automatic',resources:'Resources',whatsNew:"What's New",viewChanges:'See what has changed.',history:'Release History',historyHelp:'View previous builds.',about:'About',version:'Version',counters:'Counters',tasks:'Tasks',journal:'Journal',settings:'Settings',notYet:'Task functionality follows in Phase 1.',close:'Close',continue:'Continue',whatsNewTitle:"What's New",intro:'The standalone test environment for the Tasks module is ready.',foundation:'Technical foundation',foundationText:'PWA, local settings, themes and bilingual support are prepared.',navigation:'Navigation preview',navigationText:'The bottom bar shows how Tasks will later sit beside Counters and Journal.',testStatus:'Test status',testStatusText:'This is an initial alpha build without real task functionality.',historyTitle:'Release History',current:'Current version',versionTitle:'Version information',released:'Released',build:'Build',status:'Status',release:'Release name',updateTitle:'Update available',updateText:'A new version is ready.',updateNow:'Update now',laterButton:'Later'}
+};
+const state=JSON.parse(localStorage.getItem('tellyTasksSettings')||'{}');
+state.theme=state.theme||'emerald-lite';state.size=state.size||'1';state.language=state.language||'auto';
+function lang(){if(state.language!=='auto')return state.language;return (navigator.language||'nl').toLowerCase().startsWith('nl')?'nl':'en'}
+function t(k){return translations[lang()][k]||k}
+function save(){localStorage.setItem('tellyTasksSettings',JSON.stringify(state))}
+function apply(){document.documentElement.dataset.theme=state.theme;document.documentElement.style.setProperty('--font-scale',state.size);document.documentElement.lang=lang();document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});themeSelect.value=state.theme;sizeSelect.value=state.size;languageSelect.value=state.language}
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
+function openModal(html){modal.innerHTML=html;modalWrap.classList.add('open')}
+function closeModal(){modalWrap.classList.remove('open')}
+function buttonClose(label=t('close')){return `<button class="primary" onclick="closeModal()">${label}</button>`}
+function showWhatsNew(){openModal(`<h2>${t('whatsNewTitle')}</h2><p>${t('intro')}</p><div class="card"><div class="row"><span class="row-icon">⌘</span><span class="row-main"><span class="row-title">${t('foundation')}</span><span class="row-sub">${t('foundationText')}</span></span></div><div class="row"><span class="row-icon">⌄</span><span class="row-main"><span class="row-title">${t('navigation')}</span><span class="row-sub">${t('navigationText')}</span></span></div><div class="row"><span class="row-icon">α</span><span class="row-main"><span class="row-title">${t('testStatus')}</span><span class="row-sub">${t('testStatusText')}</span></span></div></div><div class="modal-actions">${buttonClose(t('continue'))}</div>`)}
+function showHistory(){openModal(`<h2>${t('historyTitle')}</h2><div class="release current"><h4>0.1.0-alpha.1 — ${APP.release}</h4><p>${APP.date} · ${APP.build}<br>${t('foundationText')} ${t('navigationText')}</p></div><div class="modal-actions">${buttonClose()}</div>`)}
+function showVersion(){openModal(`<div class="version-card"><div class="app-mark">✓</div><h2>${APP.name}</h2><p>${t('versionTitle')}</p><div class="meta"><div><strong>${t('version')}</strong>${APP.version}</div><div><strong>${t('release')}</strong>${APP.release}</div><div><strong>${t('build')}</strong>${APP.build}</div><div><strong>${t('status')}</strong>${APP.status}</div><div style="grid-column:1/-1"><strong>${t('released')}</strong>${APP.date}</div></div></div><div class="modal-actions"><button class="secondary" onclick="showWhatsNew()">${t('whatsNew')}</button>${buttonClose()}</div>`)}
+
+document.querySelectorAll('.tab[data-view]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(btn.dataset.view).classList.add('active');document.querySelector('h1').textContent=btn.dataset.view==='settingsView'?t('settings'):t('tasksTitle');window.scrollTo({top:0,behavior:'smooth'})}));
+themeSelect.addEventListener('change',e=>{state.theme=e.target.value;save();apply()});sizeSelect.addEventListener('change',e=>{state.size=e.target.value;save();apply()});languageSelect.addEventListener('change',e=>{state.language=e.target.value;save();apply()});
+newTaskPreview.addEventListener('click',()=>showToast(t('notYet')));whatsNewBtn.addEventListener('click',showWhatsNew);historyBtn.addEventListener('click',showHistory);versionBtn.addEventListener('click',showVersion);infoBtn.addEventListener('click',showVersion);modalWrap.addEventListener('click',e=>{if(e.target===modalWrap)closeModal()});
+apply();
+if(!localStorage.getItem('tellyTasksSeenBuild')){setTimeout(showWhatsNew,300);localStorage.setItem('tellyTasksSeenBuild',APP.build)}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').then(reg=>{reg.addEventListener('updatefound',()=>{const worker=reg.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller){openModal(`<h2>${t('updateTitle')}</h2><p>${t('updateText')}</p><div class="modal-actions"><button class="secondary" onclick="closeModal()">${t('laterButton')}</button><button class="primary" onclick="location.reload()">${t('updateNow')}</button></div>`)}})})}).catch(()=>{})}
+</script>
+</body>
+</html>
