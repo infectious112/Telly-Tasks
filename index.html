@@ -1555,6 +1555,60 @@ html[lang="nl"] .roadmap-step.current {
 .next-step-card strong { display:block; margin-top:3px; }
 .phase-note { margin-top:12px; }
 
+/* Telly Tasks 0.1.0-alpha.3 — compact bottom navigation */
+body {
+  padding-bottom: calc(88px + var(--safe-bottom)) !important;
+}
+
+.tabbar {
+  left: 10px !important;
+  right: 10px !important;
+  bottom: calc(8px + var(--safe-bottom)) !important;
+  transform: none !important;
+  width: auto !important;
+  max-width: 520px !important;
+  margin-inline: auto !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  padding: 4px 5px !important;
+  border-radius: 17px !important;
+}
+
+.tab {
+  min-width: 0 !important;
+  min-height: 48px !important;
+  padding: 5px 2px !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--muted) !important;
+  font-weight: 750 !important;
+}
+
+.tab.active {
+  background: transparent !important;
+  color: var(--theme-accent) !important;
+}
+
+:root[data-theme="arctic-white"] .tab.active {
+  color: var(--theme-accent) !important;
+}
+
+.tab:disabled {
+  opacity: .38 !important;
+}
+
+.tab span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app {
+  padding-bottom: calc(94px + var(--safe-bottom)) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1571,9 +1625,9 @@ html[lang="nl"] .roadmap-step.current {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.1.0-alpha.2";
-const TJ_RELEASE = "Vertrouwde basis";
-const TJ_BUILD = "20260714-TT02";
+const TJ_VERSION = "0.1.0-alpha.3";
+const TJ_RELEASE = "Compacte navigatie";
+const TJ_BUILD = "20260714-TT03";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3215,7 +3269,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Gebouwd vanuit de stabiele Telly Tasks-basis" : "Built from the stable Telly Tasks foundation"}</li><li>${nl ? "Dezelfde thema’s en instellingenopmaak" : "The same themes and Settings layout"}</li><li>${nl ? "Eerste visuele voorbeeldtaak met voortgang" : "First visual task preview with progress"}</li><li>${nl ? "Taken toegevoegd aan de onderste navigatie" : "Tasks added to the bottom navigation"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Compacte onderste navigatie met vier gelijke tabbladen" : "Compact bottom navigation with four equal tabs"}</li><li>${nl ? "De actieve tab wordt alleen subtiel gemarkeerd" : "The active tab is now highlighted subtly"}</li><li>${nl ? "Instellingen blijven volledig zichtbaar boven de navigatie" : "Settings remain fully visible above the navigation"}</li><li>${nl ? "Verbeterde veilige ruimte onderaan op iPhone" : "Improved bottom safe-area spacing on iPhone"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
