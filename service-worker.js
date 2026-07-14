@@ -1,4 +1,4 @@
-const CACHE_NAME = "telly-tasks-20260714-TT03";
+const CACHE_NAME = "telly-tasks-20260714-TT04";
 const FILES = [
   "./",
   "./index.html",
