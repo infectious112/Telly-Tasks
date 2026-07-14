@@ -1,136 +1,3935 @@
-<!doctype html>
-<html lang="nl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#176b54">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Telly Tasks">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Telly Tasks" />
+  <link rel="manifest" href="manifest.json" />
   <title>Telly Tasks</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <style>
-    :root {
-      --bg:#f4f7f5; --surface:#ffffff; --surface-2:#edf4f1; --text:#17201d; --muted:#6f7f79;
-      --accent:#176b54; --accent-2:#dcefe7; --border:#dbe5e1; --danger:#b64b4b; --shadow:0 10px 30px rgba(25,54,45,.08);
-      --radius:20px; --font-scale:1;
-    }
-    [data-theme="emerald-dark"] { --bg:#101714; --surface:#18231f; --surface-2:#20302a; --text:#f2f7f5; --muted:#a7b8b1; --accent:#50c59b; --accent-2:#173d31; --border:#2a4038; --danger:#ff8f8f; --shadow:0 12px 34px rgba(0,0,0,.28); color-scheme:dark; }
-    [data-theme="sand"] { --bg:#f7f3ea; --surface:#fffdf8; --surface-2:#efe7d8; --text:#2b2720; --muted:#7c7468; --accent:#8b6a3f; --accent-2:#eee0c9; --border:#e5dac9; --shadow:0 10px 30px rgba(76,57,32,.08); }
-    [data-theme="midnight"] { --bg:#10141b; --surface:#171d27; --surface-2:#202938; --text:#f3f6fb; --muted:#aab4c4; --accent:#7fa8ff; --accent-2:#22365d; --border:#2b3546; --shadow:0 12px 34px rgba(0,0,0,.28); color-scheme:dark; }
-    *{box-sizing:border-box} html{font-size:calc(16px * var(--font-scale)); background:var(--bg)}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh}
-    button,input,select{font:inherit} button{cursor:pointer}
-    .app{max-width:760px;margin:0 auto;min-height:100dvh;padding:env(safe-area-inset-top) 16px calc(98px + env(safe-area-inset-bottom))}
-    header{display:flex;align-items:center;justify-content:space-between;padding:22px 4px 14px}
-    .eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
-    h1{font-size:2rem;margin:4px 0 0;letter-spacing:-.04em}.header-actions{display:flex;gap:8px}
-    .icon-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
-    .view{display:none}.view.active{display:block}
-    .hero{background:linear-gradient(135deg,var(--surface),var(--surface-2));border:1px solid var(--border);border-radius:28px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
-    .hero-icon{width:58px;height:58px;border-radius:18px;background:var(--accent-2);display:grid;place-items:center;color:var(--accent);font-size:1.7rem;margin-bottom:18px}
-    .hero h2{font-size:1.5rem;margin:0 0 8px;letter-spacing:-.03em}.hero p{margin:0;color:var(--muted);line-height:1.55}
-    .primary{border:0;background:var(--accent);color:white;padding:14px 18px;border-radius:15px;font-weight:700}
-    .secondary{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:13px 17px;border-radius:15px;font-weight:650}
-    .hero .primary{width:100%;margin-top:20px}
-    .section-title{display:flex;align-items:center;justify-content:space-between;margin:24px 4px 10px}.section-title h3{margin:0;font-size:1rem}.section-title span{color:var(--muted);font-size:.86rem}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .row{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--border)}.row:last-child{border-bottom:0}
-    .row-icon{width:40px;height:40px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
-    .row-main{flex:1;min-width:0}.row-title{font-weight:700}.row-sub{font-size:.86rem;color:var(--muted);margin-top:3px;line-height:1.35}.chev{color:var(--muted)}
-    .empty{padding:28px;text-align:center;color:var(--muted)}
-    .settings-block{margin-bottom:18px}.settings-block h3{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 4px 8px}
-    .setting{display:flex;align-items:center;gap:14px;padding:15px 16px;border-bottom:1px solid var(--border)}.setting:last-child{border-bottom:0}
-    .setting label{flex:1}.setting small{display:block;color:var(--muted);margin-top:3px}
-    select{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:12px;padding:9px 11px;max-width:46%}
-    .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--border);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:20}
-    .tab{border:0;background:transparent;color:var(--muted);padding:7px 2px;border-radius:13px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.7rem;font-weight:650}.tab .ico{font-size:1.25rem;line-height:1}.tab.active{color:var(--accent);background:var(--accent-2)}.tab.disabled{opacity:.45;cursor:default}
-    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:16px}.modal-wrap.open{display:flex}
-    .modal{background:var(--surface);color:var(--text);width:min(600px,100%);max-height:88dvh;overflow:auto;border-radius:26px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
-    .modal h2{margin:0 0 8px;font-size:1.45rem}.modal p{color:var(--muted);line-height:1.5}.modal-actions{display:flex;gap:10px;margin-top:20px}.modal-actions>*{flex:1}
-    .release{border-left:3px solid transparent;padding:8px 0 8px 14px;margin:10px 0}.release.current{border-left-color:var(--accent)}.release h4{margin:0 0 4px}.release p{margin:0;font-size:.9rem}
-    .version-card{text-align:center;padding:24px}.app-mark{width:72px;height:72px;margin:0 auto 14px;border-radius:22px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:2rem}.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.meta div{background:var(--surface-2);border-radius:14px;padding:12px}.meta strong{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
-    .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:.2s;z-index:60;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(min-width:680px){.modal-wrap{align-items:center}.hero{padding:30px}}
-  </style>
+:root {
+  --bg: #0b0d12;
+  --panel: rgba(255,255,255,.075);
+  --panel-strong: rgba(255,255,255,.11);
+  --line: rgba(255,255,255,.13);
+  --text: #f5f7fb;
+  --muted: rgba(245,247,251,.62);
+  --gold: #d7b56d;
+  --danger: #ff6b6b;
+  --success: #61d394;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(215,181,109,.16), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(110,168,255,.12), transparent 28rem),
+    linear-gradient(180deg, var(--bg), #11141c);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+body {
+  padding-bottom: calc(66px + var(--safe-bottom));
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-weight: 750;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.primary {
+  color: #15120b;
+  background: linear-gradient(135deg, #f4dc9f, #caa45f);
+  border: 0;
+}
+
+.danger {
+  color: white;
+  background: rgba(255,107,107,.2);
+  border: 1px solid rgba(255,107,107,.35);
+}
+
+.success {
+  color: #06120c;
+  background: linear-gradient(135deg, #a7f3c5, #45d383);
+  border: 0;
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: calc(10px + var(--safe-top)) 10px 18px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -.045em;
+  line-height: 1;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.3;
+  margin-top: 5px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  padding: 0;
+}
+
+.segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.055);
+  border-radius: 15px;
+}
+
+.segment button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 7px 9px;
+  border-radius: 11px;
+}
+
+.segment button.active {
+  color: #15120b;
+  background: linear-gradient(135deg, #f4dc9f, #caa45f);
+}
+
+.search {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.075);
+  color: var(--text);
+  border-radius: 15px;
+  padding: 9px 12px;
+  margin: 8px 0 10px;
+  outline: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-bottom: 9px;
+}
+
+.stat {
+  min-height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.065);
+  padding: 7px 9px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.list {
+  display: grid;
+  gap: 7px;
+}
+
+.counter {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(140deg, var(--panel-strong), var(--panel));
+  position: relative;
+  overflow: hidden;
+}
+
+.counter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, var(--accent), transparent 58%);
+  opacity: .16;
+  pointer-events: none;
+}
+
+.counter > * {
+  position: relative;
+}
+
+.emoji {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid var(--line);
+  font-size: 20px;
+}
+
+.counter h2 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  line-height: 1.05;
+}
+
+.counter p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.count {
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: -.08em;
+}
+
+.empty {
+  padding: 22px 12px;
+  border: 1px dashed var(--line);
+  border-radius: 15px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+.detail-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(140deg, var(--panel-strong), var(--panel));
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, var(--accent), transparent 58%);
+  opacity: .16;
+  pointer-events: none;
+}
+
+.detail-top {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+}
+
+.detail-top h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.detail-count {
+  font-size: 40px;
+  font-weight: 950;
+  letter-spacing: -.08em;
+}
+
+.detail-sub {
+  position: relative;
+  color: var(--muted);
+  font-size: 11px;
+  margin: 3px 0 9px 46px;
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.actions .wide {
+  width: 100%;
+  justify-content: center;
+  padding: 11px 12px;
+  font-size: 15px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 3px 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255,255,255,.065);
+  padding: 9px 10px;
+}
+
+.entry strong {
+  font-size: 13px;
+}
+
+.entry p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  white-space: pre-wrap;
+  font-size: 12px;
+}
+
+.settings-group {
+  margin-top: 12px;
+}
+
+.settings-row {
+  min-height: 38px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255,255,255,.065);
+  padding: 9px 10px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.settings-row span:last-child {
+  color: var(--muted);
+}
+
+.tabbar {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: calc(6px + var(--safe-bottom));
+  transform: translateX(-50%);
+  width: min(92vw, 520px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 5px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(20,22,30,.86);
+  backdrop-filter: blur(18px);
+}
+
+.tab {
+  display: grid;
+  gap: 1px;
+  place-items: center;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.tab span {
+  font-size: 11px;
+}
+
+.tab.active {
+  color: #15120b;
+  background: linear-gradient(135deg, #f4dc9f, #caa45f);
+}
+
+dialog {
+  width: min(92vw, 390px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 0;
+  background: #171a22;
+  color: var(--text);
+  box-shadow: 0 30px 80px rgba(0,0,0,.55);
+}
+
+dialog::backdrop {
+  background: rgba(0,0,0,.58);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  padding: 12px;
+}
+
+.modal h2 {
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+label {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+
+input, textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+  border-radius: 13px;
+  padding: 9px 10px;
+  outline: 0;
+}
+
+textarea {
+  min-height: 64px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 8px;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.swatch {
+  height: 26px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+}
+
+.swatch.active {
+  border-color: white;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+  
+.lock-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.settings-row.danger {
+  color: white;
+  background: rgba(255,107,107,.18);
+  border: 1px solid rgba(255,107,107,.35);
+}
+
+
+/* v2.1.1 iOS overscroll fix */
+html {
+  background: #0b0d12 !important;
+  min-height: 100%;
+  overscroll-behavior-y: none;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(215,181,109,.16), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(110,168,255,.12), transparent 28rem),
+    linear-gradient(180deg, #0b0d12, #11141c) !important;
+  min-height: 100svh;
+  overscroll-behavior-y: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at top left, rgba(215,181,109,.16), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(110,168,255,.12), transparent 28rem),
+    linear-gradient(180deg, #0b0d12, #11141c);
+  pointer-events: none;
+}
+
+.app {
+  min-height: calc(100svh - 82px - var(--safe-bottom));
+}
+
+@supports not (height: 100svh) {
+  body {
+    min-height: 100vh;
+  }
+
+  .app {
+    min-height: calc(100vh - 82px - var(--safe-bottom));
+  }
+}
+
+
+/* v2.2 Theme and Interface Size */
+:root {
+  --scale: 1;
+  --theme-bg: #0b0d12;
+  --theme-bg2: #11141c;
+  --theme-panel: rgba(255,255,255,.075);
+  --theme-panel-strong: rgba(255,255,255,.11);
+  --theme-line: rgba(255,255,255,.13);
+  --theme-text: #f5f7fb;
+  --theme-muted: rgba(245,247,251,.62);
+  --theme-accent: #d7b56d;
+  --theme-accent2: #caa45f;
+  --theme-glow-a: rgba(215,181,109,.16);
+  --theme-glow-b: rgba(110,168,255,.12);
+}
+
+:root[data-size="compact"] { --scale: .88; }
+:root[data-size="standard"] { --scale: 1; }
+:root[data-size="comfortable"] { --scale: 1.10; }
+:root[data-size="large"] { --scale: 1.20; }
+
+:root[data-theme="emerald-elite"] {
+  --theme-bg: #06100d;
+  --theme-bg2: #0b1712;
+  --theme-panel: rgba(232,255,245,.07);
+  --theme-panel-strong: rgba(232,255,245,.115);
+  --theme-line: rgba(173,255,214,.16);
+  --theme-text: #f2fff8;
+  --theme-muted: rgba(242,255,248,.62);
+  --theme-accent: #35d07f;
+  --theme-accent2: #0f9f5b;
+  --theme-glow-a: rgba(53,208,127,.22);
+  --theme-glow-b: rgba(14,124,78,.16);
+}
+
+:root[data-theme="arctic-white"] {
+  --theme-bg: #f4f6f8;
+  --theme-bg2: #e9edf2;
+  --theme-panel: rgba(255,255,255,.72);
+  --theme-panel-strong: rgba(255,255,255,.92);
+  --theme-line: rgba(20,25,35,.12);
+  --theme-text: #111827;
+  --theme-muted: rgba(17,24,39,.58);
+  --theme-accent: #c59b4a;
+  --theme-accent2: #a47c32;
+  --theme-glow-a: rgba(197,155,74,.16);
+  --theme-glow-b: rgba(80,120,180,.12);
+}
+
+:root {
+  --bg: var(--theme-bg);
+  --panel: var(--theme-panel);
+  --panel-strong: var(--theme-panel-strong);
+  --line: var(--theme-line);
+  --text: var(--theme-text);
+  --muted: var(--theme-muted);
+  --gold: var(--theme-accent);
+}
+
+html, body, body::after {
+  background:
+    radial-gradient(circle at top left, var(--theme-glow-a), transparent 32rem),
+    radial-gradient(circle at bottom right, var(--theme-glow-b), transparent 28rem),
+    linear-gradient(180deg, var(--theme-bg), var(--theme-bg2)) !important;
+}
+
+.primary,
+.segment button.active,
+.tab.active {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 80%, white), var(--theme-accent2)) !important;
+  color: #07120c !important;
+}
+
+:root[data-theme="arctic-white"] .primary,
+:root[data-theme="arctic-white"] .segment button.active,
+:root[data-theme="arctic-white"] .tab.active {
+  color: #111827 !important;
+}
+
+.tabbar {
+  background: color-mix(in srgb, var(--theme-bg2) 86%, transparent) !important;
+}
+
+.detail-card,
+.counter {
+  background: linear-gradient(140deg, var(--theme-panel-strong), var(--theme-panel)) !important;
+}
+
+.app {
+  padding-left: calc(10px * var(--scale)) !important;
+  padding-right: calc(10px * var(--scale)) !important;
+}
+
+h1 { font-size: calc(26px * var(--scale)) !important; }
+.subtitle { font-size: calc(12px * var(--scale)) !important; }
+.eyebrow { font-size: calc(10px * var(--scale)) !important; }
+
+.counter {
+  min-height: calc(72px * var(--scale)) !important;
+  padding: calc(10px * var(--scale)) calc(12px * var(--scale)) !important;
+  gap: calc(10px * var(--scale)) !important;
+}
+
+.emoji {
+  width: calc(36px * var(--scale)) !important;
+  height: calc(36px * var(--scale)) !important;
+  font-size: calc(20px * var(--scale)) !important;
+}
+
+.counter h2 {
+  font-size: calc(16px * var(--scale)) !important;
+}
+
+.counter p {
+  font-size: calc(11px * var(--scale)) !important;
+}
+
+.count {
+  font-size: calc(34px * var(--scale)) !important;
+}
+
+.stat {
+  min-height: calc(44px * var(--scale)) !important;
+  padding: calc(7px * var(--scale)) calc(9px * var(--scale)) !important;
+}
+
+.stat strong {
+  font-size: calc(17px * var(--scale)) !important;
+}
+
+.stat span {
+  font-size: calc(10px * var(--scale)) !important;
+}
+
+.search,
+.settings-row,
+.entry,
+button,
+input,
+textarea {
+  font-size: calc(13px * var(--scale)) !important;
+}
+
+.detail-card {
+  padding: calc(12px * var(--scale)) !important;
+}
+
+.detail-top {
+  grid-template-columns: calc(36px * var(--scale)) 1fr auto !important;
+}
+
+.detail-top h2 {
+  font-size: calc(20px * var(--scale)) !important;
+}
+
+.detail-count {
+  font-size: calc(40px * var(--scale)) !important;
+}
+
+.detail-sub {
+  font-size: calc(11px * var(--scale)) !important;
+  margin-left: calc(46px * var(--scale)) !important;
+}
+
+.tab span {
+  font-size: calc(11px * var(--scale)) !important;
+}
+
+.tab {
+  font-size: calc(15px * var(--scale)) !important;
+}
+
+:root[data-theme="arctic-white"] .tabbar {
+  background: rgba(255,255,255,.82) !important;
+}
+
+:root[data-theme="arctic-white"] dialog {
+  background: #ffffff !important;
+}
+
+:root[data-theme="arctic-white"] input,
+:root[data-theme="arctic-white"] textarea {
+  background: rgba(17,24,39,.04) !important;
+}
+
+
+/* v2.2.1 Compact overscroll fix */
+html,
+body {
+  background-color: var(--theme-bg) !important;
+  min-height: 100svh !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  position: relative;
+}
+
+.app {
+  min-height: calc(100svh - 56px - var(--safe-bottom)) !important;
+  padding-bottom: calc(18px + var(--safe-bottom)) !important;
+}
+
+:root[data-size="compact"] .app {
+  min-height: calc(100svh - 44px - var(--safe-bottom)) !important;
+  padding-bottom: calc(26px + var(--safe-bottom)) !important;
+}
+
+:root[data-size="compact"] body {
+  padding-bottom: calc(72px + var(--safe-bottom)) !important;
+}
+
+:root[data-size="standard"] body,
+:root[data-size="comfortable"] body,
+:root[data-size="large"] body {
+  padding-bottom: calc(66px + var(--safe-bottom)) !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -80px;
+  height: 160px;
+  background: linear-gradient(180deg, var(--theme-bg2), var(--theme-bg2)) !important;
+  z-index: -2;
+  pointer-events: none;
+}
+
+@supports not (height: 100svh) {
+  .app {
+    min-height: calc(100vh - 56px - var(--safe-bottom)) !important;
+  }
+
+  :root[data-size="compact"] .app {
+    min-height: calc(100vh - 44px - var(--safe-bottom)) !important;
+  }
+}
+
+
+/* v2.3.0 Welcome */
+.tj-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(76px + var(--safe-bottom));
+  z-index: 999;
+  transform: translate(-50%, 16px);
+  opacity: 0;
+  color: #07120c;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 82%, white), var(--theme-accent2));
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 14px 34px rgba(0,0,0,.32);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.tj-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.tj-onboarding {
+  width: min(92vw, 410px);
+}
+
+.onboarding-card {
+  text-align: center;
+  padding: calc(18px * var(--scale)) !important;
+}
+
+.onboarding-progress {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.onboarding-progress span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.onboarding-progress span.active {
+  width: 22px;
+  background: var(--theme-accent);
+}
+
+.onboarding-icon,
+.help-hero-icon {
+  width: calc(54px * var(--scale));
+  height: calc(54px * var(--scale));
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  font-size: calc(29px * var(--scale));
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+}
+
+.onboarding-card p,
+.help-copy {
+  color: var(--muted);
+  font-size: calc(13px * var(--scale));
+  line-height: 1.55;
+}
+
+.stacked-actions {
+  display: grid !important;
+  grid-template-columns: 1fr;
+}
+
+.stacked-actions button {
+  width: 100%;
+}
+
+.help-list-grid {
+  display: grid;
+  gap: calc(7px * var(--scale));
+}
+
+.help-row {
+  width: 100%;
+  min-height: calc(45px * var(--scale));
+  display: grid;
+  grid-template-columns: calc(32px * var(--scale)) 1fr auto;
+  align-items: center;
+  gap: calc(9px * var(--scale));
+  text-align: left;
+  border-radius: calc(13px * var(--scale));
+  background: var(--panel);
+}
+
+.help-row-icon {
+  font-size: calc(20px * var(--scale));
+}
+
+.help-row b {
+  color: var(--muted);
+  font-size: calc(20px * var(--scale));
+}
+
+.replay-intro {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.help-article {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: calc(18px * var(--scale));
+  padding: calc(15px * var(--scale));
+}
+
+.help-article .help-hero-icon {
+  margin-left: 0;
+}
+
+.help-article h1 {
+  margin-bottom: 14px;
+}
+
+.help-body {
+  color: var(--text);
+  font-size: calc(13px * var(--scale));
+  line-height: 1.62;
+}
+
+.help-body p {
+  color: var(--muted);
+}
+
+.help-body strong,
+.help-body h3 {
+  color: var(--text);
+}
+
+.help-body h3 {
+  margin: 18px 0 7px;
+  font-size: calc(14px * var(--scale));
+}
+
+.help-list {
+  margin: 8px 0 14px;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.help-list li {
+  margin: 6px 0;
+}
+
+.help-list.numbered {
+  padding-left: 22px;
+}
+
+.example-grid,
+.principles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.example-grid span,
+.principles span {
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  border-radius: 12px;
+  padding: 9px;
+  color: var(--text);
+  font-size: calc(12px * var(--scale));
+}
+
+.help-action {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.disabled-action {
+  opacity: .55;
+}
+
+.info-card {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+
+.faq-item:first-child {
+  padding-top: 0;
+}
+
+.faq-item:last-child {
+  border-bottom: 0;
+}
+
+.faq-item p {
+  margin-bottom: 0;
+}
+
+.release-card {
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  border-radius: 13px;
+  padding: 11px;
+  margin-bottom: 9px;
+}
+
+.release-card.current {
+  box-shadow: inset 3px 0 0 var(--theme-accent);
+}
+
+.release-card strong,
+.release-card span {
+  display: block;
+}
+
+.release-card span {
+  color: var(--muted);
+  font-size: calc(11px * var(--scale));
+  margin-top: 2px;
+}
+
+.release-card ul {
+  color: var(--muted);
+  padding-left: 18px;
+  margin-bottom: 0;
+}
+
+.contact-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  text-align: left;
+  border-radius: 14px;
+  margin: 7px 0;
+  background: var(--panel-strong);
+}
+
+.contact-card > span {
+  font-size: calc(20px * var(--scale));
+}
+
+.contact-card strong,
+.contact-card small {
+  display: block;
+}
+
+.contact-card small {
+  color: var(--muted);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.contact-card b {
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.contact-address,
+.made-in {
+  text-align: center;
+  font-size: calc(11px * var(--scale));
+  color: var(--muted);
+}
+
+blockquote {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--theme-accent);
+  background: var(--panel-strong);
+  border-radius: 0 12px 12px 0;
+  color: var(--text);
+  font-weight: 750;
+}
+
+@media (max-width: 360px) {
+  .example-grid,
+  .principles {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* v2.3.1-beta.1 Welcome Polish */
+.settings-row {
+  width: 100% !important;
+  display: flex !important;
+  box-sizing: border-box !important;
+}
+
+button.settings-row {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  justify-content: space-between !important;
+  text-align: left !important;
+}
+
+.settings-row > span:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.settings-row > span:last-child {
+  flex: 0 0 auto;
+  text-align: right;
+  margin-left: 12px;
+}
+
+.test-status {
+  border-color: rgba(255, 166, 0, .42) !important;
+  background: rgba(255, 166, 0, .10) !important;
+}
+
+.test-status > span:last-child {
+  color: #f4b04c !important;
+  font-weight: 800;
+}
+
+
+/* v2.4.0-beta.1 */
+
+
+
+/* v2.4.0-beta.2 Recovery & Actions */
+.counter-card-wrap {
+  border: 1px solid var(--line);
+  border-radius: calc(18px * var(--scale));
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 8px 22px rgba(0,0,0,.18);
+}
+
+.counter-card-wrap .counter {
+  border: 0 !important;
+  border-radius: 0 !important;
+  min-height: calc(74px * var(--scale)) !important;
+  box-shadow: none !important;
+}
+
+.counter-main {
+  cursor: pointer;
+}
+
+.counter-copy {
+  min-width: 0;
+}
+
+.counter-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+}
+
+.counter-action {
+  width: 100%;
+  min-height: calc(34px * var(--scale));
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-size: calc(12px * var(--scale)) !important;
+  font-weight: 850;
+}
+
+.archive-action {
+  background: linear-gradient(135deg, #efca62, #c79318) !important;
+  color: #181204 !important;
+}
+
+.delete-action {
+  background: linear-gradient(135deg, #ef7777, #bd3e3e) !important;
+  color: white !important;
+  border-left: 1px solid rgba(255,255,255,.16) !important;
+}
+
+.deleted-list {
+  margin-top: 9px;
+}
+
+.deleted-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--panel);
+  padding: 10px;
+}
+
+.deleted-content strong,
+.deleted-content small {
+  display: block;
+}
+
+.deleted-content small {
+  color: var(--muted);
+  margin-top: 3px;
+  font-size: calc(11px * var(--scale));
+}
+
+.deleted-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.deleted-actions button {
+  width: 100%;
+}
+
+.tj-update-dialog .info-card {
+  margin: 7px 0;
+}
+
+
+/* v2.4.0-beta.3 Recovery Polish */
+.counter-card-wrap {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-strong) 82%, transparent), var(--panel)) !important;
+}
+
+.counter-actions {
+  gap: 7px;
+  padding: 7px;
+  background: color-mix(in srgb, var(--theme-bg2) 76%, transparent);
+  border-top: 1px solid var(--line);
+}
+
+.counter-action {
+  min-height: calc(36px * var(--scale)) !important;
+  border-radius: calc(11px * var(--scale)) !important;
+  letter-spacing: .01em;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+.archive-action {
+  background: linear-gradient(135deg, #f2d478, #d3a333) !important;
+  color: #181204 !important;
+}
+
+.delete-action {
+  background: linear-gradient(135deg, #e97979, #c64c4c) !important;
+  color: #fff !important;
+  border-left: 0 !important;
+}
+
+.counter-action:active {
+  transform: scale(.975);
+}
+
+:root[data-theme="arctic-white"] .counter-actions {
+  background: rgba(17,24,39,.035);
+}
+
+
+/* v2.5.0-beta.1 Card Menu */
+.compact-counter {
+  min-height: calc(82px * var(--scale)) !important;
+  grid-template-columns: 1fr auto !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.counter-open-area {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: calc(36px * var(--scale)) 1fr auto;
+  gap: calc(10px * var(--scale));
+  align-items: center;
+  padding: calc(11px * var(--scale)) calc(12px * var(--scale));
+}
+
+.counter-copy {
+  min-width: 0;
+}
+
+.counter-copy h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.counter-more {
+  align-self: stretch;
+  min-width: calc(48px * var(--scale));
+  padding: 0 calc(10px * var(--scale)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-size: calc(19px * var(--scale)) !important;
+  letter-spacing: .08em;
+}
+
+.counter-more:active {
+  background: var(--panel-strong) !important;
+}
+
+.counter-action-dialog {
+  width: min(94vw, 430px) !important;
+  margin: auto auto 0 !important;
+  border-radius: 24px 24px 0 0 !important;
+}
+
+.counter-menu-modal {
+  padding: 10px 12px calc(14px + var(--safe-bottom)) !important;
+}
+
+.counter-menu-handle {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--muted);
+  opacity: .45;
+  margin: 0 auto 12px;
+}
+
+.counter-menu-title {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 4px 4px 12px;
+}
+
+.counter-menu-title strong,
+.counter-menu-title small {
+  display: block;
+}
+
+.counter-menu-title small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: calc(11px * var(--scale));
+}
+
+.counter-menu-list {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--panel);
+}
+
+.counter-menu-item {
+  width: 100%;
+  min-height: calc(54px * var(--scale));
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 11px;
+  align-items: center;
+  text-align: left;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 10px 12px !important;
+}
+
+.counter-menu-item:last-child {
+  border-bottom: 0 !important;
+}
+
+.counter-menu-item > span {
+  font-size: calc(20px * var(--scale));
+}
+
+.counter-menu-item strong,
+.counter-menu-item small {
+  display: block;
+}
+
+.counter-menu-item small {
+  color: var(--muted);
+  margin-top: 2px;
+  font-size: calc(11px * var(--scale));
+  font-weight: 500;
+}
+
+.archive-menu strong {
+  color: #e0b63f;
+}
+
+.delete-menu strong {
+  color: #ef6666;
+}
+
+.counter-menu-cancel {
+  width: 100%;
+  margin-top: 9px;
+  background: var(--panel-strong) !important;
+}
+
+
+/* v2.5.0-beta.2 UX Refinement */
+.section-title{margin-top:calc(18px * var(--scale))!important;margin-bottom:calc(7px * var(--scale))!important}.section-title:first-of-type{margin-top:0!important}.back-link{border:0!important;background:transparent!important;padding:0!important;color:var(--theme-accent)!important;font-size:calc(13px * var(--scale))!important;font-weight:800;text-align:left}.help-center-header{align-items:start!important}.help-center-header .back-link{margin-bottom:12px}.standalone-header{min-height:auto!important;margin-bottom:10px}.stable-status{border-color:rgba(76,214,132,.42)!important;background:rgba(76,214,132,.10)!important}.stable-status>span:last-child{color:#67dd9b!important;font-weight:850}.test-status{border-color:rgba(255,184,48,.42)!important;background:rgba(255,184,48,.10)!important}.test-status>span:last-child{color:#f4b04c!important;font-weight:850}.development-status{border-color:rgba(239,102,102,.42)!important;background:rgba(239,102,102,.10)!important}.development-status>span:last-child{color:#ef6666!important;font-weight:850}.roadmap-timeline{display:grid;gap:9px;margin:12px 0 18px}.roadmap-step{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;border:1px solid var(--line);background:var(--panel-strong);border-radius:13px;padding:10px}.roadmap-step>span{font-size:19px;color:var(--muted)}.roadmap-step strong,.roadmap-step small{display:block}.roadmap-step small{margin-top:2px;color:var(--muted)}.roadmap-step.complete>span{color:#67dd9b}.roadmap-step.current{box-shadow:inset 3px 0 0 var(--theme-accent)}.roadmap-step.current>span{color:var(--theme-accent)}.roadmap-step.future>span{color:#77a9ff}
+
+
+/* v2.5.0-beta.3 iOS Input Fix */
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  font-size: 16px !important;
+}
+
+dialog .modal {
+  max-height: min(82svh, 720px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+dialog[open] {
+  align-items: flex-start;
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+@supports (height: 100dvh) {
+  dialog .modal {
+    max-height: calc(100dvh - max(40px, env(safe-area-inset-top)) - max(40px, env(safe-area-inset-bottom)));
+  }
+}
+
+@media (max-width: 430px) {
+  dialog .modal {
+    width: calc(100vw - 24px);
+    margin-inline: auto;
+  }
+
+  dialog input,
+  dialog textarea,
+  dialog select {
+    font-size: 16px !important;
+  }
+}
+
+
+/* v2.5.0-beta.4 Timeline Insights */
+.timeline-entry{position:relative!important;display:block!important;min-height:auto!important;padding:calc(11px * var(--scale)) calc(56px * var(--scale)) calc(11px * var(--scale)) calc(12px * var(--scale))!important}
+.timeline-entry .entry-content{min-width:0}
+.timeline-entry p{white-space:pre-wrap!important;overflow-wrap:anywhere;line-height:1.55;margin-bottom:0}
+.entry-delete-fixed{position:absolute!important;top:calc(9px * var(--scale));right:calc(9px * var(--scale));width:calc(36px * var(--scale))!important;height:calc(36px * var(--scale))!important;min-width:calc(36px * var(--scale))!important;min-height:calc(36px * var(--scale))!important;padding:0!important;border-radius:50%!important;display:grid!important;place-items:center;font-size:calc(18px * var(--scale))!important}
+.day-gap-marker{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:calc(8px * var(--scale));margin:calc(3px * var(--scale)) calc(12px * var(--scale));color:#62d98f}
+.day-gap-marker span{height:1px;background:linear-gradient(90deg,transparent,rgba(98,217,143,.7))}.day-gap-marker span:last-child{background:linear-gradient(90deg,rgba(98,217,143,.7),transparent)}
+.day-gap-marker strong{font-size:calc(11px * var(--scale));font-weight:850;white-space:nowrap}
+.since-last-entry{display:inline-flex;align-items:center;gap:6px;margin-top:calc(8px * var(--scale));padding:calc(8px * var(--scale)) calc(10px * var(--scale));border:1px solid rgba(98,217,143,.42);background:rgba(98,217,143,.10);color:#77e3a0;border-radius:calc(12px * var(--scale));font-size:calc(11px * var(--scale));font-weight:800}
+.counter-toggle-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:14px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel-strong)}
+.counter-toggle-row strong,.counter-toggle-row small{display:block}.counter-toggle-row small{margin-top:3px;color:var(--muted);line-height:1.35}.counter-toggle-row input[type="checkbox"]{width:44px;height:26px;accent-color:var(--theme-accent)}
+
+
+/* v2.5.1-beta.1 Home Insights */
+.home-insight {
+  margin-top: calc(3px * var(--scale));
+  color: #72df9c;
+  font-size: calc(10.5px * var(--scale));
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.compact-counter {
+  min-height: calc(88px * var(--scale)) !important;
+}
+
+.counter-copy .home-insight {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* v2.5.2-beta.1 Update Experience */
+.release-overlay-card { text-align: left; }
+.release-highlights {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 14px 0;
+  list-style: none;
+}
+.release-highlights li {
+  position: relative;
+  padding-left: 24px;
+}
+.release-highlights li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #67dd9b;
+  font-weight: 900;
+}
+.release-history { display: grid; gap: 10px; }
+.release-overlay::backdrop {
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(10px);
+}
+
+
+/* v2.6.0-beta.2 Localization Foundation */
+.language-options {
+  display: grid;
+  gap: 8px;
+}
+.selected-language {
+  border-color: rgba(103, 221, 155, .55) !important;
+  background: rgba(103, 221, 155, .10) !important;
+}
+
+
+/* v2.6.0-beta.3 Full Dutch */
+.roadmap-step.current > span {
+  display: none !important;
+}
+
+html[lang="nl"] .section-title,
+html[lang="nl"] .eyebrow {
+  letter-spacing: .12em;
+}
+
+html[lang="nl"] .settings-row span:last-child {
+  max-width: 58%;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+
+/* v2.6.0 Natural Dutch */
+html[lang="nl"] .help-row span:nth-child(2),
+html[lang="nl"] .settings-row span:first-child {
+  line-height: 1.3;
+}
+
+html[lang="nl"] .roadmap-step.current {
+  grid-template-columns: 1fr;
+  padding-left: 14px;
+}
+
+
+/* Telly Tasks module preview */
+.tab:disabled { opacity: .45; cursor: default; }
+.task-preview-card { border:1px solid var(--line); background:linear-gradient(140deg,var(--panel-strong),var(--panel)); border-radius:calc(18px * var(--scale)); padding:calc(15px * var(--scale)); box-shadow:0 16px 38px rgba(0,0,0,.14); }
+.task-preview-top { display:flex; align-items:flex-start; gap:12px; }
+.task-check { width:28px; height:28px; border-radius:999px; border:2px solid var(--theme-accent); flex:0 0 auto; margin-top:2px; }
+.task-preview-copy { min-width:0; flex:1; }
+.task-preview-copy h2 { margin:0 0 4px; font-size:calc(19px * var(--scale)); }
+.task-preview-copy p { margin:0; color:var(--muted); font-size:calc(12px * var(--scale)); }
+.task-more-static { color:var(--muted); font-weight:800; letter-spacing:1px; }
+.task-progress { height:7px; border-radius:999px; background:var(--line); overflow:hidden; margin:14px 0 7px; }
+.task-progress span { display:block; height:100%; width:40%; background:linear-gradient(90deg,var(--theme-accent),var(--theme-accent2)); border-radius:inherit; }
+.task-progress-copy { display:flex; justify-content:space-between; gap:10px; color:var(--muted); font-size:calc(11px * var(--scale)); }
+.next-step-card { margin-top:12px; border:1px solid color-mix(in srgb,var(--theme-accent) 35%,var(--line)); background:color-mix(in srgb,var(--theme-accent) 10%,var(--panel)); border-radius:13px; padding:11px 12px; }
+.next-step-card span { display:block; color:var(--muted); font-size:calc(10px * var(--scale)); text-transform:uppercase; letter-spacing:.08em; }
+.next-step-card strong { display:block; margin-top:3px; }
+.phase-note { margin-top:12px; }
+
+</style>
 </head>
 <body>
-<div class="app" id="app">
-  <header>
-    <div><div class="eyebrow">Telly Journal Lab</div><h1 data-i18n="tasksTitle">Taken</h1></div>
-    <div class="header-actions"><button class="icon-btn" id="infoBtn" aria-label="Info">ⓘ</button></div>
-  </header>
+  <div id="app" class="app"></div>
 
-  <main>
-    <section id="tasksView" class="view active">
-      <div class="hero">
-        <div class="hero-icon">✓</div>
-        <h2 data-i18n="emptyTitle">Je taken beginnen hier</h2>
-        <p data-i18n="emptyText">In de volgende fase voeg je hoofdtaken toe, plan je ze en rond je ze af. Deze eerste build legt de visuele en technische basis.</p>
-        <button class="primary" id="newTaskPreview" data-i18n="newTask">Nieuwe taak</button>
+  <nav class="tabbar">
+    <button class="tab" disabled aria-disabled="true">⌂<span>Counters</span></button>
+    <button class="tab active" data-screen="tasks">✓<span>Tasks</span></button>
+    <button class="tab" disabled aria-disabled="true">☷<span>Journal</span></button>
+    <button class="tab" data-screen="settings">⚙<span>Settings</span></button>
+  </nav>
+
+  <input id="importFile" type="file" accept="application/json" hidden />
+
+  <script>
+const TJ_STORAGE_KEY = "telly-tasks-v1";
+const TJ_VERSION = "0.1.0-alpha.2";
+const TJ_RELEASE = "Vertrouwde basis";
+const TJ_BUILD = "20260714-TT02";
+const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
+const TJ_STATUS = "Alpha";
+
+function loadState() {
+  try {
+    const state = JSON.parse(localStorage.getItem(TJ_STORAGE_KEY));
+    if (state && Array.isArray(state.counters)) return state;
+  } catch {}
+  return { version: TJ_VERSION, counters: [], tasks: [], settings: { language: "auto", theme: "midnight-gold", interfaceSize: "standard", pinEnabled: false, pinHash: "", lockOnOpen: true, onboardingCompleted: true } };
+}
+
+function saveState(state, markDataChange = true) {
+  state.version = TJ_VERSION;
+  state.settings = state.settings || {};
+
+  if (markDataChange) {
+    state.settings.lastDataChangeAt = new Date().toISOString();
+  }
+
+  localStorage.setItem(TJ_STORAGE_KEY, JSON.stringify(state));
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+
+function exportJson(state) {
+  const now = new Date();
+  const filename = `Backup-TJ-${fileTimestamp(now)}.json`;
+
+  const backup = {
+    version: TJ_VERSION,
+    release: TJ_RELEASE,
+    build: TJ_BUILD,
+    appName: "Telly Tasks",
+    exportedAt: now.toISOString(),
+    counters: state.counters,
+    deletedCounters: state.deletedCounters || [],
+    settings: state.settings
+  };
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  downloadBlob(blob, filename);
+
+  state.settings.lastBackupAt = now.toISOString();
+  state.settings.lastDataChangeAt = state.settings.lastBackupAt;
+  saveState(state, false);
+
+  showToast("Backup created");
+  if (screen === "settings") renderSettings();
+}
+
+function exportCsv(counters) {
+  const rows = [["Counter", "Status", "Emoji", "Date and Time", "Note"]];
+  counters.forEach(counter => {
+    (counter.entries || []).forEach(entry => {
+      rows.push([
+        counter.name,
+        counter.archived ? "Archived" : "Active",
+        counter.emoji || "",
+        formatDate(entry.dateTime),
+        entry.note || ""
+      ]);
+    });
+  });
+
+  const csv = rows.map(row => row.map(v => `"${String(v).replaceAll('"', '""')}"`).join(";")).join("\n");
+  downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8" }), `Export-TJ-${fileTimestamp(new Date())}.csv`);
+}
+
+function fileTimestamp(date = new Date()) {
+  const pad = value => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}-${pad(date.getHours())}${pad(date.getMinutes())}`;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJsonFile(file, state, onDone) {
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const importedCounters = Array.isArray(data) ? data : data.counters;
+
+      if (!Array.isArray(importedCounters)) throw new Error("No counters found");
+
+      const add = confirm("Import JSON backup?\n\nOK = Add imported counters.\nCancel = Replace current data.");
+      const counters = importedCounters.map(normalizeCounter);
+
+      if (add) {
+        const ids = new Set(state.counters.map(c => c.id));
+        counters.forEach(counter => {
+          if (ids.has(counter.id)) counter.id = uid();
+          state.counters.push(counter);
+        });
+      } else {
+        if (!confirm("Replace all current data?")) return;
+        state.counters = counters;
+        state.deletedCounters = Array.isArray(data.deletedCounters)
+          ? data.deletedCounters.map(counter => ({
+              ...normalizeCounter(counter),
+              deletedAt: counter.deletedAt || new Date().toISOString()
+            }))
+          : [];
+      }
+
+      state.settings = state.settings || {};
+      state.settings.lastDataChangeAt = new Date().toISOString();
+      saveState(state, false);
+      alert("Import completed.");
+      onDone();
+    } catch {
+      alert("Import failed. This file could not be read.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function normalizeCounter(counter) {
+  return {
+    id: counter.id || uid(),
+    name: counter.name || "Imported Counter",
+    emoji: counter.emoji || "📌",
+    color: counter.color || "#d7b56d",
+    archived: !!counter.archived,
+    showDaysBetweenEntries: !!counter.showDaysBetweenEntries,
+    createdAt: counter.createdAt || new Date().toISOString(),
+    entries: (counter.entries || []).map(entry => ({
+      id: entry.id || uid(),
+      dateTime: entry.dateTime || new Date().toISOString(),
+      note: entry.note || ""
+    })).sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))
+  };
+}
+
+
+const app = document.getElementById("app");
+const importFile = document.getElementById("importFile");
+
+let state = loadState();
+state.settings = state.settings || {};
+if (typeof state.settings.pinEnabled !== "boolean") state.settings.pinEnabled = false;
+if (typeof state.settings.pinHash !== "string") state.settings.pinHash = "";
+if (typeof state.settings.lockOnOpen !== "boolean") state.settings.lockOnOpen = true;
+if (!state.settings.theme) state.settings.theme = "midnight-gold";
+if (!state.settings.interfaceSize) state.settings.interfaceSize = "standard";
+if (typeof state.settings.onboardingCompleted !== "boolean") state.settings.onboardingCompleted = true;
+if (typeof state.settings.lastSeenVersion !== "string") state.settings.lastSeenVersion = "";
+if (typeof state.settings.lastBackupAt !== "string") state.settings.lastBackupAt = "";
+if (typeof state.settings.lastDataChangeAt !== "string") state.settings.lastDataChangeAt = "";
+if (typeof state.settings.backupReminderDismissedAt !== "string") state.settings.backupReminderDismissedAt = "";
+if (!Array.isArray(state.deletedCounters)) state.deletedCounters = [];
+if (typeof state.settings.autoUpdateCheck !== "boolean") state.settings.autoUpdateCheck = true;
+if (typeof state.settings.lastUpdateCheckAt !== "string") state.settings.lastUpdateCheckAt = "";
+if (typeof state.settings.dismissedUpdateBuild !== "string") state.settings.dismissedUpdateBuild = "";
+if (typeof state.settings.lastSeenReleaseBuild !== "string") state.settings.lastSeenReleaseBuild = "";
+if (!["auto","en","nl"].includes(state.settings.language)) state.settings.language = "auto";
+saveState(state, false);
+
+function applyAppearance() {
+  document.documentElement.setAttribute("data-theme", state.settings.theme || "midnight-gold");
+  document.documentElement.setAttribute("data-size", state.settings.interfaceSize || "standard");
+}
+
+applyAppearance();
+
+let locked = !!state.settings.pinEnabled;
+let screen = "tasks";
+let helpArticle = null;
+let startupChecksCompleted = false;
+let settingsScrollY = 0;
+
+let mode = "active";
+let selectedCounterId = null;
+let selectedColor = "#d7b56d";
+
+const colors = ["#d7b56d", "#6ea8ff", "#61d394", "#ff8fab", "#c084fc", "#fb923c", "#22d3ee", "#a3e635", "#f87171", "#facc15", "#94a3b8", "#f5f7fb"];
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    screen = btn.dataset.screen;
+    selectedCounterId = null;
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  });
+});
+
+importFile.addEventListener("change", event => {
+  const file = event.target.files[0];
+  event.target.value = "";
+  if (!file) return;
+  importJsonFile(file, state, render);
+});
+
+
+function hashPin(pin) {
+  let hash = 0;
+  const text = "tj:" + String(pin);
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash) + text.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(hash);
+}
+
+function showLockScreen() {
+  app.innerHTML = `
+    <div class="header">
+      <div>
+        <div class="eyebrow">Private journal locked</div>
+        <h1>Telly Tasks</h1>
+        <div class="subtitle">Enter your PIN to unlock your journal.</div>
       </div>
-      <div class="section-title"><h3 data-i18n="today">Vandaag</h3><span>0</span></div>
-      <div class="card"><div class="empty" data-i18n="noTasks">Nog geen taken voor vandaag.</div></div>
-      <div class="section-title"><h3 data-i18n="later">Later</h3><span>0</span></div>
-      <div class="card"><div class="empty" data-i18n="noLaterTasks">Nog geen taken voor later.</div></div>
-    </section>
+    </div>
 
-    <section id="settingsView" class="view">
-      <div class="settings-block"><h3 data-i18n="appearance">Weergave</h3><div class="card">
-        <div class="setting"><label><b data-i18n="theme">Thema</b><small data-i18n="themeHelp">Kies de uitstraling van de app.</small></label><select id="themeSelect"><option value="emerald-lite">Emerald Lite</option><option value="emerald-dark">Emerald Dark</option><option value="sand">Sand</option><option value="midnight">Midnight</option></select></div>
-        <div class="setting"><label><b data-i18n="interfaceSize">Interfacegrootte</b><small data-i18n="sizeHelp">Pas tekst en bediening aan.</small></label><select id="sizeSelect"><option value="0.92" data-i18n="small">Klein</option><option value="1" data-i18n="standard">Standaard</option><option value="1.1" data-i18n="large">Groot</option></select></div>
-      </div></div>
-      <div class="settings-block"><h3 data-i18n="language">Taal</h3><div class="card">
-        <div class="setting"><label><b data-i18n="appLanguage">App-taal</b><small data-i18n="languageHelp">Automatisch gebruikt de taal van je apparaat.</small></label><select id="languageSelect"><option value="auto" data-i18n="automatic">Automatisch</option><option value="nl">Nederlands</option><option value="en">English</option></select></div>
-      </div></div>
-      <div class="settings-block"><h3 data-i18n="resources">Bronnen</h3><div class="card">
-        <button class="row" id="whatsNewBtn" style="width:100%;text-align:left;border-left:0;border-right:0;border-top:0;background:none;color:inherit"><span class="row-icon">✦</span><span class="row-main"><span class="row-title" data-i18n="whatsNew">Nieuw in deze versie</span><span class="row-sub" data-i18n="viewChanges">Bekijk wat er is veranderd.</span></span><span class="chev">›</span></button>
-        <button class="row" id="historyBtn" style="width:100%;text-align:left;border:0;background:none;color:inherit"><span class="row-icon">↺</span><span class="row-main"><span class="row-title" data-i18n="history">Versiegeschiedenis</span><span class="row-sub" data-i18n="historyHelp">Bekijk eerdere builds.</span></span><span class="chev">›</span></button>
-      </div></div>
-      <div class="settings-block"><h3 data-i18n="about">Over</h3><div class="card">
-        <button class="row" id="versionBtn" style="width:100%;text-align:left;border:0;background:none;color:inherit"><span class="row-icon">i</span><span class="row-main"><span class="row-title" data-i18n="version">Versie</span><span class="row-sub">0.1.0-alpha.1 · 20260714-TT01</span></span><span class="chev">›</span></button>
-      </div></div>
-    </section>
-  </main>
-</div>
+    <div class="detail-card">
+      <label>PIN Code</label>
+      <input id="unlockPin" type="password" inputmode="numeric" maxlength="12" placeholder="Enter PIN" />
+      <div class="actions" style="margin-top:10px">
+        <button class="wide primary" onclick="unlockApp()">Unlock</button>
+      </div>
+      <p class="subtitle" style="margin-top:10px">If you forget your PIN, your local app data cannot be unlocked from this screen. Keep a JSON backup somewhere safe.</p>
+    </div>
+  `;
+  setTimeout(() => document.getElementById("unlockPin")?.focus(), 100);
+}
 
-<nav class="nav" aria-label="Hoofdnavigatie">
-  <button class="tab disabled" aria-disabled="true"><span class="ico">◉</span><span data-i18n="counters">Counters</span></button>
-  <button class="tab active" data-view="tasksView"><span class="ico">✓</span><span data-i18n="tasks">Taken</span></button>
-  <button class="tab disabled" aria-disabled="true"><span class="ico">≡</span><span data-i18n="journal">Logboek</span></button>
-  <button class="tab" data-view="settingsView"><span class="ico">⚙</span><span data-i18n="settings">Instellingen</span></button>
-</nav>
+function unlockApp() {
+  const pin = document.getElementById("unlockPin")?.value || "";
+  if (hashPin(pin) === state.settings.pinHash) {
+    locked = false;
+    render();
+  } else {
+    alert("Incorrect PIN.");
+  }
+}
 
-<div class="modal-wrap" id="modalWrap"><div class="modal" id="modal"></div></div>
-<div class="toast" id="toast"></div>
+function setPin() {
+  const pin1 = prompt("Choose a PIN code. Use at least 4 digits.");
+  if (pin1 === null) return;
+  if (!/^\d{4,12}$/.test(pin1)) {
+    alert("PIN must be 4 to 12 digits.");
+    return;
+  }
 
-<script>
-const APP={name:'Telly Tasks',version:'0.1.0-alpha.1',release:'Eerste stap',build:'20260714-TT01',status:'Alpha',date:'14 juli 2026'};
-const translations={
- nl:{tasksTitle:'Taken',emptyTitle:'Je taken beginnen hier',emptyText:'In de volgende fase voeg je hoofdtaken toe, plan je ze en rond je ze af. Deze eerste build legt de visuele en technische basis.',newTask:'Nieuwe taak',today:'Vandaag',later:'Later',noTasks:'Nog geen taken voor vandaag.',noLaterTasks:'Nog geen taken voor later.',appearance:'Weergave',theme:'Thema',themeHelp:'Kies de uitstraling van de app.',interfaceSize:'Interfacegrootte',sizeHelp:'Pas tekst en bediening aan.',small:'Klein',standard:'Standaard',large:'Groot',language:'Taal',appLanguage:'App-taal',languageHelp:'Automatisch gebruikt de taal van je apparaat.',automatic:'Automatisch',resources:'Bronnen',whatsNew:'Nieuw in deze versie',viewChanges:'Bekijk wat er is veranderd.',history:'Versiegeschiedenis',historyHelp:'Bekijk eerdere builds.',about:'Over',version:'Versie',counters:'Counters',tasks:'Taken',journal:'Logboek',settings:'Instellingen',notYet:'Taakfunctionaliteit volgt in Fase 1.',close:'Sluiten',continue:'Doorgaan',whatsNewTitle:'Nieuw in deze versie',intro:'De zelfstandige testomgeving voor de Taken-module is klaar.',foundation:'Technische basis',foundationText:'PWA, lokale instellingen, thema’s en tweetaligheid zijn voorbereid.',navigation:'Navigatievoorbeeld',navigationText:'De onderste balk toont hoe Taken later naast Counters en Logboek staat.',testStatus:'Teststatus',testStatusText:'Dit is een eerste alpha-build zonder echte taakfunctionaliteit.',historyTitle:'Versiegeschiedenis',current:'Huidige versie',versionTitle:'Versie-informatie',released:'Uitgebracht',build:'Build',status:'Status',release:'Releasenaam',updateTitle:'Update beschikbaar',updateText:'Er staat een nieuwe versie klaar.',updateNow:'Nu bijwerken',laterButton:'Later'},
- en:{tasksTitle:'Tasks',emptyTitle:'Your tasks start here',emptyText:'In the next phase you will add, schedule and complete main tasks. This first build establishes the visual and technical foundation.',newTask:'New task',today:'Today',later:'Later',noTasks:'No tasks for today yet.',noLaterTasks:'No tasks for later yet.',appearance:'Appearance',theme:'Theme',themeHelp:'Choose the look of the app.',interfaceSize:'Interface size',sizeHelp:'Adjust text and controls.',small:'Small',standard:'Standard',large:'Large',language:'Language',appLanguage:'App language',languageHelp:'Automatic uses your device language.',automatic:'Automatic',resources:'Resources',whatsNew:"What's New",viewChanges:'See what has changed.',history:'Release History',historyHelp:'View previous builds.',about:'About',version:'Version',counters:'Counters',tasks:'Tasks',journal:'Journal',settings:'Settings',notYet:'Task functionality follows in Phase 1.',close:'Close',continue:'Continue',whatsNewTitle:"What's New",intro:'The standalone test environment for the Tasks module is ready.',foundation:'Technical foundation',foundationText:'PWA, local settings, themes and bilingual support are prepared.',navigation:'Navigation preview',navigationText:'The bottom bar shows how Tasks will later sit beside Counters and Journal.',testStatus:'Test status',testStatusText:'This is an initial alpha build without real task functionality.',historyTitle:'Release History',current:'Current version',versionTitle:'Version information',released:'Released',build:'Build',status:'Status',release:'Release name',updateTitle:'Update available',updateText:'A new version is ready.',updateNow:'Update now',laterButton:'Later'}
+  const pin2 = prompt("Repeat your PIN code.");
+  if (pin2 === null) return;
+
+  if (pin1 !== pin2) {
+    alert("PIN codes do not match.");
+    return;
+  }
+
+  state.settings.pinEnabled = true;
+  state.settings.pinHash = hashPin(pin1);
+  state.settings.lockOnOpen = true;
+  saveState(state);
+  alert("PIN enabled.");
+  render();
+}
+
+function changePin() {
+  const oldPin = prompt("Enter current PIN.");
+  if (oldPin === null) return;
+  if (hashPin(oldPin) !== state.settings.pinHash) {
+    alert("Incorrect PIN.");
+    return;
+  }
+
+  const pin1 = prompt("Choose a new PIN code. Use at least 4 digits.");
+  if (pin1 === null) return;
+  if (!/^\d{4,12}$/.test(pin1)) {
+    alert("PIN must be 4 to 12 digits.");
+    return;
+  }
+
+  const pin2 = prompt("Repeat your new PIN code.");
+  if (pin2 === null) return;
+  if (pin1 !== pin2) {
+    alert("PIN codes do not match.");
+    return;
+  }
+
+  state.settings.pinHash = hashPin(pin1);
+  saveState(state);
+  alert("PIN changed.");
+  render();
+}
+
+function disablePin() {
+  const pin = prompt("Enter current PIN to disable access control.");
+  if (pin === null) return;
+  if (hashPin(pin) !== state.settings.pinHash) {
+    alert("Incorrect PIN.");
+    return;
+  }
+
+  if (!confirm("Disable PIN protection?")) return;
+  state.settings.pinEnabled = false;
+  state.settings.pinHash = "";
+  saveState(state);
+  alert("PIN disabled.");
+  render();
+}
+
+function lockNow() {
+  if (!state.settings.pinEnabled) return;
+  locked = true;
+  showLockScreen();
+}
+
+function updateAppCache() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => registration.unregister());
+      if ("caches" in window) {
+        caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))).then(() => {
+          alert("App cache cleared. Close and reopen the app.");
+        });
+      } else {
+        alert("Service worker cleared. Close and reopen the app.");
+      }
+    });
+  } else {
+    alert("No app cache found.");
+  }
+}
+
+
+
+
+function versionUrl() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("build", TJ_BUILD);
+  url.searchParams.set("_", Date.now().toString());
+  return url.toString();
+}
+
+async function checkForUpdates(manual = false) {
+  try {
+    state.settings.lastUpdateCheckAt = new Date().toISOString();
+    saveState(state, false);
+    const response = await fetch(`index.html?update-check=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error("Update check failed");
+    const text = await response.text();
+    const versionMatch = text.match(/const TJ_VERSION = "([^"]+)"/);
+    const buildMatch = text.match(/const TJ_BUILD = "([^"]+)"/);
+    const remoteVersion = versionMatch ? versionMatch[1] : "";
+    const remoteBuild = buildMatch ? buildMatch[1] : "";
+    if (remoteBuild && remoteBuild !== TJ_BUILD) showUpdateDialog(remoteVersion || "New version", remoteBuild);
+    else if (manual) showToast("You are up to date");
+  } catch (error) {
+    if (manual) alert("Update check failed. Please try again later.");
+  }
+}
+
+function showUpdateDialog(version, build) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "tj-update-dialog";
+  dialog.innerHTML = `<div class="modal"><div class="help-hero-icon">🎉</div><h2>Update available</h2><p class="help-copy">A newer Telly Tasks build is available.</p><div class="info-card"><span>Version</span><strong>${version}</strong></div><div class="info-card"><span>Build</span><strong>${build}</strong></div><div class="modal-actions stacked-actions"><button class="primary" onclick="installLatestUpdate()">Update Now</button><button onclick="dismissUpdate('${build}', this.closest('dialog'))">Later</button></div></div>`;
+  document.body.appendChild(dialog); dialog.showModal();
+}
+
+
+function dismissUpdate(build, dialog) {
+  state.settings.dismissedUpdateBuild = build;
+  saveState(state, false);
+  dialog.remove();
+  showToast("Update postponed");
+}
+
+async function installLatestUpdate() {
+  state.settings.dismissedUpdateBuild = "";
+  saveState(state, false);
+
+  try {
+    const regs = await navigator.serviceWorker?.getRegistrations?.() || [];
+    await Promise.all(regs.map(r => r.unregister()));
+    if ("caches" in window) { const keys = await caches.keys(); await Promise.all(keys.map(k => caches.delete(k))); }
+  } finally { window.location.replace(versionUrl()); }
+}
+
+function scheduleAutomaticUpdateCheck() {
+  if (state.settings.autoUpdateCheck) setTimeout(() => checkForUpdates(false), 1200);
+}
+
+function showToast(message) {
+  const existing = document.querySelector(".tj-toast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.className = "tj-toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add("show"));
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 220);
+  }, 1700);
+}
+
+
+const I18N = {
+  en: {},
+  nl: {
+    "Home": "Home",
+    "Counters": "Counters",
+    "Tasks": "Taken",
+    "Journal": "Logboek",
+    "Settings": "Instellingen",
+    "Active": "Actief",
+    "Archive": "Archief",
+    "Archived": "Gearchiveerd",
+    "Search counters...": "Counters zoeken...",
+    "Entries": "Items",
+    "Entry": "Item",
+    "Today": "Vandaag",
+    "Yesterday": "Gisteren",
+    "Track anything. Every tap becomes a dated journal entry.": "Houd alles bij. Elke tik wordt een logboekitem met datum en tijd.",
+    "Add Entry": "Item toevoegen",
+    "Add Old Entry": "Oud item toevoegen",
+    "Export": "Exporteren",
+    "Timeline": "Tijdlijn",
+    "No entries yet.": "Nog geen items.",
+    "No entries yet": "Nog geen items",
+    "No active counters.": "Geen actieve counters.",
+    "No archived counters.": "Geen gearchiveerde counters.",
+    "General": "Algemeen",
+    "Language": "Taal",
+    "Automatic": "Automatisch",
+    "Theme": "Thema",
+    "Interface Size": "Weergavegrootte",
+    "Compact": "Compact",
+    "Small": "Klein",
+    "Standard": "Standaard",
+    "Large": "Groot",
+    "Privacy": "Privacy",
+    "Access Control": "Toegangscontrole",
+    "Set PIN Code": "Pincode instellen",
+    "Change PIN Code": "Pincode wijzigen",
+    "PIN Code": "Pincode",
+    "Face ID": "Face ID",
+    "Coming later": "Komt later",
+    "Recovery": "Herstel",
+    "Recently Deleted": "Recent verwijderd",
+    "Deleted counters are kept for 30 days.": "Verwijderde counters worden 30 dagen bewaard.",
+    "Automatically removed after 30 days.": "Wordt na 30 dagen automatisch verwijderd.",
+    "Restore": "Herstellen",
+    "Delete Permanently": "Definitief verwijderen",
+    "Delete permanently": "Definitief verwijderen",
+    "Empty Recently Deleted": "Recent verwijderd leegmaken",
+    "Data": "Gegevens",
+    "Import JSON": "JSON importeren",
+    "Choose file": "Bestand kiezen",
+    "Export Backup": "Back-up exporteren",
+    "Export CSV": "CSV exporteren",
+    "Spreadsheet": "Spreadsheet",
+    "Backup Status": "Back-upstatus",
+    "Last Backup": "Laatste back-up",
+    "Up to date": "Actueel",
+    "Backup recommended": "Back-up aanbevolen",
+    "Never": "Nooit",
+    "Resources": "Informatie",
+    "Help & Tips": "Hulp en tips",
+    "What’s New": "Wat is er nieuw",
+    "Roadmap": "Roadmap",
+    "Feedback & Contact": "Feedback en contact",
+    "Support Development": "Ontwikkeling steunen",
+    "Open": "Openen",
+    "View": "Bekijken",
+    "Coming soon": "Binnenkort",
+    "Updates": "Updates",
+    "Check for Updates": "Controleren op updates",
+    "Automatic Checks": "Automatisch controleren",
+    "Last Check": "Laatste controle",
+    "Postponed Build": "Uitgestelde build",
+    "None": "Geen",
+    "Now": "Nu",
+    "On": "Aan",
+    "Off": "Uit",
+    "Maintenance": "Onderhoud",
+    "Reset App Cache": "Appcache herstellen",
+    "Refresh": "Vernieuwen",
+    "About": "Over",
+    "Version": "Versie",
+    "Release": "Release",
+    "Build": "Build",
+    "Status": "Status",
+    "Stable": "Stabiel",
+    "Stable": "Stable",
+    "Development": "Ontwikkeling",
+    "Contact": "Contact",
+    "Developed by": "Ontwikkeld door",
+    "Continue": "Doorgaan",
+    "View Full Release Notes": "Volledige release-opmerkingen bekijken",
+    "Telly Tasks updated": "Telly Tasks is bijgewerkt",
+    "New update experience": "Nieuwe update-ervaring",
+    "Clickable Version information": "Klikbare versie-informatie",
+    "Improved release history": "Verbeterde versiegeschiedenis",
+    "Resources menu refinement": "Vernieuwd informatiemenu",
+    "Change Color": "Kleur wijzigen",
+    "Rename": "Hernoemen",
+    "Duplicate": "Dupliceren",
+    "Delete": "Verwijderen",
+    "Show Days Between Entries": "Dagen tussen items tonen",
+    "Hide Days Between Entries": "Dagen tussen items verbergen",
+    "Move out of Active": "Verplaatsen uit Actief",
+    "Move back to Active": "Terugzetten naar Actief",
+    "Choose another counter color": "Kies een andere counterkleur",
+    "Change the name or emoji": "Wijzig de naam of emoji",
+    "Create a copy without entries": "Maak een kopie zonder items",
+    "Move to Recently Deleted": "Verplaats naar Recent verwijderd",
+    "Display day-gap markers in this timeline": "Toon dagmarkeringen in deze tijdlijn",
+    "Remove day-gap markers from this timeline": "Verberg dagmarkeringen in deze tijdlijn",
+    "Cancel": "Annuleren",
+    "Save": "Opslaan",
+    "Close": "Sluiten",
+    "Done": "Klaar",
+    "Back": "Terug",
+    "Edit Counter": "Counter bewerken",
+    "New Counter": "Nieuwe counter",
+    "Emoji": "Emoji",
+    "Name": "Naam",
+    "Color": "Kleur",
+    "Counter archived": "Counter gearchiveerd",
+    "Counter restored": "Counter hersteld",
+    "Counter duplicated": "Counter gedupliceerd",
+    "Day gaps enabled": "Dagmarkeringen ingeschakeld",
+    "Day gaps disabled": "Dagmarkeringen uitgeschakeld",
+    "Counter moved to Recently Deleted": "Counter verplaatst naar Recent verwijderd",
+    "Entry added": "Item toegevoegd",
+    "Entry deleted": "Item verwijderd",
+    "Backup exported": "Back-up geëxporteerd",
+    "CSV exported": "CSV geëxporteerd",
+    "Import completed": "Import voltooid",
+    "You are up to date": "Je gebruikt de nieuwste versie",
+    "Update postponed": "Update uitgesteld",
+    "Update available": "Update beschikbaar",
+    "A newer Telly Tasks build is available.": "Er is een nieuwere versie van Telly Tasks beschikbaar.",
+    "Update Now": "Nu bijwerken",
+    "Later": "Later",
+    "Current build": "Huidige build",
+    "Released": "Uitgebracht",
+    "View What’s New": "Bekijk wat er nieuw is",
+    "Release History": "Versiegeschiedenis",
+    "Previous releases": "Vorige versies",
+    "Current Release": "Huidige versie",
+    "Welcome": "Welkom",
+    "What is Telly Tasks?": "Wat is Telly Tasks?",
+    "Why was it created?": "Waarom is het gemaakt?",
+    "ADHD as Inspiration": "ADHD als inspiratie",
+    "For Everyone": "Voor iedereen",
+    "Features": "Functies",
+    "Timeline Insights": "Tijdlijninzichten",
+    "Getting Started": "Aan de slag",
+    "Backup Reminder": "Back-upherinnering",
+    "FAQ": "Veelgestelde vragen",
+    "Community": "Community",
+    "My Philosophy": "Mijn visie",
+    "About the Developer": "Over de ontwikkelaar",
+    "Guides and information": "Handleidingen en informatie",
+    "Learn what Telly Tasks is and how to use it.": "Lees wat Telly Tasks is en hoe je de app gebruikt.",
+    "Learn what Telly Tasks is, how to use it and where it is going.": "Lees wat Telly Tasks is, hoe je de app gebruikt en waar de ontwikkeling naartoe gaat.",
+    "See the time between entries": "Bekijk de tijd tussen items",
+    "Questions": "Vragen",
+    "Report a Bug": "Een fout melden",
+    "Request a Feature": "Een functie aanvragen",
+    "General Feedback": "Algemene feedback",
+    "Ask a Question": "Een vraag stellen",
+    "Contact Developer": "Contact opnemen",
+    "Telly Tasks groeit door jouw feedback. Kies wat het beste bij jouw bericht past.": "Telly Tasks groeit door echte feedback. Kies de optie die het beste bij jouw bericht past.",
+    "Tell me what happened and what you expected.": "Vertel wat er gebeurde en wat je verwachtte.",
+    "Share an idea that could improve Telly Tasks.": "Deel een idee dat Telly Tasks kan verbeteren.",
+    "Share your experience or thoughts.": "Deel jouw ervaring of gedachten.",
+    "Need help? Feel free to contact me.": "Hulp nodig? Neem gerust contact met mij op.",
+    "This is the recommended public release. It has passed testing and is intended for daily use.": "Dit is de aanbevolen openbare versie. Deze versie is getest en bedoeld voor dagelijks gebruik.",
+    "This version contains new features that are still being evaluated. Bugs or visual changes may occur.": "Deze versie bevat nieuwe functies die nog worden getest. Er kunnen fouten of visuele wijzigingen voorkomen.",
+    "What is next?": "Wat komt hierna?",
+    "The roadmap may change based on testing and feedback.": "De roadmap kan wijzigen op basis van tests en feedback.",
+    "Updates, backups and Recently Deleted": "Updates, back-ups en Recent verwijderd",
+    "Card Menu, Help Center and navigation": "Countermenu, Hulpcentrum en navigatie",
+    "Automatic, English and Dutch": "Automatisch, Engels en Nederlands",
+    "Multi Select and bulk actions": "Meerdere selecteren en bulkacties",
+    "Statistics, trends and visual summaries": "Statistieken, trends en visuele overzichten",
+    "Review options for an official App Store release": "Mogelijkheden onderzoeken voor een officiële App Store-release",
+    "Recovery": "Herstel",
+    "User Experience": "Gebruikservaring",
+    "Languages": "Talen",
+    "Productivity": "Productiviteit",
+    "Insights": "Inzichten",
+    "App Store": "App Store",
+    "Professional update experience and release management improvements.": "Professionele update-ervaring en verbeterd versiebeheer.",
+    "Your data stays on your device. Create regular backups while Telly Tasks is under active development.": "Jouw gegevens blijven op je toestel. Maak regelmatig een back-up zolang Telly Tasks actief wordt ontwikkeld.",
+    "Your data stays on your device. Create regular backups while Telly Tasks is under active development. After an update, a short What’s New overview may appear once.": "Jouw gegevens blijven op je toestel. Maak regelmatig een back-up zolang Telly Tasks actief wordt ontwikkeld. Na een update kan één keer een kort overzicht met wijzigingen verschijnen.",
+    "See the time between moments": "Bekijk de tijd tussen momenten",
+    "Each counter can optionally show how many days passed between entries. Open the three-dot counter menu and enable Show Days Between Entries to add subtle timeline markers.": "Per counter kun je tonen hoeveel dagen tussen items zitten. Open het menu met de drie puntjes en schakel Dagen tussen items tonen in voor subtiele tijdlijnmarkeringen."    ,"A timeline of your latest entries across all active counters.": "Bekijk de nieuwste items van al je actieve counters op één plek."
+    ,"Privacy, appearance, backups and support.": "Beheer je privacy, weergave, back-ups en ondersteuning."
+    ,"Private counter journal": "Persoonlijk counterlogboek"
+    ,"No note": "Geen notitie"
+    ,"No journal entries yet.": "Nog geen logboekitems."
+    ,"PIN Code": "Pincode"
+    ,"Enter PIN": "Voer je pincode in"
+    ,"Unlock": "Ontgrendelen"
+    ,"If you forget your PIN, your local app data cannot be unlocked from this screen. Keep a JSON backup somewhere safe.": "Ben je je pincode vergeten, dan kun je jouw lokale gegevens via dit scherm niet ontgrendelen. Bewaar daarom altijd een JSON-back-up op een veilige plek."
+    ,"Choose a PIN code. Use at least 4 digits.": "Kies een pincode van minimaal 4 cijfers."
+    ,"PIN must be 4 to 12 digits.": "Je pincode moet uit 4 tot 12 cijfers bestaan."
+    ,"Repeat your PIN code.": "Voer je pincode nogmaals in."
+    ,"PIN codes do not match.": "De pincodes komen niet overeen."
+    ,"PIN enabled.": "Pincode ingeschakeld."
+    ,"Enter current PIN.": "Voer je huidige pincode in."
+    ,"Choose a new PIN code. Use at least 4 digits.": "Kies een nieuwe pincode van minimaal 4 cijfers."
+    ,"Repeat your new PIN code.": "Voer je nieuwe pincode nogmaals in."
+    ,"PIN changed.": "Pincode gewijzigd."
+    ,"Enter current PIN to disable access control.": "Voer je huidige pincode in om de toegangscontrole uit te schakelen."
+    ,"Disable PIN protection?": "Pincode uitschakelen?"
+    ,"PIN disabled.": "Pincode uitgeschakeld."
+    ,"Incorrect PIN.": "Onjuiste pincode."
+    ,"PIN enabled": "Pincode ingesteld"
+    ,"Lock Now": "Nu vergrendelen"
+    ,"Secure": "Beveiligd"
+    ,"Change PIN": "Pincode wijzigen"
+    ,"Disable PIN": "Pincode uitschakelen"
+    ,"4–12 digits": "4 tot 12 cijfers"
+    ,"App cache cleared. Close and reopen the app.": "De appcache is gewist. Sluit de app volledig af en open hem opnieuw."
+    ,"Service worker cleared. Close and reopen the app.": "De appcache is hersteld. Sluit de app volledig af en open hem opnieuw."
+    ,"No app cache found.": "Er is geen appcache gevonden."
+    ,"Update check failed. Please try again later.": "Controleren op updates is mislukt. Probeer het later opnieuw."
+    ,"New version": "Nieuwe versie"
+    ,"Create Backup": "Back-up maken"
+    ,"Create Backup Now": "Nu een back-up maken"
+    ,"Remind Me Later": "Later herinneren"
+    ,"Replay Welcome Guide": "Introductie opnieuw bekijken"
+    ,"Welcome to Telly Tasks": "Welkom bij Telly Tasks"
+    ,"Inspired by ADHD": "Ontstaan vanuit ADHD"
+    ,"Keep your data safe": "Bescherm je gegevens"
+    ,"See the time between moments": "Zie hoeveel tijd ertussen zit"
+    ,"Counter actions": "Counteracties"
+    ,"Restore Counter": "Counter herstellen"
+    ,"Last backup": "Laatste back-up"
+    ,"Backup created": "Back-up gemaakt"
+    ,"Moved to Recently Deleted": "Verplaatst naar Recent verwijderd"
+    ,"Deleted permanently": "Definitief verwijderd"
+    ,"Recently Deleted emptied": "Recent verwijderd is leeggemaakt"
+    ,"No recently deleted counters.": "Geen recent verwijderde counters."
+    ,"days remaining": "dagen resterend"
+    ,"day remaining": "dag resterend"
+    ,"items": "items"
+    ,"item": "item"
+    ,"Released": "Uitgebracht"
+    ,"Current build": "Huidige build"
+    ,"View What’s New": "Bekijk wat er nieuw is"
+    ,"Release History": "Versiegeschiedenis"
+    ,"Previous releases": "Vorige versies"
+    ,"Contact and suggestions": "Contact en suggesties"
+    ,"Help shape Telly Tasks": "Help Telly Tasks verbeteren"
+    ,"Built together": "Samen ontwikkeld"
+    ,"Software should respect its users": "Software hoort gebruikers te respecteren"
+    ,"Keep Telly Tasks independent": "Help Telly Tasks onafhankelijk te houden"
+    ,"Hi, I’m Martijn P.": "Hoi, ik ben Martijn P."
+    ,"Made with care in the Netherlands.": "Met zorg gemaakt in Nederland."
+
+  }
 };
-const state=JSON.parse(localStorage.getItem('tellyTasksSettings')||'{}');
-state.theme=state.theme||'emerald-lite';state.size=state.size||'1';state.language=state.language||'auto';
-function lang(){if(state.language!=='auto')return state.language;return (navigator.language||'nl').toLowerCase().startsWith('nl')?'nl':'en'}
-function t(k){return translations[lang()][k]||k}
-function save(){localStorage.setItem('tellyTasksSettings',JSON.stringify(state))}
-function apply(){document.documentElement.dataset.theme=state.theme;document.documentElement.style.setProperty('--font-scale',state.size);document.documentElement.lang=lang();document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});themeSelect.value=state.theme;sizeSelect.value=state.size;languageSelect.value=state.language}
-function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)}
-function openModal(html){modal.innerHTML=html;modalWrap.classList.add('open')}
-function closeModal(){modalWrap.classList.remove('open')}
-function buttonClose(label=t('close')){return `<button class="primary" onclick="closeModal()">${label}</button>`}
-function showWhatsNew(){openModal(`<h2>${t('whatsNewTitle')}</h2><p>${t('intro')}</p><div class="card"><div class="row"><span class="row-icon">⌘</span><span class="row-main"><span class="row-title">${t('foundation')}</span><span class="row-sub">${t('foundationText')}</span></span></div><div class="row"><span class="row-icon">⌄</span><span class="row-main"><span class="row-title">${t('navigation')}</span><span class="row-sub">${t('navigationText')}</span></span></div><div class="row"><span class="row-icon">α</span><span class="row-main"><span class="row-title">${t('testStatus')}</span><span class="row-sub">${t('testStatusText')}</span></span></div></div><div class="modal-actions">${buttonClose(t('continue'))}</div>`)}
-function showHistory(){openModal(`<h2>${t('historyTitle')}</h2><div class="release current"><h4>0.1.0-alpha.1 — ${APP.release}</h4><p>${APP.date} · ${APP.build}<br>${t('foundationText')} ${t('navigationText')}</p></div><div class="modal-actions">${buttonClose()}</div>`)}
-function showVersion(){openModal(`<div class="version-card"><div class="app-mark">✓</div><h2>${APP.name}</h2><p>${t('versionTitle')}</p><div class="meta"><div><strong>${t('version')}</strong>${APP.version}</div><div><strong>${t('release')}</strong>${APP.release}</div><div><strong>${t('build')}</strong>${APP.build}</div><div><strong>${t('status')}</strong>${APP.status}</div><div style="grid-column:1/-1"><strong>${t('released')}</strong>${APP.date}</div></div></div><div class="modal-actions"><button class="secondary" onclick="showWhatsNew()">${t('whatsNew')}</button>${buttonClose()}</div>`)}
 
-document.querySelectorAll('.tab[data-view]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(btn.dataset.view).classList.add('active');document.querySelector('h1').textContent=btn.dataset.view==='settingsView'?t('settings'):t('tasksTitle');window.scrollTo({top:0,behavior:'smooth'})}));
-themeSelect.addEventListener('change',e=>{state.theme=e.target.value;save();apply()});sizeSelect.addEventListener('change',e=>{state.size=e.target.value;save();apply()});languageSelect.addEventListener('change',e=>{state.language=e.target.value;save();apply()});
-newTaskPreview.addEventListener('click',()=>showToast(t('notYet')));whatsNewBtn.addEventListener('click',showWhatsNew);historyBtn.addEventListener('click',showHistory);versionBtn.addEventListener('click',showVersion);infoBtn.addEventListener('click',showVersion);modalWrap.addEventListener('click',e=>{if(e.target===modalWrap)closeModal()});
-apply();
-if(!localStorage.getItem('tellyTasksSeenBuild')){setTimeout(showWhatsNew,300);localStorage.setItem('tellyTasksSeenBuild',APP.build)}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').then(reg=>{reg.addEventListener('updatefound',()=>{const worker=reg.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller){openModal(`<h2>${t('updateTitle')}</h2><p>${t('updateText')}</p><div class="modal-actions"><button class="secondary" onclick="closeModal()">${t('laterButton')}</button><button class="primary" onclick="location.reload()">${t('updateNow')}</button></div>`)}})})}).catch(()=>{})}
-</script>
+function currentLanguage() {
+  const pref = state.settings.language || "auto";
+  if (pref === "en" || pref === "nl") return pref;
+  return (navigator.language || "en").toLowerCase().startsWith("nl") ? "nl" : "en";
+}
+
+function translateString(value) {
+  const lang = currentLanguage();
+  if (lang !== "nl") return value;
+
+  const trimmed = String(value || "").trim();
+  if (I18N.nl[trimmed]) return I18N.nl[trimmed];
+
+  let match = trimmed.match(/^(\d+)\s+days since last entry$/i);
+  if (match) return `${match[1]} dagen sinds het laatste item`;
+
+  match = trimmed.match(/^1 day since last entry$/i);
+  if (match) return "1 dag sinds het laatste item";
+
+  match = trimmed.match(/^(\d+)\s+days later$/i);
+  if (match) return `${match[1]} dagen later`;
+
+  match = trimmed.match(/^1 day later$/i);
+  if (match) return "1 dag later";
+
+  match = trimmed.match(/^(\d+)\s+items$/i);
+  if (match) return `${match[1]} items`;
+
+  match = trimmed.match(/^(\d+)\s+entries$/i);
+  if (match) return `${match[1]} items`;
+
+  match = trimmed.match(/^(\d+)\s+item$/i);
+  if (match) return `${match[1]} item`;
+
+  match = trimmed.match(/^(\d+)\s+entry$/i);
+  if (match) return `${match[1]} item`;
+
+  match = trimmed.match(/^Version\s+(.+)$/i);
+  if (match) return `Versie ${match[1]}`;
+
+  return value;
+}
+
+function applyTranslations(root = document) {
+  const lang = currentLanguage();
+  document.documentElement.lang = lang;
+
+  root.querySelectorAll("input[placeholder], textarea[placeholder]").forEach(el => {
+    el.placeholder = translateString(el.placeholder);
+  });
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(node => {
+    const parent = node.parentElement;
+    if (!parent || ["SCRIPT","STYLE"].includes(parent.tagName)) return;
+
+    const original = node.nodeValue;
+    const trimmed = original.trim();
+    if (!trimmed) return;
+
+    const translated = translateString(trimmed);
+    if (translated !== trimmed) {
+      node.nodeValue = original.replace(trimmed, translated);
+    }
+  });
+}
+
+function setLanguagePreference(value) {
+  state.settings.language = value;
+  saveState(state, false);
+  render();
+  setTimeout(() => applyTranslations(document), 0);
+}
+
+function languageLabel() {
+  const pref = state.settings.language || "auto";
+  if (pref === "nl") return "Nederlands";
+  if (pref === "en") return "English";
+  return currentLanguage() === "nl" ? "Automatisch, Nederlands" : "Automatic, English";
+}
+
+function openLanguageDialog() {
+  const pref = state.settings.language || "auto";
+  const dialog = document.createElement("dialog");
+  dialog.innerHTML = `
+    <div class="modal">
+      <h2>Language</h2>
+      <div class="language-options">
+        <button class="settings-row ${pref === "auto" ? "selected-language" : ""}" onclick="setLanguagePreference('auto'); this.closest('dialog').remove()"><span>Automatic</span><span>${pref === "auto" ? "✓" : ""}</span></button>
+        <button class="settings-row ${pref === "en" ? "selected-language" : ""}" onclick="setLanguagePreference('en'); this.closest('dialog').remove()"><span>English</span><span>${pref === "en" ? "✓" : ""}</span></button>
+        <button class="settings-row ${pref === "nl" ? "selected-language" : ""}" onclick="setLanguagePreference('nl'); this.closest('dialog').remove()"><span>Nederlands</span><span>${pref === "nl" ? "✓" : ""}</span></button>
+      </div>
+      <div class="modal-actions"><button onclick="this.closest('dialog').remove()">Cancel</button></div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+  applyTranslations(dialog);
+  dialog.showModal();
+}
+
+
+const nativeAlert = window.alert.bind(window);
+const nativePrompt = window.prompt.bind(window);
+const nativeConfirm = window.confirm.bind(window);
+
+window.alert = message => nativeAlert(translateString(message));
+window.prompt = (message, defaultValue) => nativePrompt(translateString(message), defaultValue);
+window.confirm = message => nativeConfirm(translateString(message));
+
+const translationObserver = new MutationObserver(mutations => {
+  for (const mutation of mutations) {
+    mutation.addedNodes.forEach(node => {
+      if (node.nodeType === 1) applyTranslations(node);
+    });
+  }
+});
+
+function statusClass() {
+  const status = (TJ_STATUS || "").toLowerCase();
+  if (status.includes("stable")) return "stable-status";
+  if (status.includes("test")) return "test-status";
+  return "development-status";
+}
+
+function openStatusInfo() {
+  const isStable = TJ_STATUS === "Stable";
+  const text = isStable
+    ? "This is the recommended public release. It has passed testing and is intended for daily use."
+    : "This version contains new features that are still being evaluated. Bugs or visual changes may occur.";
+  const dialog = document.createElement("dialog");
+  dialog.innerHTML = `<div class="modal"><div class="help-hero-icon">${isStable ? "🟢" : "🟡"}</div><h2>${TJ_STATUS}</h2><p class="help-copy">${text}</p><div class="modal-actions"><button class="primary" onclick="this.closest('dialog').remove()">Close</button></div></div>`;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function formatFriendlyDate(value) {
+  if (!value) return "Never";
+  return new Intl.DateTimeFormat(currentLanguage() === "nl" ? "nl-NL" : "en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(new Date(value));
+}
+
+function sameCalendarDay(a, b) {
+  if (!a || !b) return false;
+  return new Date(a).toDateString() === new Date(b).toDateString();
+}
+
+function hasUnbackedChanges() {
+  const changed = state.settings.lastDataChangeAt;
+  const backedUp = state.settings.lastBackupAt;
+
+  if (!changed) return false;
+  if (!backedUp) return state.counters.some(counter => (counter.entries || []).length > 0);
+  return new Date(changed) > new Date(backedUp);
+}
+
+function showBackupReminder() {
+  const dialog = document.createElement("dialog");
+  dialog.className = "tj-system-dialog";
+  dialog.innerHTML = `
+    <div class="modal">
+      <div class="help-hero-icon">💾</div>
+      <h2>Backup recommended</h2>
+      <p class="help-copy">
+        Your journal contains changes that have not been backed up yet.
+      </p>
+      <p class="help-copy">
+        Telly Tasks is currently under active development. Creating a backup only takes a few seconds and helps protect your data.
+      </p>
+      <div class="modal-actions stacked-actions">
+        <button class="primary" onclick="exportJson(state); this.closest('dialog').remove()">${currentLanguage() === "nl" ? "Back-up maken" : "Create Backup"}</button>
+        <button onclick="dismissBackupReminder(this.closest('dialog'))">Remind Me Later</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+  dialog.addEventListener("close", () => dialog.remove());
+  dialog.showModal();
+}
+
+function dismissBackupReminder(dialog) {
+  state.settings.backupReminderDismissedAt = new Date().toISOString();
+  saveState(state, false);
+  dialog.remove();
+}
+
+function runStartupChecks() {
+  if (startupChecksCompleted || locked || !state.settings.onboardingCompleted) return;
+  startupChecksCompleted = true;
+
+  const dismissedToday = sameCalendarDay(
+    state.settings.backupReminderDismissedAt,
+    new Date().toISOString()
+  );
+
+  if (hasUnbackedChanges() && !dismissedToday) {
+    setTimeout(showBackupReminder, 450);
+  }
+}
+
+function showOnboarding(step = 0) {
+  const pages = currentLanguage() === "nl" ? [
+    {
+      icon: "👋",
+      title: "Welkom bij Telly Tasks",
+      body: "Leg momenten, gewoontes en terugkerende gebeurtenissen vast met één tik. Iedere invoer krijgt automatisch een datum en tijd."
+    },
+    {
+      icon: "🧠",
+      title: "Ontstaan vanuit ADHD",
+      body: "Telly Tasks is gemaakt om gedrag, routines en terugkerende situaties beter te herkennen. De app is er voor iedereen die meer inzicht wil in het dagelijks leven."
+    },
+    {
+      icon: "📅",
+      title: "Zie hoeveel tijd ertussen zit",
+      body: "Per counter kun je dagen tussen items tonen. Zo zie je direct hoeveel tijd tussen twee momenten zit en hoelang het laatste item geleden is."
+    },
+    {
+      icon: "💾",
+      title: "Bescherm je gegevens",
+      body: "Jouw gegevens blijven lokaal op je toestel. Maak regelmatig een JSON-back-up, zeker zolang Telly Tasks actief wordt ontwikkeld."
+    }
+  ] : [
+    {
+      icon: "👋",
+      title: "Welcome to Telly Tasks",
+      body: "Telly Tasks helps you record moments, habits and recurring events with a single tap. Every entry receives a date and time."
+    },
+    {
+      icon: "🧠",
+      title: "Inspired by ADHD",
+      body: "Telly Tasks was created to help recognize behaviours, routines and recurring situations. It is useful for anyone who wants more insight into everyday life."
+    },
+    {
+      icon: "📅",
+      title: "See the time between moments",
+      body: "Each counter can optionally show the days between entries and how long it has been since the latest entry."
+    },
+    {
+      icon: "💾",
+      title: "Keep your data safe",
+      body: "Your data stays on your device. Create regular JSON backups, especially while Telly Tasks is under active development."
+    }
+  ];
+
+  const page = pages[step];
+  const dialog = document.createElement("dialog");
+  dialog.className = "tj-onboarding";
+  dialog.innerHTML = `
+    <div class="modal onboarding-card">
+      <div class="onboarding-progress">${pages.map((_, i) => `<span class="${i === step ? "active" : ""}"></span>`).join("")}</div>
+      <div class="onboarding-icon">${page.icon}</div>
+      <h2>${page.title}</h2>
+      <p>${page.body}</p>
+
+      <div class="modal-actions stacked-actions">
+        ${step === pages.length - 1
+          ? `<button class="primary" onclick="exportJson(state)">${currentLanguage() === "nl" ? "Back-up maken" : "Create Backup"}</button>
+             <button onclick="finishOnboarding(this.closest('dialog'))">${currentLanguage() === "nl" ? "Doorgaan" : "Continue"}</button>`
+          : `<button class="primary" onclick="nextOnboarding(${step + 1}, this.closest('dialog'))">${currentLanguage() === "nl" ? "Doorgaan" : "Continue"}</button>`
+        }
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function nextOnboarding(step, dialog) {
+  dialog.remove();
+  showOnboarding(step);
+}
+
+function finishOnboarding(dialog) {
+  state.settings.onboardingCompleted = true;
+  state.settings.lastSeenVersion = TJ_VERSION;
+  saveState(state, false);
+  dialog.remove();
+  render();
+  setTimeout(runStartupChecks, 350);
+}
+
+function replayOnboarding() {
+  showOnboarding(0);
+}
+
+function openContact(type) {
+  const nl = currentLanguage() === "nl";
+  const subjects = nl ? {
+    feedback: "Telly Tasks - Algemene feedback",
+    bug: "Telly Tasks - Foutmelding",
+    feature: "Telly Tasks - Functievoorstel",
+    question: "Telly Tasks - Vraag"
+  } : {
+    feedback: "Telly Tasks Feedback",
+    bug: "Telly Tasks Bug Report",
+    feature: "Telly Tasks Feature Request",
+    question: "Telly Tasks Question"
+  };
+
+  const prompts = nl ? {
+    feedback: "Deel hieronder jouw feedback:",
+    bug: "Wat gebeurde er en wat verwachtte je?",
+    feature: "Beschrijf hieronder jouw idee:",
+    question: "Stel hieronder jouw vraag:"
+  } : {
+    feedback: "Please share your feedback below:",
+    bug: "What happened? What did you expect to happen?",
+    feature: "Please describe your idea below:",
+    question: "Please write your question below:"
+  };
+
+  const subject = `${subjects[type]} - v${TJ_VERSION} - Build ${TJ_BUILD}`;
+  const body = `${prompts[type]}
+
+${nl ? "Appversie" : "App version"}: ${TJ_VERSION}
+Release: ${TJ_RELEASE}
+Build: ${TJ_BUILD}
+${nl ? "Thema" : "Theme"}: ${themeLabel(state.settings.theme)}
+${nl ? "Weergavegrootte" : "Interface size"}: ${sizeLabel(state.settings.interfaceSize)}
+Platform: ${navigator.platform || "Unknown"}
+
+`;
+
+  window.location.href = `mailto:${TJ_CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+const HELP_ARTICLES = {
+  welcome: {
+    icon: "👋",
+    title: "Welcome",
+    subtitle: "Welcome to Telly Tasks",
+    body: `
+      <p>Thank you for choosing Telly Tasks.</p>
+      <p>I created Telly Tasks because I wanted something simple. Not another complicated journal. Not another basic tally counter.</p>
+      <p>I wanted a place where every tap could become a meaningful moment. Every count can tell a story.</p>
+      <p>I hope Telly Tasks becomes just as useful for you as it has been for me.</p>
+    `
+  },
+  what: {
+    icon: "📖",
+    title: "What is Telly Tasks?",
+    subtitle: "More than just a tally counter",
+    body: `
+      <p>Most tally apps increase a number. Telly Tasks remembers why.</p>
+      <p>Every entry can include a date, time and note. Together they create a timeline that helps you look back, understand patterns and remember important moments.</p>
+      <p><strong>Simple to use. Powerful over time.</strong></p>
+    `
+  },
+  why: {
+    icon: "💚",
+    title: "Why was it created?",
+    subtitle: "A personal project",
+    body: `
+      <p>The idea behind Telly Tasks came from everyday life.</p>
+      <p>I often wanted to remember when something happened, how often it occurred or what was going on at that moment.</p>
+      <p>A diary felt like too much. A spreadsheet felt too complicated. A normal tally counter was not enough.</p>
+      <p>So I built something in between. Something that stays fast while adding context to every count.</p>
+    `
+  },
+  adhd: {
+    icon: "🧠",
+    title: "ADHD as Inspiration",
+    subtitle: "Inspired by real life",
+    body: `
+      <p>Telly Tasks was originally created with people with ADHD in mind.</p>
+      <p>Many people struggle to remember when something happened or to recognize patterns over time. By recording moments with a single tap, those patterns slowly become visible.</p>
+      <p>Although ADHD inspired the project, Telly Tasks is not only an ADHD app. It is a journal for anyone who wants more insight into habits, routines and everyday life.</p>
+      <p>Telly Tasks does not diagnose conditions or replace professional advice. It simply helps you collect and review information about your own life.</p>
+    `
+  },
+  everyone: {
+    icon: "🌍",
+    title: "For Everyone",
+    subtitle: "Track what matters",
+    body: `
+      <p>Use Telly Tasks for anything you want.</p>
+      <div class="example-grid">
+        <span>❤️ Relationships</span><span>💊 Medication</span>
+        <span>💪 Fitness</span><span>😴 Sleep</span>
+        <span>📚 Reading</span><span>😊 Mood</span>
+        <span>🧠 Migraines</span><span>☕ Caffeine</span>
+        <span>🐶 Pets</span><span>🔧 Maintenance</span>
+        <span>🎯 Personal goals</span><span>💼 Work</span>
+      </div>
+      <p><strong>Your journal. Your story.</strong></p>
+    `
+  },
+  features: {
+    icon: "✨",
+    title: "Features",
+    subtitle: "Current features",
+    body: `
+      <ul class="help-list">
+        <li>Unlimited counters</li>
+        <li>Entries with date and time</li>
+        <li>Optional notes</li>
+        <li>Counter archive</li>
+        <li>JSON import and backup</li>
+        <li>CSV export</li>
+        <li>PIN protection</li>
+        <li>Multiple themes</li>
+        <li>Adjustable interface size</li>
+        <li>Private local storage</li>
+        <li>Optional day-gap markers between entries</li>
+        <li>Days since last entry</li>
+      </ul>
+      <p>More features are added with every release.</p>
+    `
+  },
+
+  timelineInsights: {
+    icon: "📅",
+    title: "Timeline Insights",
+    subtitle: "See the time between entries",
+    body: `
+      <p>Some patterns only become clear when you can see the time between moments.</p>
+      <p>For each counter, you can choose to display subtle day-gap markers between entries.</p>
+      <ol class="help-list numbered">
+        <li>Open the three-dot menu on a counter.</li>
+        <li>Choose <strong>Show Days Between Entries</strong>.</li>
+        <li>Open the counter timeline.</li>
+      </ol>
+      <p>The timeline will show markers such as <strong>3 days later</strong> between entries. It can also show how many days have passed since the latest entry.</p>
+      <p>The setting is stored separately for each counter and is included in backups and duplicates.</p>
+    `
+  },
+
+  gettingStarted: {
+    icon: "🚀",
+    title: "Getting Started",
+    subtitle: "Your first journal",
+    body: `
+      <ol class="help-list numbered">
+        <li>Create a counter.</li>
+        <li>Choose a name.</li>
+        <li>Pick an emoji.</li>
+        <li>Tap “+ Add Entry” whenever something happens.</li>
+        <li>Add a note if you want.</li>
+        <li>Use the three-dot menu to enable Show Days Between Entries when you want extra timeline context.</li>
+      </ol>
+      <p>That is all you need to start building a useful timeline.</p>
+    `
+  },
+  backup: {
+    icon: "💾",
+    title: "Backup Reminder",
+    subtitle: "Keep your journal safe",
+    body: `
+      <p>Telly Tasks is currently under active development. New features and improvements are released regularly.</p>
+      <p>Although every release is tested carefully, I recommend creating a backup after adding or changing important information.</p>
+      <p>Go to <strong>Settings → Export Backup</strong>. A backup only takes a few seconds.</p>
+      <button class="primary help-action" onclick="exportJson(state)">Create Backup Now</button>
+      <div class="info-card">
+        <span>Last backup</span>
+        <strong>${formatFriendlyDate(state.settings.lastBackupAt)}</strong>
+      </div>
+    `
+  },
+  faq: {
+    icon: "❓",
+    title: "FAQ",
+    subtitle: "Frequently asked questions",
+    body: `
+      <div class="faq-item"><strong>Is my data stored online?</strong><p>No. Everything stays on your own device.</p></div>
+      <div class="faq-item"><strong>Do I need an account?</strong><p>No. Telly Tasks works without accounts.</p></div>
+      <div class="faq-item"><strong>Are there advertisements?</strong><p>No. Telly Tasks is designed to remain ad-free.</p></div>
+      <div class="faq-item"><strong>Is my data tracked?</strong><p>No. Privacy always comes first.</p></div>
+      <div class="faq-item"><strong>Can I restore my data?</strong><p>Yes. Import your latest JSON backup from Settings.</p></div>
+      <div class="faq-item"><strong>Why do I see backup reminders?</strong><p>The app is under active development. Regular backups help protect your journal while frequent updates are released.</p></div>
+      <div class="faq-item"><strong>What are the green day markers?</strong><p>They show how many calendar days passed between two entries. You can enable or disable them separately for each counter.</p></div>
+      <div class="faq-item"><strong>Why do some entries have no day marker?</strong><p>Markers only appear when at least one full calendar day separates two entries. Entries on the same day stay visually grouped.</p></div>
+    `
+  },
+  roadmap: {
+    icon: "🗺️",
+    title: "Roadmap",
+    subtitle: "What is next?",
+    body: `
+      <div class="roadmap-timeline">
+        <div class="roadmap-step complete"><span>✓</span><div><strong>2.4 Recovery</strong><small>Updates, backups and Recently Deleted</small></div></div>
+        <div class="roadmap-step current"><span>◉</span><div><strong>2.5 User Experience</strong><small>Card Menu, Help Center and navigation</small></div></div>
+        <div class="roadmap-step"><span>○</span><div><strong>2.6 Languages</strong><small>Automatic, English and Dutch</small></div></div>
+        <div class="roadmap-step"><span>○</span><div><strong>2.7 Productivity</strong><small>Multi Select and bulk actions</small></div></div>
+        <div class="roadmap-step"><span>○</span><div><strong>2.8 Insights</strong><small>Statistics, trends and visual summaries</small></div></div>
+        <div class="roadmap-step future"><span>☆</span><div><strong>3.0 App Store</strong><small>Review options for an official App Store release</small></div></div>
+      </div>
+      <p>The roadmap may change based on testing and feedback.</p>
+    `
+  },
+  whatsNew: {
+    icon: "🆕",
+    title: "What’s New",
+    subtitle: "Release history",
+    body: `
+      <div class="release-card current">
+        <strong>Versie 2.6.0</strong><span>Natural Dutch · Build ${TJ_BUILD}</span>
+        <ul>
+          <li>Alle vaste appteksten volledig naar het Nederlands vertaald</li>
+          <li>Intro, Hulp en tips, overlays, meldingen en menu’s bijgewerkt</li>
+          <li>Engelse counternamen en eigen notities blijven ongewijzigd</li>
+          <li>Groen rondje bij de huidige roadmapversie verwijderd</li>
+        </ul>
+      </div>
+    `
+  },
+  feedback: {
+    icon: "💬",
+    title: "Feedback & Contact",
+    subtitle: "Help shape Telly Tasks",
+    body: `
+      <p>Telly Tasks grows through real feedback. If you have an idea, found a bug or simply want to share your experience, I would love to hear from you.</p>
+      <button class="contact-card" onclick="openContact('feedback')"><span>💬</span><div><strong>Send Feedback</strong><small>Share your thoughts and experience.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('bug')"><span>🐞</span><div><strong>Report a Bug</strong><small>Tell me what happened and what you expected.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('feature')"><span>💡</span><div><strong>Request a Feature</strong><small>Share an idea that could improve the app.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('question')"><span>❓</span><div><strong>Ask a Question</strong><small>Need help? Feel free to contact me.</small></div><b>›</b></button>
+      <p class="contact-address">${TJ_CONTACT_EMAIL}</p>
+    `
+  },
+  community: {
+    icon: "❤️",
+    title: "Community",
+    subtitle: "Built together",
+    body: `
+      <p>Although Telly Tasks started as a personal project, it continues to grow thanks to the people who use it every day.</p>
+      <p>Every suggestion, bug report and conversation helps shape the future of the app.</p>
+      <p>Thank you for being part of that journey.</p>
+    `
+  },
+  philosophy: {
+    icon: "🛡️",
+    title: "My Philosophy",
+    subtitle: "Software should respect its users",
+    body: `
+      <div class="principles">
+        <span>Privacy First</span><span>Local First</span>
+        <span>No Ads</span><span>No Tracking</span>
+        <span>No Required Account</span><span>Premium Experience</span>
+      </div>
+      <p>I do not build features to collect more data or increase screen time. I build features because they genuinely improve the experience.</p>
+      <blockquote>Does this make Telly Tasks better for its users?</blockquote>
+      <p>If the answer is no, I do not build it.</p>
+      <p>Core journaling should remain simple, private and accessible without advertising or tracking.</p>
+    `
+  },
+  support: {
+    icon: "☕",
+    title: "Support Development",
+    subtitle: "Keep Telly Tasks independent",
+    body: `
+      <p>Telly Tasks is developed in my spare time.</p>
+      <p>If you enjoy using the app and would like to support future development, you will soon be able to buy me a coffee.</p>
+      <p>Your support will help me keep Telly Tasks ad-free, privacy-first and independent.</p>
+      <button disabled class="help-action disabled-action">Buy Me a Coffee · Coming Soon</button>
+    `
+  },
+  developer: {
+    icon: "👨‍💻",
+    title: "About the Developer",
+    subtitle: "Hi, I’m Martijn P.",
+    body: `
+      <p>Telly Tasks started because I could not find an app that worked the way I wanted.</p>
+      <p>I was not looking for another tally counter. I wanted something that could remember the story behind every count.</p>
+      <p>What started as a small personal project has grown through real use, feedback and ideas from others.</p>
+      <p>I continue to develop Telly Tasks one release at a time, with a strong focus on privacy, simplicity and quality.</p>
+      <p><strong>Thank you for trusting Telly Tasks with your memories.</strong></p>
+      <p class="made-in">Made with care in the Netherlands.</p>
+    `
+  }
+};
+
+
+const HELP_ARTICLES_NL = {
+  welcome: {
+    icon: "👋",
+    title: "Welkom",
+    subtitle: "Fijn dat je Telly Tasks gebruikt",
+    body: `
+      <p>Telly Tasks helpt je om momenten, gewoontes en terugkerende gebeurtenissen eenvoudig vast te leggen.</p>
+      <p>Elke tik wordt opgeslagen met een datum en tijd. Voeg een notitie toe wanneer je meer context wilt bewaren.</p>
+      <p>Zo ontstaat vanzelf een persoonlijk logboek waarin je kunt terugkijken en patronen kunt herkennen.</p>
+    `
+  },
+  what: {
+    icon: "📖",
+    title: "Zo werkt Telly Tasks",
+    subtitle: "Meer dan alleen een teller",
+    body: `
+      <p>Een gewone teller onthoudt alleen een getal. Telly Tasks bewaart ook wanneer iets gebeurde en waarom het voor jou belangrijk was.</p>
+      <p>Elke counter krijgt een eigen tijdlijn met datums, tijden en optionele notities.</p>
+      <p><strong>Snel vastleggen, later beter begrijpen.</strong></p>
+    `
+  },
+  why: {
+    icon: "💚",
+    title: "Waarom heb ik Telly Tasks gemaakt?",
+    subtitle: "Het verhaal achter de app",
+    body: `
+      <p>Ik zocht een eenvoudige manier om gebeurtenissen bij te houden zonder iedere keer een volledig dagboek te schrijven.</p>
+      <p>Een spreadsheet vond ik te omslachtig en een normale tally counter gaf te weinig context.</p>
+      <p>Daarom heb ik Telly Tasks gemaakt. Snel genoeg voor dagelijks gebruik, maar uitgebreid genoeg om later terug te zien wat er speelde.</p>
+    `
+  },
+  adhd: {
+    icon: "🧠",
+    title: "ADHD als inspiratie",
+    subtitle: "Ontstaan vanuit de praktijk",
+    body: `
+      <p>Telly Tasks is ontstaan vanuit mijn eigen behoefte om gedrag, routines en terugkerende situaties beter te herkennen.</p>
+      <p>Voor mensen met ADHD kan het lastig zijn om achteraf te bepalen wanneer iets gebeurde of hoe vaak een patroon terugkwam. Door een moment direct vast te leggen, wordt dat later beter zichtbaar.</p>
+      <p>De app is niet alleen bedoeld voor mensen met ADHD. Iedereen die meer inzicht wil in het dagelijks leven kan Telly Tasks gebruiken.</p>
+      <p>Telly Tasks stelt geen diagnose en vervangt geen professioneel advies.</p>
+    `
+  },
+  everyone: {
+    icon: "🌍",
+    title: "Voor iedereen",
+    subtitle: "Houd bij wat voor jou telt",
+    body: `
+      <p>Je bepaalt zelf waarvoor je Telly Tasks gebruikt.</p>
+      <div class="example-grid">
+        <span>❤️ Relaties</span><span>💊 Medicatie</span>
+        <span>💪 Sport</span><span>😴 Slaap</span>
+        <span>📚 Lezen</span><span>😊 Stemming</span>
+        <span>🧠 Hoofdpijn</span><span>☕ Cafeïne</span>
+        <span>🐶 Huisdieren</span><span>🔧 Onderhoud</span>
+        <span>🎯 Persoonlijke doelen</span><span>💼 Werk</span>
+      </div>
+      <p><strong>Jouw counters. Jouw verhaal.</strong></p>
+    `
+  },
+  features: {
+    icon: "✨",
+    title: "Functies",
+    subtitle: "Wat je nu al kunt doen",
+    body: `
+      <ul class="help-list">
+        <li>Onbeperkt counters aanmaken</li>
+        <li>Items opslaan met datum en tijd</li>
+        <li>Notities toevoegen</li>
+        <li>Counters archiveren en herstellen</li>
+        <li>Recent verwijderde counters terughalen</li>
+        <li>JSON-back-ups importeren en exporteren</li>
+        <li>Gegevens exporteren als CSV</li>
+        <li>De app beveiligen met een pincode</li>
+        <li>Kiezen uit meerdere thema’s en weergavegroottes</li>
+        <li>Optioneel dagen tussen items tonen</li>
+        <li>Direct zien hoeveel dagen sinds het laatste item zijn verstreken</li>
+      </ul>
+    `
+  },
+  timelineInsights: {
+    icon: "📅",
+    title: "Tijdlijninzichten",
+    subtitle: "Zie hoeveel tijd tussen momenten zit",
+    body: `
+      <p>Sommige patronen vallen pas op wanneer je ziet hoeveel tijd tussen twee items zit.</p>
+      <ol class="help-list numbered">
+        <li>Open bij een counter het menu met de drie puntjes.</li>
+        <li>Kies <strong>Dagen tussen items tonen</strong>.</li>
+        <li>Open daarna de tijdlijn van de counter.</li>
+      </ol>
+      <p>Tussen de items verschijnen subtiele groene markeringen, bijvoorbeeld <strong>3 dagen later</strong>.</p>
+      <p>Op Home zie je dan ook direct hoeveel dagen sinds het laatste item zijn verstreken.</p>
+      <p>Je stelt dit per counter in. De instelling wordt meegenomen in back-ups en bij het dupliceren van een counter.</p>
+    `
+  },
+  gettingStarted: {
+    icon: "🚀",
+    title: "Aan de slag",
+    subtitle: "Je eerste counter",
+    body: `
+      <ol class="help-list numbered">
+        <li>Maak een nieuwe counter aan.</li>
+        <li>Geef de counter een duidelijke naam.</li>
+        <li>Kies een passende emoji en kleur.</li>
+        <li>Tik op <strong>Item toevoegen</strong> zodra er iets gebeurt.</li>
+        <li>Voeg een notitie toe wanneer je later meer context wilt hebben.</li>
+      </ol>
+      <p>Meer hoef je niet te doen. Je tijdlijn groeit vanzelf mee.</p>
+    `
+  },
+  backup: {
+    icon: "💾",
+    title: "Back-ups",
+    subtitle: "Bescherm je gegevens",
+    body: `
+      <p>Jouw gegevens worden lokaal op je toestel opgeslagen. Er is geen account of online opslag nodig.</p>
+      <p>Maak regelmatig een JSON-back-up, zeker zolang Telly Tasks actief wordt ontwikkeld.</p>
+      <p>Ga naar <strong>Instellingen → Back-up exporteren</strong>. Bewaar het bestand op een veilige plek, bijvoorbeeld in iCloud Drive of Google Drive.</p>
+      <button class="primary help-action" onclick="exportJson(state)">Nu een back-up maken</button>
+      <div class="info-card">
+        <span>Laatste back-up</span>
+        <strong>${formatFriendlyDate(state.settings.lastBackupAt)}</strong>
+      </div>
+    `
+  },
+  faq: {
+    icon: "❓",
+    title: "Veelgestelde vragen",
+    subtitle: "Antwoorden op praktische vragen",
+    body: `
+      <div class="faq-item"><strong>Worden mijn gegevens online opgeslagen?</strong><p>Nee. Alles blijft lokaal op jouw toestel.</p></div>
+      <div class="faq-item"><strong>Heb ik een account nodig?</strong><p>Nee. Je kunt Telly Tasks zonder account gebruiken.</p></div>
+      <div class="faq-item"><strong>Bevat de app reclame of tracking?</strong><p>Nee. Telly Tasks bevat geen reclame en volgt jouw gebruik niet.</p></div>
+      <div class="faq-item"><strong>Hoe herstel ik mijn gegevens?</strong><p>Importeer via Instellingen jouw meest recente JSON-back-up.</p></div>
+      <div class="faq-item"><strong>Waarom krijg ik een back-upherinnering?</strong><p>Regelmatige back-ups beschermen je gegevens tijdens de actieve ontwikkeling van de app.</p></div>
+      <div class="faq-item"><strong>Wat betekenen de groene dagmarkeringen?</strong><p>Ze tonen hoeveel kalenderdagen tussen twee items zitten.</p></div>
+      <div class="faq-item"><strong>Waarom staat er soms geen dagmarkering?</strong><p>Items op dezelfde kalenderdag blijven bij elkaar staan. Een markering verschijnt pas vanaf één dag verschil.</p></div>
+    `
+  },
+  roadmap: {
+    icon: "🗺️",
+    title: "Roadmap",
+    subtitle: "Waar werken we naartoe?",
+    body: `
+      <div class="roadmap-timeline">
+        <div class="roadmap-step complete"><span>✓</span><div><strong>2.4 Herstel</strong><small>Updates, back-ups en Recent verwijderd</small></div></div>
+        <div class="roadmap-step complete"><span>✓</span><div><strong>2.5 Gebruikservaring</strong><small>Countermenu, Hulp en tips en betere navigatie</small></div></div>
+        <div class="roadmap-step current"><span>◉</span><div><strong>2.6 Talen</strong><small>Automatisch, Engels en Nederlands</small></div></div>
+        <div class="roadmap-step"><span>○</span><div><strong>2.7 Productiviteit</strong><small>Meerdere counters selecteren en bulkacties</small></div></div>
+        <div class="roadmap-step"><span>○</span><div><strong>2.8 Inzichten</strong><small>Statistieken, trends en visuele overzichten</small></div></div>
+        <div class="roadmap-step future"><span>☆</span><div><strong>3.0 App Store</strong><small>Onderzoeken wat nodig is voor een officiële App Store-release</small></div></div>
+      </div>
+      <p>De roadmap kan wijzigen op basis van tests, gebruik en feedback.</p>
+    `
+  },
+  whatsNew: {
+    icon: "🆕",
+    title: "Nieuw in deze versie",
+    subtitle: "Versie 2.6.0",
+    body: `
+      <div class="release-card current">
+        <strong>Versie 2.6.0</strong><span>Natural Dutch · Build ${TJ_BUILD}</span>
+        <ul>
+          <li>De volledige Nederlandse tekst is opnieuw geschreven</li>
+          <li>Intro, pincode, meldingen en Hulp en tips zijn volledig gelokaliseerd</li>
+          <li>Engels blijft als volwaardige taal beschikbaar</li>
+          <li>Eigen counternamen en notities worden nooit vertaald</li>
+        </ul>
+      </div>
+    `
+  },
+  feedback: {
+    icon: "💬",
+    title: "Feedback en contact",
+    subtitle: "Help Telly Tasks verbeteren",
+    body: `
+      <p>Een idee, vraag of fout gevonden? Kies hieronder wat het beste bij jouw bericht past.</p>
+      <button class="contact-card" onclick="openContact('bug')"><span>🐞</span><div><strong>Een fout melden</strong><small>Vertel wat er gebeurde en wat je verwachtte.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('feature')"><span>💡</span><div><strong>Een functie aanvragen</strong><small>Deel een idee waarmee Telly Tasks beter wordt.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('feedback')"><span>💬</span><div><strong>Algemene feedback</strong><small>Deel jouw ervaring of gedachten.</small></div><b>›</b></button>
+      <button class="contact-card" onclick="openContact('question')"><span>❓</span><div><strong>Een vraag stellen</strong><small>Hulp nodig? Neem gerust contact op.</small></div><b>›</b></button>
+      <p class="contact-address">${TJ_CONTACT_EMAIL}</p>
+    `
+  },
+  community: {
+    icon: "❤️",
+    title: "Community",
+    subtitle: "Samen ontwikkeld",
+    body: `
+      <p>Telly Tasks begon als een persoonlijk project, maar groeit door de mensen die de app gebruiken.</p>
+      <p>Iedere suggestie, foutmelding en ervaring helpt om de app beter te maken.</p>
+      <p>Bedankt dat je hieraan bijdraagt.</p>
+    `
+  },
+  philosophy: {
+    icon: "🛡️",
+    title: "Mijn visie",
+    subtitle: "Software hoort gebruikers te respecteren",
+    body: `
+      <div class="principles">
+        <span>Privacy voorop</span><span>Lokaal opgeslagen</span>
+        <span>Geen reclame</span><span>Geen tracking</span>
+        <span>Geen verplicht account</span><span>Rustige gebruikservaring</span>
+      </div>
+      <p>Ik voeg alleen functies toe wanneer ze Telly Tasks duidelijk beter maken.</p>
+      <blockquote>Wordt de app hierdoor eenvoudiger, nuttiger of prettiger?</blockquote>
+      <p>Is het antwoord nee, dan hoort de functie niet in de app.</p>
+      <p>De basis moet eenvoudig, privé en toegankelijk blijven.</p>
+    `
+  },
+  support: {
+    icon: "☕",
+    title: "Ontwikkeling steunen",
+    subtitle: "Help Telly Tasks onafhankelijk te blijven",
+    body: `
+      <p>Ik ontwikkel Telly Tasks in mijn vrije tijd.</p>
+      <p>Later kun je de ontwikkeling ondersteunen met een eenmalige bijdrage, bijvoorbeeld via Buy Me a Coffee.</p>
+      <p>Zo kan Telly Tasks onafhankelijk, reclamevrij en privacygericht blijven.</p>
+      <button disabled class="help-action disabled-action">Buy Me a Coffee · Binnenkort</button>
+    `
+  },
+  developer: {
+    icon: "👨‍💻",
+    title: "Over de ontwikkelaar",
+    subtitle: "Hoi, ik ben Martijn P.",
+    body: `
+      <p>Telly Tasks ontstond omdat ik geen app kon vinden die werkte zoals ik wilde.</p>
+      <p>Ik zocht geen gewone teller, maar een eenvoudige manier om het verhaal achter ieder getal te bewaren.</p>
+      <p>Wat begon als een klein persoonlijk project, groeit door dagelijks gebruik, feedback en nieuwe ideeën.</p>
+      <p>Ik ontwikkel de app stap voor stap, met aandacht voor privacy, eenvoud en kwaliteit.</p>
+      <p><strong>Bedankt voor het vertrouwen in Telly Tasks.</strong></p>
+      <p class="made-in">Met zorg gemaakt in Nederland.</p>
+    `
+  }
+};
+
+const HELP_ITEMS_NL = [
+  ["welcome", "👋", "Welkom"],
+  ["what", "📖", "Zo werkt Telly Tasks"],
+  ["why", "💚", "Waarom heb ik Telly Tasks gemaakt?"],
+  ["adhd", "🧠", "ADHD als inspiratie"],
+  ["everyone", "🌍", "Voor iedereen"],
+  ["features", "✨", "Functies"],
+  ["timelineInsights", "📅", "Tijdlijninzichten"],
+  ["gettingStarted", "🚀", "Aan de slag"],
+  ["backup", "💾", "Back-ups"],
+  ["faq", "❓", "Veelgestelde vragen"],
+  ["community", "❤️", "Community"],
+  ["philosophy", "🛡️", "Mijn visie"],
+  ["developer", "👨‍💻", "Over de ontwikkelaar"]
+];
+
+const HELP_ITEMS = [
+  ["welcome", "👋", "Welcome"],
+  ["what", "📖", "What is Telly Tasks?"],
+  ["why", "💚", "Why was it created?"],
+  ["adhd", "🧠", "ADHD as Inspiration"],
+  ["everyone", "🌍", "For Everyone"],
+  ["features", "✨", "Features"],
+  ["timelineInsights", "📅", "Timeline Insights"],
+  ["gettingStarted", "🚀", "Getting Started"],
+  ["backup", "💾", "Backup Reminder"],
+  ["faq", "❓", "FAQ"],
+  ["community", "❤️", "Community"],
+  ["philosophy", "🛡️", "My Philosophy"],
+  ["developer", "👨‍💻", "About the Developer"]
+];
+
+
+
+function cleanupRecentlyDeleted() {
+  const cutoff = Date.now() - 30 * 86400000;
+  const before = state.deletedCounters.length;
+  state.deletedCounters = state.deletedCounters.filter(c => new Date(c.deletedAt || 0).getTime() >= cutoff);
+  if (before !== state.deletedCounters.length) saveState(state, false);
+}
+function moveCounterToRecentlyDeleted(counterId) {
+  const counter = getCounter(counterId); if (!counter) return;
+  state.deletedCounters.push({...JSON.parse(JSON.stringify(counter)), deletedAt:new Date().toISOString()});
+  state.counters = state.counters.filter(c => c.id !== counterId);
+  selectedCounterId = null; saveState(state); showToast("Moved to Recently Deleted"); render();
+}
+function restoreDeletedCounter(counterId) {
+  const item = state.deletedCounters.find(c => c.id===counterId); if(!item) return;
+  const restored=JSON.parse(JSON.stringify(item)); delete restored.deletedAt; restored.archived=false;
+  if(state.counters.some(c=>c.id===restored.id)) restored.id=uid();
+  state.counters.push(restored); state.deletedCounters=state.deletedCounters.filter(c=>c.id!==counterId);
+  saveState(state); showToast("Counter restored"); renderRecentlyDeleted();
+}
+function permanentlyDeleteCounter(counterId) {
+  const item=state.deletedCounters.find(c=>c.id===counterId); if(!item) return;
+  if(!confirm(`Permanently delete "${item.name}"? This cannot be undone.`)) return;
+  state.deletedCounters=state.deletedCounters.filter(c=>c.id!==counterId); saveState(state); showToast("Deleted permanently"); renderRecentlyDeleted();
+}
+function emptyRecentlyDeleted() {
+  if(!state.deletedCounters.length || !confirm("Permanently delete all recently deleted counters?")) return;
+  state.deletedCounters=[]; saveState(state); showToast("Recently Deleted emptied"); renderRecentlyDeleted();
+}
+function daysRemaining(item) { return Math.max(0, Math.ceil((new Date(item.deletedAt).getTime()+30*86400000-Date.now())/86400000)); }
+function renderRecentlyDeleted() {
+  cleanupRecentlyDeleted(); screen="deleted"; selectedCounterId=null;
+  app.innerHTML=`<div class="header"><div><div class="eyebrow">Recovery</div><h1>Recently Deleted</h1><div class="subtitle">${state.deletedCounters.length} ${state.deletedCounters.length === 1 ? "item" : "items"} · Automatically removed after 30 days.</div></div><button onclick="returnToSettings()">Done</button></div>${state.deletedCounters.length?`<button class="settings-row danger" onclick="emptyRecentlyDeleted()"><span>Empty Recently Deleted</span><span>${state.deletedCounters.length}</span></button><div class="list deleted-list">${state.deletedCounters.slice().sort((a,b)=>new Date(b.deletedAt)-new Date(a.deletedAt)).map(c=>`<div class="deleted-card" style="--accent:${c.color||'#d7b56d'}"><div class="emoji">${escapeHtml(c.emoji||'📌')}</div><div class="deleted-content"><strong>${escapeHtml(c.name)}</strong><small>${(c.entries||[]).length} entries · ${daysRemaining(c)} days remaining</small></div><div class="deleted-actions"><button class="success" onclick="restoreDeletedCounter('${c.id}')">Restore</button><button class="danger" onclick="permanentlyDeleteCounter('${c.id}')">Delete</button></div></div>`).join('')}</div>`:`<div class="empty">No recently deleted counters.</div>`}`;
+  window.scrollTo(0,0);
+}
+
+function rememberSettingsScroll() {
+  if (screen === "settings") settingsScrollY = window.scrollY || 0;
+}
+
+function restoreSettingsScroll() {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => window.scrollTo(0, settingsScrollY || 0));
+  });
+}
+
+function openHelpFromSettings(articleId = null) {
+  rememberSettingsScroll();
+  if (articleId) renderHelpArticle(articleId);
+  else renderHelpCenter();
+}
+
+function returnToSettings() {
+  screen = "settings";
+  helpArticle = null;
+  renderSettings();
+  restoreSettingsScroll();
+}
+
+function renderStandaloneArticle(id, title) {
+  const article = currentLanguage() === "nl" ? HELP_ARTICLES_NL[id] : HELP_ARTICLES[id];
+  if (!article) return returnToSettings();
+  screen = "help"; helpArticle = id;
+  app.innerHTML = `<div class="header standalone-header"><button class="back-link" onclick="returnToSettings()">← Settings</button></div><article class="help-article"><div class="help-hero-icon">${article.icon}</div><div class="eyebrow">${article.subtitle}</div><h1>${title || article.title}</h1><div class="help-body">${article.body}</div></article>`;
+  window.scrollTo(0,0);
+}
+
+
+function renderVersionPage() {
+  screen = "version";
+  app.innerHTML = `
+    <div class="header standalone-header">
+      <button class="back-link" onclick="returnToSettings()">← Settings</button>
+    </div>
+    <article class="help-article">
+      <div class="help-hero-icon">ℹ️</div>
+      <div class="eyebrow">Current build</div>
+      <h1>Version ${TJ_VERSION}</h1>
+      <div class="help-body">
+        <div class="info-card"><span>Release</span><strong>${TJ_RELEASE}</strong></div>
+        <div class="info-card"><span>Build</span><strong>${TJ_BUILD}</strong></div>
+        <div class="info-card"><span>Status</span><strong>${TJ_STATUS}</strong></div>
+        <div class="info-card"><span>Released</span><strong>14 July 2026</strong></div>
+        <p>Professional update experience and release management improvements.</p>
+        <button class="settings-row" onclick="renderStandaloneArticle('whatsNew','What’s New')"><span>View What’s New</span><span>Open</span></button>
+        <button class="settings-row" onclick="renderReleaseHistory()"><span>Release History</span><span>View</span></button>
+      </div>
+    </article>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function renderReleaseHistory() {
+  screen = "history";
+  app.innerHTML = `
+    <div class="header standalone-header">
+      <button class="back-link" onclick="renderVersionPage()">← Version</button>
+    </div>
+    <article class="help-article">
+      <div class="help-hero-icon">🕘</div>
+      <div class="eyebrow">Vorige versies</div>
+      <h1>Versiegeschiedenis</h1>
+      <div class="help-body release-history">
+        <div class="release-card current"><strong>2.5.2</strong><span>Update Experience</span><ul><li>What’s New overlay</li><li>Version information page</li><li>Release history</li></ul></div>
+        <div class="release-card"><strong>2.5.1</strong><span>Home Insights</span><ul><li>Days since last entry on Home</li><li>Improved timeline insights</li></ul></div>
+        <div class="release-card"><strong>2.5.0</strong><span>User Experience</span><ul><li>Card menu</li><li>Resources and Help improvements</li></ul></div>
+        <div class="release-card"><strong>2.4.0</strong><span>Recovery</span><ul><li>Updates</li><li>Recently Deleted</li><li>Backup improvements</li></ul></div>
+      </div>
+    </article>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function showReleaseOverlayIfNeeded() {
+  if (state.settings.lastSeenReleaseBuild === TJ_BUILD) return;
+  const nl = currentLanguage() === "nl";
+  const dialog = document.createElement("dialog");
+  dialog.className = "release-overlay";
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Gebouwd vanuit de stabiele Telly Tasks-basis" : "Built from the stable Telly Tasks foundation"}</li><li>${nl ? "Dezelfde thema’s en instellingenopmaak" : "The same themes and Settings layout"}</li><li>${nl ? "Eerste visuele voorbeeldtaak met voortgang" : "First visual task preview with progress"}</li><li>${nl ? "Taken toegevoegd aan de onderste navigatie" : "Tasks added to the bottom navigation"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+function acknowledgeRelease(dialog) {
+  state.settings.lastSeenReleaseBuild = TJ_BUILD;
+  saveState(state, false);
+  if (dialog) dialog.remove();
+}
+
+function renderFeedbackCenter() {
+  screen = "feedback";
+  app.innerHTML = `<div class="header standalone-header"><button class="back-link" onclick="returnToSettings()">← Settings</button></div><article class="help-article"><div class="help-hero-icon">💬</div><div class="eyebrow">Contact en suggesties</div><h1>Feedback en contact</h1><div class="help-body"><p>Telly Tasks groeit door jouw feedback. Kies wat het beste bij jouw bericht past.</p><button class="contact-card" onclick="openContact('bug')"><span>🐞</span><div><strong>Report a Bug</strong><small>Tell me what happened and what you expected.</small></div><b>›</b></button><button class="contact-card" onclick="openContact('feature')"><span>💡</span><div><strong>Request a Feature</strong><small>Share an idea that could improve Telly Tasks.</small></div><b>›</b></button><button class="contact-card" onclick="openContact('feedback')"><span>💬</span><div><strong>General Feedback</strong><small>Share your experience or thoughts.</small></div><b>›</b></button><button class="contact-card" onclick="openContact('question')"><span>❓</span><div><strong>Ask a Question</strong><small>Need help? Feel free to contact me.</small></div><b>›</b></button><p class="contact-address">${TJ_CONTACT_EMAIL}</p></div></article>`;
+  window.scrollTo(0,0);
+}
+
+function renderSupportPage() { renderStandaloneArticle("support", "Support Development"); }
+
+function renderHelpCenter() {
+  screen = "help";
+  helpArticle = null;
+
+  app.innerHTML = `
+    <div class="header help-center-header"><div><button class="back-link" onclick="returnToSettings()">← Settings</button><div class="eyebrow">Guides and information</div><h1>Help & Tips</h1><div class="subtitle">Learn what Telly Tasks is and how to use it.</div></div></div>
+
+    <div class="help-list-grid">
+      ${(currentLanguage() === "nl" ? HELP_ITEMS_NL : HELP_ITEMS).map(([id, icon, title]) => `
+        <button class="help-row" onclick="renderHelpArticle('${id}')">
+          <span class="help-row-icon">${icon}</span>
+          <span>${title}</span>
+          <b>›</b>
+        </button>
+      `).join("")}
+    </div>
+
+    <button class="settings-row replay-intro" onclick="replayOnboarding()">
+      <span>Replay Welcome Guide</span><span>Open</span>
+    </button>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function renderHelpArticle(id) {
+  const article = currentLanguage() === "nl" ? HELP_ARTICLES_NL[id] : HELP_ARTICLES[id];
+  if (!article) return renderHelpCenter();
+
+  helpArticle = id;
+  app.innerHTML = `
+    <div class="header">
+      <button onclick="openHelpFromSettings()">← Back</button>
+      <button onclick="returnToSettings()">Done</button>
+    </div>
+
+    <article class="help-article">
+      <div class="help-hero-icon">${article.icon}</div>
+      <div class="eyebrow">${article.subtitle}</div>
+      <h1>${article.title}</h1>
+      <div class="help-body">${article.body}</div>
+    </article>
+  `;
+  window.scrollTo(0, 0);
+}
+
+
+function render() {
+  queueMicrotask(() => applyTranslations(document));
+  if (locked) return showLockScreen();
+
+  if (!state.settings.onboardingCompleted) {
+    if (!document.querySelector(".tj-onboarding")) showOnboarding(0);
+    return;
+  }
+
+  if (screen === "help") {
+    return helpArticle ? renderHelpArticle(helpArticle) : renderHelpCenter();
+  }
+  if (screen === "deleted") return renderRecentlyDeleted();
+
+  if (selectedCounterId) return renderDetail(selectedCounterId);
+  if (screen === "settings") {
+    renderSettings();
+  } else if (screen === "journal") {
+    renderJournal();
+  } else {
+    renderHome();
+  }
+
+  setTimeout(runStartupChecks, 300);
+  scheduleAutomaticUpdateCheck();
+  setTimeout(showReleaseOverlayIfNeeded, 900);
+  translationObserver.observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => applyTranslations(document), 50);
+}
+
+function renderHeader(title, subtitle, action = "") {
+  return `
+    <div class="header">
+      <div>
+        <div class="eyebrow">Focused task companion</div>
+        <h1>${title}</h1>
+        <div class="subtitle">${subtitle}</div>
+      </div>
+      ${action}
+    </div>
+  `;
+}
+
+function todayKey(date = new Date()) {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Amsterdam", dateStyle: "short" }).format(new Date(date));
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  return new Intl.DateTimeFormat(currentLanguage() === "nl" ? "nl-NL" : "en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(date) + " • " +
+         new Intl.DateTimeFormat(currentLanguage() === "nl" ? "nl-NL" : "en-GB", { timeStyle: "short" }).format(date);
+}
+
+function lastText(counter) {
+  const entry = counter.entries?.[0];
+  return entry ? formatDate(entry.dateTime) : "No entries yet";
+}
+
+function sortedCounters() {
+  return [...state.counters].sort((a, b) => {
+    const aTime = a.entries?.[0]?.dateTime || a.createdAt || 0;
+    const bTime = b.entries?.[0]?.dateTime || b.createdAt || 0;
+    return new Date(bTime) - new Date(aTime);
+  });
+}
+
+function renderHome() {
+  const nl = currentLanguage() === "nl";
+  app.innerHTML = `
+    ${renderHeader("Telly Tasks", nl ? "Maak grote taken kleiner en begin met één duidelijke stap." : "Make large tasks smaller and start with one clear step.", `<button class="icon-btn primary" disabled aria-disabled="true">+</button>`)}
+    <div class="segment">
+      <button class="active">${nl ? "Vandaag" : "Today"}</button>
+      <button disabled>${nl ? "Later" : "Later"}</button>
+      <button disabled>${nl ? "Wachten op" : "Waiting on"}</button>
+    </div>
+    <div class="section-title"><span>${nl ? "Voorbeeld" : "Preview"}</span><span>${nl ? "Fase 1 volgt" : "Phase 1 follows"}</span></div>
+    <div class="task-preview-card">
+      <div class="task-preview-top">
+        <div class="task-check"></div>
+        <div class="task-preview-copy"><h2>${nl ? "De garage opruimen" : "Clean the garage"}</h2><p>${nl ? "Deze week · 2 van 5 stappen klaar" : "This week · 2 of 5 steps complete"}</p></div>
+        <div class="task-more-static">•••</div>
+      </div>
+      <div class="task-progress"><span></span></div>
+      <div class="task-progress-copy"><span>${nl ? "40% voltooid" : "40% complete"}</span><span>${nl ? "2 van 5" : "2 of 5"}</span></div>
+      <div class="next-step-card"><span>${nl ? "Volgende stap" : "Next step"}</span><strong>${nl ? "Gereedschap sorteren" : "Sort the tools"}</strong></div>
+    </div>
+    <div class="empty phase-note">${nl ? "Dit is de visuele basis. Toevoegen, bewerken en afronden bouwen we in fase 1." : "This is the visual foundation. Adding, editing and completing tasks will be built in phase 1."}</div>
+  `;
+}
+
+function homeInsightText(counter) {
+  if (!counter.showDaysBetweenEntries) return "";
+
+  const entries = (counter.entries || [])
+    .map(entry => {
+      const raw = entry.dateTime || entry.date || entry.createdAt || "";
+      const parsed = raw ? new Date(raw) : null;
+      return {
+        ...entry,
+        _parsedDate: parsed && !Number.isNaN(parsed.getTime()) ? parsed : null
+      };
+    })
+    .filter(entry => entry._parsedDate)
+    .sort((a, b) => b._parsedDate - a._parsedDate);
+
+  if (!entries.length) return "No entries yet";
+
+  const latest = entries[0]._parsedDate;
+  const today = new Date();
+
+  const latestDay = new Date(latest.getFullYear(), latest.getMonth(), latest.getDate());
+  const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diff = Math.max(0, Math.round((todayDay - latestDay) / 86400000));
+
+  if (diff === 0) return "Today";
+  if (diff === 1) return "1 day since last entry";
+  return `${diff} days since last entry`;
+}
+
+function renderCounters() {
+  const list = document.getElementById("counterList");
+  if (!list) return;
+
+  const q = document.getElementById("search")?.value?.toLowerCase() || "";
+  const counters = sortedCounters().filter(counter =>
+    (mode === "archived" ? counter.archived : !counter.archived) &&
+    counter.name.toLowerCase().includes(q)
+  );
+
+  if (!counters.length) {
+    list.innerHTML = `<div class="empty">${mode === "archived" ? "No archived counters." : "No active counters."}</div>`;
+    return;
+  }
+
+  list.innerHTML = counters.map(counter => `
+    <div class="counter compact-counter" style="--accent:${counter.color || "#d7b56d"}">
+      <div class="counter-open-area" onclick="selectedCounterId='${counter.id}'; render()">
+        <div class="emoji">${escapeHtml(counter.emoji || "📌")}</div>
+        <div class="counter-copy">
+          <h2>${escapeHtml(counter.name)}</h2>
+          <p>${lastText(counter)}</p>
+          ${counter.showDaysBetweenEntries ? `<div class="home-insight">${homeInsightText(counter) || "No entries yet"}</div>` : ""}
+        </div>
+        <div class="count">${(counter.entries || []).length}</div>
+      </div>
+
+      <button class="counter-more"
+              aria-label="Counter actions"
+              onclick="event.stopPropagation(); openCounterMenu('${counter.id}')">•••</button>
+    </div>
+  `).join("");
+}
+
+
+function calendarDayDifference(newerDateTime, olderDateTime) {
+  const newer = new Date(newerDateTime);
+  const older = new Date(olderDateTime);
+  const newerDay = Date.UTC(newer.getFullYear(), newer.getMonth(), newer.getDate());
+  const olderDay = Date.UTC(older.getFullYear(), older.getMonth(), older.getDate());
+  return Math.max(0, Math.round((newerDay - olderDay) / 86400000));
+}
+
+function daysSinceLatestEntry(counter) {
+  const entries = (counter.entries || []).slice().sort((a,b) => new Date(b.dateTime) - new Date(a.dateTime));
+  if (!entries.length) return null;
+  return calendarDayDifference(new Date().toISOString(), entries[0].dateTime);
+}
+
+function renderCounterTimeline(counter) {
+  const entries = (counter.entries || []).slice().sort((a,b) => new Date(b.dateTime) - new Date(a.dateTime));
+  if (!entries.length) return `<div class="empty">No entries yet.</div>`;
+
+  const rows = entries.map((entry, index) => {
+    const older = entries[index + 1];
+    const gap = older ? calendarDayDifference(entry.dateTime, older.dateTime) : 0;
+    return `
+      <div class="entry timeline-entry">
+        <div class="entry-content" onclick="openEntryDialog('${counter.id}', false, '${entry.id}')">
+          <strong>${formatDate(entry.dateTime)}</strong>
+          <p>${entry.note ? escapeHtml(entry.note) : "No note"}</p>
+        </div>
+        ${counter.archived ? "" : `<button class="danger entry-delete-fixed" onclick="deleteEntry('${counter.id}', '${entry.id}')">×</button>`}
+      </div>
+      ${counter.showDaysBetweenEntries && gap > 0 ? `
+        <div class="day-gap-marker"><span></span><strong>${gap} ${gap === 1 ? "day" : "days"} later</strong><span></span></div>
+      ` : ""}
+    `;
+  }).join("");
+
+  const since = daysSinceLatestEntry(counter);
+  const sinceBlock = counter.showDaysBetweenEntries && since > 0
+    ? `<div class="since-last-entry">🗓️ ${since} ${since === 1 ? "day" : "days"} since last entry</div>`
+    : "";
+
+  return rows + sinceBlock;
+}
+
+function renderDetail(counterId) {
+  const counter = state.counters.find(c => c.id === counterId);
+  if (!counter) {
+    selectedCounterId = null;
+    return render();
+  }
+
+  app.innerHTML = `
+    <div class="header">
+      <button onclick="selectedCounterId=null;render()">← Back</button>
+      <button onclick="openCounterMenu('${counter.id}')">•••</button>
+    </div>
+
+    <div class="detail-card" style="--accent:${counter.color || "#d7b56d"}">
+      <div class="detail-top">
+        <div class="emoji">${escapeHtml(counter.emoji || "📌")}</div>
+        <h2>${escapeHtml(counter.name)}</h2>
+        <div class="detail-count">${(counter.entries || []).length}</div>
+      </div>
+      <div class="detail-sub">${lastText(counter)}</div>
+      <div class="actions">
+        ${counter.archived ? `<button class="wide success" onclick="restoreCounter('${counter.id}')">Restore Counter</button>` : `
+          <button class="wide primary" onclick="openEntryDialog('${counter.id}')">+ Add Entry</button>
+          <button onclick="openEntryDialog('${counter.id}', true)">Add Old Entry</button>
+          <button onclick="exportCsv([getCounter('${counter.id}')])">Export</button>
+        `}
+      </div>
+    </div>
+
+    <div class="section-title"><span>Timeline</span><span>${(counter.entries || []).length} entries</span></div>
+    <div class="list timeline-list">
+      ${renderCounterTimeline(counter)}
+    </div>
+  `;
+}
+
+function renderJournal() {
+  const rows = state.counters
+    .filter(c => !c.archived)
+    .flatMap(c => (c.entries || []).map(e => ({ counter: c, entry: e })))
+    .sort((a, b) => new Date(b.entry.dateTime) - new Date(a.entry.dateTime));
+
+  app.innerHTML = `
+    ${renderHeader("Journal", "A timeline of your latest entries across all active counters.")}
+    <div class="list">
+      ${rows.length ? rows.slice(0, 100).map(({counter, entry}) => `
+        <div class="entry" onclick="selectedCounterId='${counter.id}';render()">
+          <div>
+            <strong>${escapeHtml(counter.emoji || "📌")} ${escapeHtml(counter.name)} · ${formatDate(entry.dateTime)}</strong>
+            <p>${entry.note ? escapeHtml(entry.note) : "No note"}</p>
+          </div>
+        </div>
+      `).join("") : `<div class="empty">No journal entries yet.</div>`}
+    </div>
+  `;
+}
+
+
+function setTheme(theme) {
+  state.settings.theme = theme;
+  saveState(state);
+  applyAppearance();
+  render();
+}
+
+function setInterfaceSize(size) {
+  state.settings.interfaceSize = size;
+  saveState(state);
+  applyAppearance();
+  render();
+}
+
+function themeLabel(value) {
+  const labels = {
+    "midnight-gold": "Midnight Gold",
+    "emerald-elite": "Emerald Elite",
+    "arctic-white": "Arctic White"
+  };
+  return labels[value] || "Midnight Gold";
+}
+
+function sizeLabel(value) {
+  const labels = {
+    "compact": "Compact",
+    "standard": "Standard",
+    "comfortable": "Comfortable",
+    "large": "Large"
+  };
+  return labels[value] || "Standard";
+}
+
+function openChoiceDialog(title, options, currentValue, onSelectName) {
+  const dialog = document.createElement("dialog");
+  dialog.innerHTML = `
+    <div class="modal">
+      <h2>${title}</h2>
+      <div class="list">
+        ${options.map(option => `
+          <button onclick="${onSelectName}('${option.value}'); this.closest('dialog').remove()" class="${option.value === currentValue ? "primary" : ""}">
+            ${option.label}
+          </button>
+        `).join("")}
+      </div>
+      <div class="modal-actions">
+        <button onclick="this.closest('dialog').remove()">Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function openThemeDialog() {
+  openChoiceDialog("Theme", [
+    { value: "midnight-gold", label: "🟨 Midnight Gold" },
+    { value: "emerald-elite", label: "💚 Emerald Elite" },
+    { value: "arctic-white", label: "⚪ Arctic White" }
+  ], state.settings.theme || "midnight-gold", "setTheme");
+}
+
+function openSizeDialog() {
+  openChoiceDialog("Interface Size", [
+    { value: "compact", label: "Compact" },
+    { value: "standard", label: "Standard" },
+    { value: "comfortable", label: "Comfortable" },
+    { value: "large", label: "Large" }
+  ], state.settings.interfaceSize || "standard", "setInterfaceSize");
+}
+
+
+function renderSettings() {
+  screen = "settings";
+  helpArticle = null;
+
+  app.innerHTML = `
+    ${renderHeader("Settings", "Privacy, appearance, backups and support.")}
+
+    <div class="section-title"><span>General</span></div>
+    <button class="settings-row" onclick="openLanguageDialog()"><span>Language</span><span>${languageLabel()}</span></button>
+    <button class="settings-row" onclick="openThemeDialog()"><span>Theme</span><span>${themeLabel(state.settings.theme)}</span></button>
+    <button class="settings-row" onclick="openSizeDialog()"><span>Interface Size</span><span>${sizeLabel(state.settings.interfaceSize)}</span></button>
+
+    <div class="section-title"><span>Privacy</span></div>
+    <div class="settings-row"><span>Access Control</span><span>${state.settings.pinEnabled ? "PIN enabled" : "Off"}</span></div>
+    ${state.settings.pinEnabled ? `
+      <button class="settings-row" onclick="lockNow()"><span>Lock Now</span><span>Secure</span></button>
+      <button class="settings-row" onclick="changePin()"><span>Change PIN</span><span>PIN</span></button>
+      <button class="settings-row danger" onclick="disablePin()"><span>Disable PIN</span><span>Off</span></button>
+    ` : `<button class="settings-row" onclick="setPin()"><span>Set PIN Code</span><span>4–12 digits</span></button>`}
+    <div class="settings-row"><span>Face ID</span><span>Coming later</span></div>
+
+    <div class="section-title"><span>Recovery</span></div>
+    <div class="settings-row"><span>Recently Deleted</span><span>0</span></div>
+
+    <div class="section-title"><span>Data</span></div>
+    <div class="settings-row"><span>Import JSON</span><span>Phase 1</span></div>
+    <div class="settings-row"><span>Export Backup</span><span>Phase 1</span></div>
+    <div class="settings-row"><span>Share Tasks</span><span>Later</span></div>
+
+    <div class="section-title"><span>Resources</span></div>
+    <button class="settings-row" onclick="rememberSettingsScroll(); renderStandaloneArticle('whatsNew', 'What’s New')"><span>What’s New</span><span>View</span></button>
+    <button class="settings-row" onclick="rememberSettingsScroll(); renderStandaloneArticle('roadmap', 'Roadmap')"><span>Roadmap</span><span>View</span></button>
+    <button class="settings-row" onclick="rememberSettingsScroll(); renderFeedbackCenter()"><span>Feedback & Contact</span><span>Open</span></button>
+
+    <div class="section-title"><span>Updates</span></div>
+    <button class="settings-row" onclick="checkForUpdates(true)"><span>Check for Updates</span><span>Now</span></button>
+    <div class="settings-row"><span>Automatic Checks</span><span>${state.settings.autoUpdateCheck ? "On" : "Off"}</span></div>
+    <div class="settings-row"><span>Last Check</span><span>${formatFriendlyDate(state.settings.lastUpdateCheckAt)}</span></div>
+    <div class="settings-row"><span>Postponed Build</span><span>${state.settings.dismissedUpdateBuild || "None"}</span></div>
+
+    <div class="section-title"><span>Maintenance</span></div>
+    <button class="settings-row" onclick="updateAppCache()"><span>Reset App Cache</span><span>Refresh</span></button>
+
+    <div class="section-title"><span>About</span></div>
+    <button class="settings-row" onclick="rememberSettingsScroll(); renderVersionPage()"><span>Version</span><span>${TJ_VERSION}</span></button>
+    <div class="settings-row"><span>Release</span><span>${TJ_RELEASE}</span></div>
+    <div class="settings-row"><span>Build</span><span>${TJ_BUILD}</span></div>
+    <button class="settings-row ${statusClass()}" onclick="openStatusInfo()"><span>Status</span><span>${TJ_STATUS}</span></button>
+    <div class="settings-row"><span>Contact</span><span>${TJ_CONTACT_EMAIL}</span></div>
+    <div class="settings-row"><span>Developed by</span><span>Martijn P.</span></div>
+  `;
+}
+function getCounter(id) {
+  return state.counters.find(c => c.id === id);
+}
+
+function openCounterDialog(id = null) {
+  const counter = id ? getCounter(id) : null;
+  selectedColor = counter?.color || "#d7b56d";
+
+  const dialog = document.createElement("dialog");
+  dialog.innerHTML = `
+    <form class="modal" method="dialog">
+      <h2>${counter ? "Edit Counter" : "New Counter"}</h2>
+      <div class="modal-grid">
+        <div>
+          <label>Emoji</label>
+          <input id="counterEmoji" maxlength="2" value="${escapeHtml(counter?.emoji || "📌")}" />
+        </div>
+        <div>
+          <label>Name</label>
+          <input id="counterName" value="${escapeHtml(counter?.name || "")}" placeholder="Counter name" />
+        </div>
+      </div>
+      <label>Color</label>
+      <div class="swatches">
+        ${colors.map(color => `<button type="button" class="swatch ${color === selectedColor ? "active" : ""}" style="background:${color}" onclick="selectColor('${color}', this)"></button>`).join("")}
+      </div>
+      <label class="counter-toggle-row">
+        <span><strong>Show days between entries</strong><small>Display subtle timeline markers for this counter.</small></span>
+        <input id="counterDaysToggle" type="checkbox" ${counter?.showDaysBetweenEntries ? "checked" : ""} />
+      </label>
+      <div class="modal-actions">
+        <button type="button" onclick="this.closest('dialog').remove()">Cancel</button>
+        <button type="submit" class="primary">Save</button>
+      </div>
+    </form>
+  `;
+
+  dialog.querySelector("form").addEventListener("submit", event => {
+    event.preventDefault();
+    const name = dialog.querySelector("#counterName").value.trim();
+    const emoji = dialog.querySelector("#counterEmoji").value.trim() || "📌";
+    const showDaysBetweenEntries = !!dialog.querySelector("#counterDaysToggle")?.checked;
+    if (!name) return;
+
+    if (counter) {
+      counter.name = name;
+      counter.emoji = emoji;
+      counter.color = selectedColor;
+      counter.showDaysBetweenEntries = showDaysBetweenEntries;
+    } else {
+      state.counters.push({
+        id: uid(),
+        name,
+        emoji,
+        color: selectedColor,
+        archived: false,
+        showDaysBetweenEntries,
+        createdAt: new Date().toISOString(),
+        entries: []
+      });
+    }
+
+    saveState(state);
+    dialog.remove();
+    render();
+  });
+
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function selectColor(color, element) {
+  selectedColor = color;
+  document.querySelectorAll(".swatch").forEach(s => s.classList.remove("active"));
+  element.classList.add("active");
+}
+
+function openEntryDialog(counterId, old = false, entryId = null) {
+  const counter = getCounter(counterId);
+  const entry = entryId ? counter.entries.find(e => e.id === entryId) : null;
+  const dialog = document.createElement("dialog");
+
+  dialog.innerHTML = `
+    <form class="modal" method="dialog">
+      <h2>${entry ? "Edit Entry" : "New Entry"}</h2>
+      <label>Date and time</label>
+      <input id="entryDateTime" type="datetime-local" value="${entry ? toLocalInput(entry.dateTime) : old ? "" : toLocalInput(new Date().toISOString())}" required />
+      <label>Note</label>
+      <textarea id="entryNote" placeholder="Optional">${escapeHtml(entry?.note || "")}</textarea>
+      <div class="modal-actions">
+        <button type="button" onclick="this.closest('dialog').remove()">Cancel</button>
+        <button type="submit" class="primary">Save</button>
+      </div>
+    </form>
+  `;
+
+  dialog.querySelector("form").addEventListener("submit", event => {
+    event.preventDefault();
+    const dateTime = dialog.querySelector("#entryDateTime").value;
+    const note = dialog.querySelector("#entryNote").value.trim();
+
+    if (entry) {
+      entry.dateTime = new Date(dateTime).toISOString();
+      entry.note = note;
+    } else {
+      counter.entries.push({ id: uid(), dateTime: new Date(dateTime).toISOString(), note });
+    }
+
+    counter.entries.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+    saveState(state);
+    dialog.remove();
+    render();
+  });
+
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function toLocalInput(value) {
+  const date = new Date(value);
+  const pad = n => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function openCounterMenu(counterId) {
+  const counter = getCounter(counterId);
+  if (!counter) return;
+
+  const dialog = document.createElement("dialog");
+  dialog.className = "counter-action-dialog";
+
+  dialog.innerHTML = `
+    <div class="modal counter-menu-modal">
+      <div class="counter-menu-handle"></div>
+      <div class="counter-menu-title">
+        <div class="emoji">${escapeHtml(counter.emoji || "📌")}</div>
+        <div>
+          <strong>${escapeHtml(counter.name)}</strong>
+          <small>${(counter.entries || []).length} ${(counter.entries || []).length === 1 ? "entry" : "entries"}</small>
+        </div>
+      </div>
+
+      <div class="counter-menu-list">
+        <button class="counter-menu-item archive-menu"
+                onclick="${counter.archived ? `restoreCounter('${counter.id}')` : `archiveCounter('${counter.id}')`}; this.closest('dialog').remove()">
+          <span>${counter.archived ? "↩️" : "📦"}</span>
+          <div><strong>${counter.archived ? "Restore" : "Archive"}</strong><small>${counter.archived ? "Move back to Active" : "Move out of Active"}</small></div>
+        </button>
+
+        <button class="counter-menu-item"
+                onclick="this.closest('dialog').remove(); openCounterDialog('${counter.id}')">
+          <span>🎨</span>
+          <div><strong>Change Color</strong><small>Choose another counter color</small></div>
+        </button>
+
+        <button class="counter-menu-item"
+                onclick="this.closest('dialog').remove(); openCounterDialog('${counter.id}')">
+          <span>✏️</span>
+          <div><strong>Rename</strong><small>Change the name or emoji</small></div>
+        </button>
+
+        <button class="counter-menu-item"
+                onclick="toggleDaysBetweenFromMenu('${counter.id}', this.closest('dialog'))">
+          <span>📅</span>
+          <div>
+            <strong>${counter.showDaysBetweenEntries ? "Hide Days Between Entries" : "Show Days Between Entries"}</strong>
+            <small>${counter.showDaysBetweenEntries ? "Remove day-gap markers from this timeline" : "Display day-gap markers in this timeline"}</small>
+          </div>
+        </button>
+
+        <button class="counter-menu-item"
+                onclick="duplicateCounter('${counter.id}'); this.closest('dialog').remove()">
+          <span>📄</span>
+          <div><strong>Duplicate</strong><small>Create a copy without entries</small></div>
+        </button>
+
+        <button class="counter-menu-item delete-menu"
+                onclick="deleteCounter('${counter.id}'); this.closest('dialog').remove()">
+          <span>🗑️</span>
+          <div><strong>Delete</strong><small>Move to Recently Deleted</small></div>
+        </button>
+      </div>
+
+      <button class="counter-menu-cancel" onclick="this.closest('dialog').remove()">Cancel</button>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+  dialog.addEventListener("close", () => dialog.remove());
+  dialog.showModal();
+}
+
+
+function toggleDaysBetweenFromMenu(counterId, dialog) {
+  const counter = getCounter(counterId);
+  if (!counter) return;
+
+  counter.showDaysBetweenEntries = !counter.showDaysBetweenEntries;
+  saveState(state);
+
+  if (dialog) dialog.remove();
+  showToast(counter.showDaysBetweenEntries ? "Day gaps enabled" : "Day gaps disabled");
+
+  if (selectedCounterId === counterId) {
+    renderDetail(counterId);
+  } else {
+    render();
+  }
+}
+
+function duplicateCounter(counterId) {
+  const counter = getCounter(counterId);
+  if (!counter) return;
+
+  state.counters.push({
+    id: uid(),
+    name: `${counter.name} Copy`,
+    emoji: counter.emoji || "📌",
+    color: counter.color || "#d7b56d",
+    archived: false,
+    showDaysBetweenEntries: !!counter.showDaysBetweenEntries,
+    createdAt: new Date().toISOString(),
+    entries: []
+  });
+
+  saveState(state);
+  showToast("Counter duplicated");
+  render();
+}
+
+function archiveCounter(counterId) {
+  const counter = getCounter(counterId);
+  if (!confirm(`Archive "${counter.name}"?`)) return;
+  counter.archived = true;
+  selectedCounterId = null;
+  saveState(state);
+  render();
+}
+
+function restoreCounter(counterId) {
+  const counter = getCounter(counterId);
+  counter.archived = false;
+  selectedCounterId = null;
+  saveState(state);
+  render();
+}
+
+function deleteCounter(counterId) { const c=getCounter(counterId); if(c&&confirm(`Move "${c.name}" to Recently Deleted?`)) moveCounterToRecentlyDeleted(counterId); }
+
+function deleteEntry(counterId, entryId) {
+  const counter = getCounter(counterId);
+  if (!confirm("Delete this entry?")) return;
+  counter.entries = counter.entries.filter(e => e.id !== entryId);
+  saveState(state);
+  render();
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+}
+
+render();
+
+  </script>
 </body>
 </html>

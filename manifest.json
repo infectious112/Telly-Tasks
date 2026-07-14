@@ -1,14 +1,11 @@
 {
   "name": "Telly Tasks",
-  "short_name": "Telly Tasks",
-  "description": "Standalone test environment for the Telly Journal Tasks module.",
+  "short_name": "Tasks",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7f5",
-  "theme_color": "#176b54",
-  "orientation": "portrait-primary",
-  "lang": "nl",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
+  "description": "Standalone test environment for the Telly Journal Tasks module.",
   "icons": [
     {
       "src": "icon.svg",
