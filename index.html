@@ -1555,7 +1555,7 @@ html[lang="nl"] .roadmap-step.current {
 .next-step-card strong { display:block; margin-top:3px; }
 .phase-note { margin-top:12px; }
 
-/* Telly Tasks 0.1.0-alpha.5 — free bottom space above fixed navigation */
+/* Telly Tasks 0.1.0-alpha.6 — real scroll spacer above fixed navigation */
 body {
   padding-bottom: calc(88px + var(--safe-bottom)) !important;
 }
@@ -1625,9 +1625,21 @@ body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   padding-top: calc(10px + max(var(--safe-top), 0px)) !important;
-  padding-bottom: calc(158px + max(var(--safe-bottom), 0px)) !important;
+  padding-bottom: 0 !important;
   scroll-padding-top: calc(10px + max(var(--safe-top), 0px));
-  scroll-padding-bottom: calc(82px + max(var(--safe-bottom), 0px));
+  scroll-padding-bottom: calc(128px + max(var(--safe-bottom), 0px));
+}
+
+/* A real final scroll item prevents iOS rubber-banding from hiding the last row.
+   This applies to Settings, Help, version pages and future long task lists. */
+.app::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: calc(132px + max(var(--safe-bottom), 0px));
+  min-height: calc(132px + max(var(--safe-bottom), 0px));
+  pointer-events: none;
+  visibility: hidden;
 }
 
 </style>
@@ -1646,9 +1658,9 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.1.0-alpha.5";
-const TJ_RELEASE = "Vrije onderruimte";
-const TJ_BUILD = "20260714-TT05";
+const TJ_VERSION = "0.1.0-alpha.6";
+const TJ_RELEASE = "Volledig vrij scrollen";
+const TJ_BUILD = "20260715-TT06";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3254,7 +3266,7 @@ function renderVersionPage() {
         <div class="info-card"><span>Release</span><strong>${TJ_RELEASE}</strong></div>
         <div class="info-card"><span>Build</span><strong>${TJ_BUILD}</strong></div>
         <div class="info-card"><span>Status</span><strong>${TJ_STATUS}</strong></div>
-        <div class="info-card"><span>Released</span><strong>14 July 2026</strong></div>
+        <div class="info-card"><span>Released</span><strong>15 July 2026</strong></div>
         <p>Professional update experience and release management improvements.</p>
         <button class="settings-row" onclick="renderStandaloneArticle('whatsNew','What’s New')"><span>View What’s New</span><span>Open</span></button>
         <button class="settings-row" onclick="renderReleaseHistory()"><span>Release History</span><span>View</span></button>
@@ -3290,7 +3302,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Lange pagina’s krijgen nu vaste vrije ruimte boven de navigatie" : "Long pages now keep fixed free space above navigation"}</li><li>${nl ? "De laatste instelling blijft volledig zichtbaar na het loslaten" : "The final setting remains fully visible after releasing the scroll"}</li><li>${nl ? "De iPhone-safe-area blijft meegenomen" : "The iPhone safe area remains supported"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Een echte scrollruimte houdt de laatste regel volledig boven de navigatie" : "A real scroll spacer keeps the final row fully above navigation"}</li><li>${nl ? "De pagina schiet na het loslaten niet meer terug achter de balk" : "Pages no longer spring back behind the bar after release"}</li><li>${nl ? "De oplossing geldt ook voor Help, informatiepagina’s en lange takenlijsten" : "The fix also applies to Help, information pages and long task lists"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
