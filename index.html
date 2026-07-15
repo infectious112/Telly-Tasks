@@ -1555,6 +1555,28 @@ html[lang="nl"] .roadmap-step.current {
 .next-step-card strong { display:block; margin-top:3px; }
 .phase-note { margin-top:12px; }
 
+
+/* Telly Tasks phase 1 — functional main tasks */
+.task-list { display:grid; gap:12px; }
+.task-card { border:1px solid var(--line); background:linear-gradient(140deg,var(--panel-strong),var(--panel)); border-radius:calc(18px * var(--scale)); padding:calc(15px * var(--scale)); box-shadow:0 16px 38px rgba(0,0,0,.12); }
+.task-row { display:flex; align-items:flex-start; gap:12px; }
+.task-complete-btn { width:30px; height:30px; min-width:30px; border-radius:999px; border:2px solid var(--theme-accent); background:transparent; color:var(--theme-accent); display:grid; place-items:center; padding:0; font-weight:900; }
+.task-complete-btn.done { background:var(--theme-accent); color:#07140f; }
+.task-main { flex:1; min-width:0; }
+.task-main h2 { margin:0 0 5px; font-size:calc(18px * var(--scale)); overflow-wrap:anywhere; }
+.task-main p { margin:0; color:var(--muted); font-size:calc(12px * var(--scale)); }
+.task-menu-btn { width:34px; min-width:34px; height:30px; padding:0; border:0; background:transparent; color:var(--muted); font-weight:900; letter-spacing:2px; }
+.task-card.completed { opacity:.68; }
+.task-card.completed h2 { text-decoration:line-through; }
+.task-filter-count { font-size:calc(11px * var(--scale)); color:var(--muted); font-weight:700; }
+.task-empty { padding:26px 18px; text-align:center; border:1px dashed var(--line); border-radius:18px; color:var(--muted); }
+.task-empty strong { display:block; color:var(--text); margin-bottom:5px; }
+.task-form label { display:block; margin:12px 0 6px; font-weight:750; }
+.task-form input, .task-form select { width:100%; box-sizing:border-box; }
+.task-dialog .modal { max-width:460px; }
+.task-dialog-menu button { width:100%; margin-top:8px; }
+.task-dialog-menu .danger { color:#ff7b7b; border-color:rgba(255,123,123,.45); }
+
 /* Telly Tasks 0.1.0-alpha.6 — real scroll spacer above fixed navigation */
 body {
   padding-bottom: calc(88px + var(--safe-bottom)) !important;
@@ -1658,16 +1680,20 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.1.0-alpha.6";
-const TJ_RELEASE = "Volledig vrij scrollen";
-const TJ_BUILD = "20260715-TT06";
+const TJ_VERSION = "0.2.0-alpha.1";
+const TJ_RELEASE = "Hoofdtaken";
+const TJ_BUILD = "20260715-TT07";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
 function loadState() {
   try {
     const state = JSON.parse(localStorage.getItem(TJ_STORAGE_KEY));
-    if (state && Array.isArray(state.counters)) return state;
+    if (state && typeof state === "object") {
+      if (!Array.isArray(state.counters)) state.counters = [];
+      if (!Array.isArray(state.tasks)) state.tasks = [];
+      return state;
+    }
   } catch {}
   return { version: TJ_VERSION, counters: [], tasks: [], settings: { language: "auto", theme: "midnight-gold", interfaceSize: "standard", pinEnabled: false, pinHash: "", lockOnOpen: true, onboardingCompleted: true } };
 }
@@ -1690,7 +1716,7 @@ function uid() {
 
 function exportJson(state) {
   const now = new Date();
-  const filename = `Backup-TJ-${fileTimestamp(now)}.json`;
+  const filename = `Backup-Telly-Tasks-${fileTimestamp(now)}.json`;
 
   const backup = {
     version: TJ_VERSION,
@@ -1698,7 +1724,9 @@ function exportJson(state) {
     build: TJ_BUILD,
     appName: "Telly Tasks",
     exportedAt: now.toISOString(),
-    counters: state.counters,
+    dataModelVersion: 1,
+    tasks: state.tasks || [],
+    counters: state.counters || [],
     deletedCounters: state.deletedCounters || [],
     settings: state.settings
   };
@@ -1823,6 +1851,7 @@ if (typeof state.settings.lastBackupAt !== "string") state.settings.lastBackupAt
 if (typeof state.settings.lastDataChangeAt !== "string") state.settings.lastDataChangeAt = "";
 if (typeof state.settings.backupReminderDismissedAt !== "string") state.settings.backupReminderDismissedAt = "";
 if (!Array.isArray(state.deletedCounters)) state.deletedCounters = [];
+if (!Array.isArray(state.tasks)) state.tasks = [];
 if (typeof state.settings.autoUpdateCheck !== "boolean") state.settings.autoUpdateCheck = true;
 if (typeof state.settings.lastUpdateCheckAt !== "string") state.settings.lastUpdateCheckAt = "";
 if (typeof state.settings.dismissedUpdateBuild !== "string") state.settings.dismissedUpdateBuild = "";
@@ -2839,7 +2868,7 @@ const HELP_ARTICLES = {
     subtitle: "Release history",
     body: `
       <div class="release-card current">
-        <strong>Versie 2.6.0</strong><span>Natural Dutch · Build ${TJ_BUILD}</span>
+        <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
           <li>Alle vaste appteksten volledig naar het Nederlands vertaald</li>
           <li>Intro, Hulp en tips, overlays, meldingen en menu’s bijgewerkt</li>
@@ -3073,15 +3102,15 @@ const HELP_ARTICLES_NL = {
   whatsNew: {
     icon: "🆕",
     title: "Nieuw in deze versie",
-    subtitle: "Versie 2.6.0",
+    subtitle: `Versie ${TJ_VERSION}`,
     body: `
       <div class="release-card current">
-        <strong>Versie 2.6.0</strong><span>Natural Dutch · Build ${TJ_BUILD}</span>
+        <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
-          <li>De volledige Nederlandse tekst is opnieuw geschreven</li>
-          <li>Intro, pincode, meldingen en Hulp en tips zijn volledig gelokaliseerd</li>
-          <li>Engels blijft als volwaardige taal beschikbaar</li>
-          <li>Eigen counternamen en notities worden nooit vertaald</li>
+          <li>Hoofdtaken toevoegen en lokaal bewaren</li>
+          <li>Taken bewerken, verplaatsen en afronden</li>
+          <li>Afgeronde taken herstellen</li>
+          <li>Taken verwijderen via het menu met drie puntjes</li>
         </ul>
       </div>
     `
@@ -3267,7 +3296,7 @@ function renderVersionPage() {
         <div class="info-card"><span>Build</span><strong>${TJ_BUILD}</strong></div>
         <div class="info-card"><span>Status</span><strong>${TJ_STATUS}</strong></div>
         <div class="info-card"><span>Released</span><strong>15 July 2026</strong></div>
-        <p>Professional update experience and release management improvements.</p>
+        <p>De eerste functionele fase met echte hoofdtaken en lokale opslag.</p>
         <button class="settings-row" onclick="renderStandaloneArticle('whatsNew','What’s New')"><span>View What’s New</span><span>Open</span></button>
         <button class="settings-row" onclick="renderReleaseHistory()"><span>Release History</span><span>View</span></button>
       </div>
@@ -3287,10 +3316,8 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>2.5.2</strong><span>Update Experience</span><ul><li>What’s New overlay</li><li>Version information page</li><li>Release history</li></ul></div>
-        <div class="release-card"><strong>2.5.1</strong><span>Home Insights</span><ul><li>Days since last entry on Home</li><li>Improved timeline insights</li></ul></div>
-        <div class="release-card"><strong>2.5.0</strong><span>User Experience</span><ul><li>Card menu</li><li>Resources and Help improvements</li></ul></div>
-        <div class="release-card"><strong>2.4.0</strong><span>Recovery</span><ul><li>Updates</li><li>Recently Deleted</li><li>Backup improvements</li></ul></div>
+        <div class="release-card current"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
+        <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
     </article>
   `;
@@ -3302,7 +3329,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Een echte scrollruimte houdt de laatste regel volledig boven de navigatie" : "A real scroll spacer keeps the final row fully above navigation"}</li><li>${nl ? "De pagina schiet na het loslaten niet meer terug achter de balk" : "Pages no longer spring back behind the bar after release"}</li><li>${nl ? "De oplossing geldt ook voor Help, informatiepagina’s en lange takenlijsten" : "The fix also applies to Help, information pages and long task lists"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Hoofdtaken toevoegen en lokaal bewaren" : "Add and store main tasks locally"}</li><li>${nl ? "Taken bewerken, verplaatsen en afronden" : "Edit, move and complete tasks"}</li><li>${nl ? "Taken verwijderen via het menu met drie puntjes" : "Delete tasks from the three-dot menu"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
@@ -3432,28 +3459,167 @@ function sortedCounters() {
   });
 }
 
+
+let taskFilter = "today";
+
+function taskBucketLabel(bucket, nl = currentLanguage() === "nl") {
+  const labels = {
+    today: nl ? "Vandaag" : "Today",
+    later: nl ? "Later" : "Later",
+    waiting: nl ? "Wachten op" : "Waiting on"
+  };
+  return labels[bucket] || labels.today;
+}
+
+function normalizeTask(task) {
+  return {
+    id: task.id || uid(),
+    title: String(task.title || "").trim(),
+    bucket: ["today","later","waiting"].includes(task.bucket) ? task.bucket : "today",
+    status: task.status === "completed" ? "completed" : "active",
+    createdAt: task.createdAt || new Date().toISOString(),
+    updatedAt: task.updatedAt || task.createdAt || new Date().toISOString(),
+    completedAt: task.completedAt || ""
+  };
+}
+
+function openTaskEditor(taskId = "") {
+  const nl = currentLanguage() === "nl";
+  const task = taskId ? state.tasks.find(t => t.id === taskId) : null;
+  const dialog = document.createElement("dialog");
+  dialog.className = "task-dialog";
+  dialog.innerHTML = `
+    <div class="modal task-form">
+      <div class="eyebrow">${task ? (nl ? "Taak bewerken" : "Edit task") : (nl ? "Nieuwe taak" : "New task")}</div>
+      <h2>${task ? (nl ? "Taak aanpassen" : "Update task") : (nl ? "Wat wil je doen?" : "What do you want to do?")}</h2>
+      <label for="taskTitle">${nl ? "Naam van de taak" : "Task name"}</label>
+      <input id="taskTitle" maxlength="160" value="${escapeHtml(task?.title || "")}" placeholder="${nl ? "Bijvoorbeeld: De garage opruimen" : "For example: Clean the garage"}" />
+      <label for="taskBucket">${nl ? "Wanneer" : "When"}</label>
+      <select id="taskBucket">
+        <option value="today" ${task?.bucket === "today" || !task ? "selected" : ""}>${nl ? "Vandaag" : "Today"}</option>
+        <option value="later" ${task?.bucket === "later" ? "selected" : ""}>${nl ? "Later" : "Later"}</option>
+        <option value="waiting" ${task?.bucket === "waiting" ? "selected" : ""}>${nl ? "Wachten op" : "Waiting on"}</option>
+      </select>
+      <div class="modal-actions stacked-actions">
+        <button class="primary" onclick="saveTaskFromDialog('${taskId}', this.closest('dialog'))">${task ? (nl ? "Wijzigingen bewaren" : "Save changes") : (nl ? "Taak toevoegen" : "Add task")}</button>
+        <button onclick="this.closest('dialog').remove()">${nl ? "Annuleren" : "Cancel"}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+  setTimeout(() => document.getElementById("taskTitle")?.focus(), 80);
+}
+
+function saveTaskFromDialog(taskId, dialog) {
+  const nl = currentLanguage() === "nl";
+  const title = document.getElementById("taskTitle")?.value.trim() || "";
+  const bucket = document.getElementById("taskBucket")?.value || "today";
+  if (!title) {
+    alert(nl ? "Vul eerst een naam voor de taak in." : "Enter a task name first.");
+    return;
+  }
+  if (taskId) {
+    const task = state.tasks.find(t => t.id === taskId);
+    if (!task) return;
+    task.title = title;
+    task.bucket = bucket;
+    task.updatedAt = new Date().toISOString();
+  } else {
+    state.tasks.unshift(normalizeTask({ id: uid(), title, bucket }));
+    taskFilter = bucket;
+  }
+  saveState(state);
+  dialog?.remove();
+  renderHome();
+}
+
+function toggleTaskComplete(taskId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const done = task.status !== "completed";
+  task.status = done ? "completed" : "active";
+  task.completedAt = done ? new Date().toISOString() : "";
+  task.updatedAt = new Date().toISOString();
+  saveState(state);
+  renderHome();
+}
+
+function openTaskMenu(taskId) {
+  const nl = currentLanguage() === "nl";
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const dialog = document.createElement("dialog");
+  dialog.className = "task-dialog";
+  dialog.innerHTML = `<div class="modal task-dialog-menu"><div class="eyebrow">${nl ? "Taak" : "Task"}</div><h2>${escapeHtml(task.title)}</h2>
+    <button onclick="this.closest('dialog').remove();openTaskEditor('${taskId}')">${nl ? "Bewerken" : "Edit"}</button>
+    <button onclick="this.closest('dialog').remove();toggleTaskComplete('${taskId}')">${task.status === "completed" ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}</button>
+    <button onclick="moveTask('${taskId}','today',this.closest('dialog'))">${nl ? "Naar Vandaag" : "Move to Today"}</button>
+    <button onclick="moveTask('${taskId}','later',this.closest('dialog'))">${nl ? "Naar Later" : "Move to Later"}</button>
+    <button onclick="moveTask('${taskId}','waiting',this.closest('dialog'))">${nl ? "Naar Wachten op" : "Move to Waiting on"}</button>
+    <button class="danger" onclick="deleteTask('${taskId}',this.closest('dialog'))">${nl ? "Verwijderen" : "Delete"}</button>
+    <button onclick="this.closest('dialog').remove()">${nl ? "Sluiten" : "Close"}</button></div>`;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function moveTask(taskId, bucket, dialog) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  task.bucket = bucket;
+  task.updatedAt = new Date().toISOString();
+  saveState(state);
+  dialog?.remove();
+  taskFilter = bucket;
+  renderHome();
+}
+
+function deleteTask(taskId, dialog) {
+  const nl = currentLanguage() === "nl";
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  if (!confirm(nl ? `Taak “${task.title}” verwijderen?` : `Delete task “${task.title}”?`)) return;
+  state.tasks = state.tasks.filter(t => t.id !== taskId);
+  saveState(state);
+  dialog?.remove();
+  renderHome();
+}
+
+function setTaskFilter(filter) {
+  taskFilter = filter;
+  renderHome();
+}
+
+function taskCardHtml(task) {
+  const nl = currentLanguage() === "nl";
+  const completed = task.status === "completed";
+  return `<div class="task-card ${completed ? "completed" : ""}">
+    <div class="task-row">
+      <button class="task-complete-btn ${completed ? "done" : ""}" onclick="toggleTaskComplete('${task.id}')" aria-label="${completed ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}">${completed ? "✓" : ""}</button>
+      <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p></div>
+      <button class="task-menu-btn" onclick="openTaskMenu('${task.id}')" aria-label="${nl ? "Meer opties" : "More options"}">•••</button>
+    </div>
+  </div>`;
+}
+
 function renderHome() {
   const nl = currentLanguage() === "nl";
+  const activeTasks = (state.tasks || []).map(normalizeTask).filter(t => t.status === "active" && t.bucket === taskFilter);
+  const completedTasks = (state.tasks || []).map(normalizeTask).filter(t => t.status === "completed").sort((a,b) => new Date(b.completedAt || b.updatedAt) - new Date(a.completedAt || a.updatedAt));
+  const filterLabels = { today: nl ? "Vandaag" : "Today", later: nl ? "Later" : "Later", waiting: nl ? "Wachten op" : "Waiting on" };
   app.innerHTML = `
-    ${renderHeader("Telly Tasks", nl ? "Maak grote taken kleiner en begin met één duidelijke stap." : "Make large tasks smaller and start with one clear step.", `<button class="icon-btn primary" disabled aria-disabled="true">+</button>`)}
+    ${renderHeader("Telly Tasks", nl ? "Maak grote taken kleiner en begin met één duidelijke stap." : "Make large tasks smaller and start with one clear step.", `<button class="icon-btn primary" onclick="openTaskEditor()" aria-label="${nl ? "Nieuwe taak" : "New task"}">+</button>`)}
     <div class="segment">
-      <button class="active">${nl ? "Vandaag" : "Today"}</button>
-      <button disabled>${nl ? "Later" : "Later"}</button>
-      <button disabled>${nl ? "Wachten op" : "Waiting on"}</button>
+      <button class="${taskFilter === "today" ? "active" : ""}" onclick="setTaskFilter('today')">${nl ? "Vandaag" : "Today"}</button>
+      <button class="${taskFilter === "later" ? "active" : ""}" onclick="setTaskFilter('later')">${nl ? "Later" : "Later"}</button>
+      <button class="${taskFilter === "waiting" ? "active" : ""}" onclick="setTaskFilter('waiting')">${nl ? "Wachten op" : "Waiting on"}</button>
     </div>
-    <div class="section-title"><span>${nl ? "Voorbeeld" : "Preview"}</span><span>${nl ? "Fase 1 volgt" : "Phase 1 follows"}</span></div>
-    <div class="task-preview-card">
-      <div class="task-preview-top">
-        <div class="task-check"></div>
-        <div class="task-preview-copy"><h2>${nl ? "De garage opruimen" : "Clean the garage"}</h2><p>${nl ? "Deze week · 2 van 5 stappen klaar" : "This week · 2 of 5 steps complete"}</p></div>
-        <div class="task-more-static">•••</div>
-      </div>
-      <div class="task-progress"><span></span></div>
-      <div class="task-progress-copy"><span>${nl ? "40% voltooid" : "40% complete"}</span><span>${nl ? "2 van 5" : "2 of 5"}</span></div>
-      <div class="next-step-card"><span>${nl ? "Volgende stap" : "Next step"}</span><strong>${nl ? "Gereedschap sorteren" : "Sort the tools"}</strong></div>
+    <div class="section-title"><span>${filterLabels[taskFilter]}</span><span class="task-filter-count">${activeTasks.length}</span></div>
+    <div class="task-list">
+      ${activeTasks.length ? activeTasks.map(taskCardHtml).join("") : `<div class="task-empty"><strong>${nl ? "Nog geen taken" : "No tasks yet"}</strong>${nl ? "Tik op + om je eerste taak toe te voegen." : "Tap + to add your first task."}</div>`}
     </div>
-    <div class="empty phase-note">${nl ? "Dit is de visuele basis. Toevoegen, bewerken en afronden bouwen we in fase 1." : "This is the visual foundation. Adding, editing and completing tasks will be built in phase 1."}</div>
+    ${completedTasks.length ? `<div class="section-title" style="margin-top:20px"><span>${nl ? "Afgerond" : "Completed"}</span><span class="task-filter-count">${completedTasks.length}</span></div><div class="task-list">${completedTasks.map(taskCardHtml).join("")}</div>` : ""}
   `;
+  app.scrollTo(0, 0);
 }
 
 function homeInsightText(counter) {
