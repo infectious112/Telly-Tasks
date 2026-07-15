@@ -1555,7 +1555,7 @@ html[lang="nl"] .roadmap-step.current {
 .next-step-card strong { display:block; margin-top:3px; }
 .phase-note { margin-top:12px; }
 
-/* Telly Tasks 0.1.0-alpha.4 — safe screen edges and complete settings base */
+/* Telly Tasks 0.1.0-alpha.5 — free bottom space above fixed navigation */
 body {
   padding-bottom: calc(88px + var(--safe-bottom)) !important;
 }
@@ -1625,7 +1625,9 @@ body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   padding-top: calc(10px + max(var(--safe-top), 0px)) !important;
+  padding-bottom: calc(158px + max(var(--safe-bottom), 0px)) !important;
   scroll-padding-top: calc(10px + max(var(--safe-top), 0px));
+  scroll-padding-bottom: calc(82px + max(var(--safe-bottom), 0px));
 }
 
 </style>
@@ -1644,9 +1646,9 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.1.0-alpha.4";
-const TJ_RELEASE = "Veilige schermranden";
-const TJ_BUILD = "20260714-TT04";
+const TJ_VERSION = "0.1.0-alpha.5";
+const TJ_RELEASE = "Vrije onderruimte";
+const TJ_BUILD = "20260714-TT05";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3288,7 +3290,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "De inhoud scrollt nu binnen een veilige schermzone" : "Content now scrolls within a safe screen area"}</li><li>${nl ? "De kop blijft volledig onder de iPhone-statusbalk" : "The header remains fully below the iPhone status bar"}</li><li>${nl ? "De algemene instellingen sluiten weer aan op Telly Journal" : "General settings now match Telly Journal more closely"}</li><li>${nl ? "Back-up, hulp en ondersteuning zijn opnieuw opgenomen" : "Backup, help and support sections have been restored"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Lange pagina’s krijgen nu vaste vrije ruimte boven de navigatie" : "Long pages now keep fixed free space above navigation"}</li><li>${nl ? "De laatste instelling blijft volledig zichtbaar na het loslaten" : "The final setting remains fully visible after releasing the scroll"}</li><li>${nl ? "De iPhone-safe-area blijft meegenomen" : "The iPhone safe area remains supported"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
