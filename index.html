@@ -1569,6 +1569,13 @@ html[lang="nl"] .roadmap-step.current {
 .task-card.completed { opacity:.68; }
 .task-card.completed h2 { text-decoration:line-through; }
 .task-filter-count { font-size:calc(11px * var(--scale)); color:var(--muted); font-weight:700; }
+.task-segment { grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; }
+.task-segment button { min-width:0; display:flex; align-items:center; justify-content:center; gap:5px; white-space:nowrap; font-size:calc(12px * var(--scale)); padding-inline:5px; }
+.task-segment .filter-label { overflow:hidden; text-overflow:ellipsis; }
+.task-segment .filter-count { flex:0 0 auto; min-width:18px; height:18px; padding:0 5px; border-radius:999px; display:inline-grid; place-items:center; color:color-mix(in srgb,var(--theme-accent) 78%,white); background:color-mix(in srgb,var(--theme-accent) 14%,transparent); font-size:calc(10px * var(--scale)); font-weight:850; line-height:1; }
+.task-segment button.active .filter-count { color:rgba(7,18,12,.72); background:rgba(7,18,12,.13); }
+@media (max-width:380px) { .task-segment button { font-size:calc(11px * var(--scale)); gap:3px; } .task-segment .filter-count { min-width:16px; height:16px; padding:0 4px; font-size:calc(9px * var(--scale)); } }
+
 .task-empty { padding:26px 18px; text-align:center; border:1px dashed var(--line); border-radius:18px; color:var(--muted); }
 .task-empty strong { display:block; color:var(--text); margin-bottom:5px; }
 .task-form label { display:block; margin:12px 0 6px; font-weight:750; }
@@ -1680,9 +1687,9 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.2.0-alpha.1";
-const TJ_RELEASE = "Hoofdtaken";
-const TJ_BUILD = "20260715-TT07";
+const TJ_VERSION = "0.2.0-alpha.2";
+const TJ_RELEASE = "Betrouwbare basis";
+const TJ_BUILD = "20260715-TT08";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -1778,39 +1785,49 @@ function importJsonFile(file, state, onDone) {
   const reader = new FileReader();
 
   reader.onload = () => {
+    const nl = currentLanguage() === "nl";
     try {
       const data = JSON.parse(reader.result);
-      const importedCounters = Array.isArray(data) ? data : data.counters;
+      const looksLikeTaskArray = Array.isArray(data) && data.every(item => item && typeof item === "object" && ("title" in item || "bucket" in item));
+      const importedTasks = looksLikeTaskArray ? data : data?.tasks;
 
-      if (!Array.isArray(importedCounters)) throw new Error("No counters found");
+      if (!Array.isArray(importedTasks)) {
+        throw new Error("No tasks found");
+      }
 
-      const add = confirm("Import JSON backup?\n\nOK = Add imported counters.\nCancel = Replace current data.");
-      const counters = importedCounters.map(normalizeCounter);
+      const tasks = importedTasks
+        .map(normalizeTask)
+        .filter(task => task.title);
+
+      const add = confirm(nl
+        ? "Back-up importeren?\n\nOK = Taken toevoegen aan de huidige lijst.\nAnnuleren = Huidige gegevens vervangen."
+        : "Import backup?\n\nOK = Add tasks to the current list.\nCancel = Replace current data.");
 
       if (add) {
-        const ids = new Set(state.counters.map(c => c.id));
-        counters.forEach(counter => {
-          if (ids.has(counter.id)) counter.id = uid();
-          state.counters.push(counter);
+        const ids = new Set((state.tasks || []).map(task => task.id));
+        tasks.forEach(task => {
+          if (ids.has(task.id)) task.id = uid();
+          ids.add(task.id);
+          state.tasks.push(task);
         });
       } else {
-        if (!confirm("Replace all current data?")) return;
-        state.counters = counters;
-        state.deletedCounters = Array.isArray(data.deletedCounters)
-          ? data.deletedCounters.map(counter => ({
-              ...normalizeCounter(counter),
-              deletedAt: counter.deletedAt || new Date().toISOString()
-            }))
-          : [];
+        if (!confirm(nl ? "Alle huidige taken vervangen?" : "Replace all current tasks?")) return;
+        state.tasks = tasks;
+        if (data && !Array.isArray(data) && data.settings && typeof data.settings === "object") {
+          state.settings = { ...state.settings, ...data.settings };
+          applyTheme(state.settings.theme || "midnight-gold");
+          applyInterfaceSize(state.settings.interfaceSize || "standard");
+        }
       }
 
       state.settings = state.settings || {};
       state.settings.lastDataChangeAt = new Date().toISOString();
       saveState(state, false);
-      alert("Import completed.");
+      alert(nl ? `${tasks.length} ${tasks.length === 1 ? "taak geïmporteerd" : "taken geïmporteerd"}.` : `${tasks.length} ${tasks.length === 1 ? "task imported" : "tasks imported"}.`);
       onDone();
-    } catch {
-      alert("Import failed. This file could not be read.");
+    } catch (error) {
+      console.error(error);
+      alert(nl ? "Importeren mislukt. In dit bestand zijn geen leesbare Telly Tasks-gegevens gevonden." : "Import failed. No readable Telly Tasks data was found in this file.");
     }
   };
 
@@ -3107,10 +3124,9 @@ const HELP_ARTICLES_NL = {
       <div class="release-card current">
         <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
-          <li>Hoofdtaken toevoegen en lokaal bewaren</li>
-          <li>Taken bewerken, verplaatsen en afronden</li>
-          <li>Afgeronde taken herstellen</li>
-          <li>Taken verwijderen via het menu met drie puntjes</li>
+          <li>Back-ups met taken kunnen weer betrouwbaar worden geïmporteerd</li>
+          <li>Vandaag, Later en Wachten op staan nu evenwichtig naast elkaar</li>
+          <li>Elk filter toont subtiel hoeveel actieve taken erin staan</li>
         </ul>
       </div>
     `
@@ -3296,7 +3312,7 @@ function renderVersionPage() {
         <div class="info-card"><span>Build</span><strong>${TJ_BUILD}</strong></div>
         <div class="info-card"><span>Status</span><strong>${TJ_STATUS}</strong></div>
         <div class="info-card"><span>Released</span><strong>15 July 2026</strong></div>
-        <p>De eerste functionele fase met echte hoofdtaken en lokale opslag.</p>
+        <p>Een onderhoudsbuild met betrouwbare taakimport en een rustiger filteroverzicht.</p>
         <button class="settings-row" onclick="renderStandaloneArticle('whatsNew','What’s New')"><span>View What’s New</span><span>Open</span></button>
         <button class="settings-row" onclick="renderReleaseHistory()"><span>Release History</span><span>View</span></button>
       </div>
@@ -3316,7 +3332,8 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
+        <div class="release-card current"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
     </article>
@@ -3329,7 +3346,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Hoofdtaken toevoegen en lokaal bewaren" : "Add and store main tasks locally"}</li><li>${nl ? "Taken bewerken, verplaatsen en afronden" : "Edit, move and complete tasks"}</li><li>${nl ? "Taken verwijderen via het menu met drie puntjes" : "Delete tasks from the three-dot menu"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Taken uit een back-up worden weer correct geïmporteerd" : "Tasks are correctly restored from backups again"}</li><li>${nl ? "Vandaag, Later en Wachten op zijn gelijk verdeeld" : "Today, Later and Waiting on are evenly arranged"}</li><li>${nl ? "Elk filter toont nu subtiel het aantal taken" : "Each filter now subtly shows its task count"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
@@ -3606,12 +3623,14 @@ function renderHome() {
   const activeTasks = (state.tasks || []).map(normalizeTask).filter(t => t.status === "active" && t.bucket === taskFilter);
   const completedTasks = (state.tasks || []).map(normalizeTask).filter(t => t.status === "completed").sort((a,b) => new Date(b.completedAt || b.updatedAt) - new Date(a.completedAt || a.updatedAt));
   const filterLabels = { today: nl ? "Vandaag" : "Today", later: nl ? "Later" : "Later", waiting: nl ? "Wachten op" : "Waiting on" };
+  const bucketCounts = { today: 0, later: 0, waiting: 0 };
+  (state.tasks || []).map(normalizeTask).filter(task => task.status === "active").forEach(task => bucketCounts[task.bucket]++);
   app.innerHTML = `
     ${renderHeader("Telly Tasks", nl ? "Maak grote taken kleiner en begin met één duidelijke stap." : "Make large tasks smaller and start with one clear step.", `<button class="icon-btn primary" onclick="openTaskEditor()" aria-label="${nl ? "Nieuwe taak" : "New task"}">+</button>`)}
-    <div class="segment">
-      <button class="${taskFilter === "today" ? "active" : ""}" onclick="setTaskFilter('today')">${nl ? "Vandaag" : "Today"}</button>
-      <button class="${taskFilter === "later" ? "active" : ""}" onclick="setTaskFilter('later')">${nl ? "Later" : "Later"}</button>
-      <button class="${taskFilter === "waiting" ? "active" : ""}" onclick="setTaskFilter('waiting')">${nl ? "Wachten op" : "Waiting on"}</button>
+    <div class="segment task-segment">
+      <button class="${taskFilter === "today" ? "active" : ""}" onclick="setTaskFilter('today')"><span class="filter-label">${nl ? "Vandaag" : "Today"}</span><span class="filter-count">${bucketCounts.today}</span></button>
+      <button class="${taskFilter === "later" ? "active" : ""}" onclick="setTaskFilter('later')"><span class="filter-label">${nl ? "Later" : "Later"}</span><span class="filter-count">${bucketCounts.later}</span></button>
+      <button class="${taskFilter === "waiting" ? "active" : ""}" onclick="setTaskFilter('waiting')"><span class="filter-label">${nl ? "Wachten op" : "Waiting on"}</span><span class="filter-count">${bucketCounts.waiting}</span></button>
     </div>
     <div class="section-title"><span>${filterLabels[taskFilter]}</span><span class="task-filter-count">${activeTasks.length}</span></div>
     <div class="task-list">
