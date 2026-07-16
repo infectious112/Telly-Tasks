@@ -1800,6 +1800,12 @@ body {
 .guidance-result-controls{display:grid;gap:9px;margin:12px 0}
 .guidance-result-note{color:var(--muted);font-size:calc(9.5px * var(--scale));line-height:1.4}
 
+.guidance-step-list{display:grid;gap:8px}
+.guidance-step-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.guidance-step-row button{min-width:42px;height:42px;border-radius:12px;padding:0}
+.guidance-add-step{width:100%;margin-top:8px}
+
+
 
 
 
@@ -1830,7 +1836,7 @@ body {
 .import-choice .choice-btn span { margin-top:3px; color:var(--muted); font-size:calc(11px * var(--scale)); font-weight:500; line-height:1.35; }
 
 
-/* Telly Tasks 0.4.0-alpha.2 — Duidelijke uitkomst */
+/* Telly Tasks 0.4.0-alpha.3 — Meer kleine stappen */
 .task-progress-head > span {
   display:block!important;
   width:auto!important;
@@ -1927,9 +1933,9 @@ dialog .help-hero-icon { margin-bottom:7px!important; }
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.4.0-alpha.2";
-const TJ_RELEASE = "Duidelijke uitkomst";
-const TJ_BUILD = "20260716-TT14";
+const TJ_VERSION = "0.4.0-alpha.3";
+const TJ_RELEASE = "Meer kleine stappen";
+const TJ_BUILD = "20260716-TT15";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3393,10 +3399,10 @@ const HELP_ARTICLES_NL = {
       <div class="release-card current">
         <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
-          <li>De uitkomst is duidelijk verdeeld in besluit, planning, genoeg voor vandaag en eerste stap</li>
-          <li>Je kunt categorie en eerste stap aanpassen voordat je opslaat</li>
-          <li>Begeleide taken krijgen een subtiel label op de taakkaart</li>
-          <li>Bestaande taken kunnen opnieuw door de vijf vragen worden beoordeeld</li>
+          <li>Lege lijsten tonen nu contextuele meldingen per categorie</li>
+          <li>Het eerste-stapveld krijgt niet automatisch focus bij openen</li>
+          <li>Je kunt meerdere kleine stappen direct als subtaken toevoegen</li>
+          <li>Nieuwe en bestaande taken kunnen een optionele datum, deadline of opvolgdatum krijgen</li>
         </ul>
       </div>
     `
@@ -3602,7 +3608,7 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.4.0-alpha.2</strong><span>Duidelijke uitkomst · Build 20260716-TT14</span><ul><li>Uitkomst overzichtelijk gestructureerd</li><li>Voorstel vóór opslaan aanpasbaar</li><li>Begeleid-label en opnieuw beoordelen toegevoegd</li></ul></div><div class="release-card"><strong>0.4.0-alpha.1</strong><span>Help mij op weg · Build 20260716-TT13</span><ul><li>Begeleide taakflow met vijf vragen</li><li>Vaste beslisregels zonder AI</li><li>Voorstel en eerste stap opslaan bij de taak</li></ul></div><div class="release-card"><strong>0.3.0-alpha.4</strong><span>Blijft in beeld · Build 20260716-TT12</span><ul><li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li><li>Rustige gezamenlijke aandachtkaart toegevoegd</li><li>Subtiel duidelijkere aantallen bij beide filters</li></ul></div><div class="release-card"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card current"><strong>0.4.0-alpha.3</strong><span>Meer kleine stappen · Build 20260716-TT15</span><ul><li>Contextuele lege meldingen</li><li>Geen automatische focus op het stapveld</li><li>Meerdere subtaken direct toevoegen</li></ul></div><div class="release-card"><strong>0.4.0-alpha.2</strong><span>Duidelijke uitkomst · Build 20260716-TT14</span><ul><li>Uitkomst overzichtelijk gestructureerd</li><li>Voorstel vóór opslaan aanpasbaar</li><li>Begeleid-label en opnieuw beoordelen toegevoegd</li></ul></div><div class="release-card"><strong>0.4.0-alpha.1</strong><span>Help mij op weg · Build 20260716-TT13</span><ul><li>Begeleide taakflow met vijf vragen</li><li>Vaste beslisregels zonder AI</li><li>Voorstel en eerste stap opslaan bij de taak</li></ul></div><div class="release-card"><strong>0.3.0-alpha.4</strong><span>Blijft in beeld · Build 20260716-TT12</span><ul><li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li><li>Rustige gezamenlijke aandachtkaart toegevoegd</li><li>Subtiel duidelijkere aantallen bij beide filters</li></ul></div><div class="release-card"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
         <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
@@ -3758,6 +3764,18 @@ function taskBucketLabel(bucket, nl = currentLanguage() === "nl") {
   return labels[bucket] || labels.today;
 }
 
+function formatTaskDate(dateValue,nl=currentLanguage()==="nl"){
+  if(!dateValue) return "";
+  const date=new Date(`${dateValue}T12:00:00`);
+  if(Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(nl?"nl-NL":"en-GB",{day:"numeric",month:"short",year:"numeric"}).format(date);
+}
+function taskDateLabel(task,nl=currentLanguage()==="nl"){
+  if(!task?.dueDate) return "";
+  const label=task.bucket==="waiting"?(nl?"Opvolgen":"Follow up"):(nl?"Datum":"Date");
+  return `${label} ${formatTaskDate(task.dueDate,nl)}`;
+}
+
 function normalizeSubtask(subtask) {
   return {
     id: subtask?.id || uid(),
@@ -3784,6 +3802,7 @@ function normalizeTask(task) {
     subtasks,
     nextStepId,
     guidance: task.guidance && typeof task.guidance === "object" ? task.guidance : null,
+    dueDate: /^\d{4}-\d{2}-\d{2}$/.test(String(task.dueDate || "")) ? String(task.dueDate) : "",
     createdAt: task.createdAt || new Date().toISOString(),
     updatedAt: task.updatedAt || task.createdAt || new Date().toISOString(),
     completedAt: task.completedAt || ""
@@ -3813,11 +3832,13 @@ function openTaskStartDialog() {
     <label for="taskStartTitle">${nl ? "Naam van de taak" : "Task name"}</label>
     <input id="taskStartTitle" maxlength="160" placeholder="${nl ? "Bijvoorbeeld: De garage opruimen" : "For example: Clean the garage"}" />
     <label for="taskStartBucket">${nl ? "Voorlopige planning" : "Initial planning"}</label>
-    <select id="taskStartBucket">
+    <select id="taskStartBucket" onchange="updateTaskStartDateLabel()">
       <option value="today">${nl ? "Vandaag" : "Today"}</option>
       <option value="later">${nl ? "Later" : "Later"}</option>
       <option value="waiting">${nl ? "Wachten op" : "Waiting on"}</option>
     </select>
+    <label id="taskStartDateLabel" for="taskStartDate">${nl ? "Datum of deadline (optioneel)" : "Date or deadline (optional)"}</label>
+    <input id="taskStartDate" type="date" />
     <p class="guidance-start-note">${nl ? "Sla hem direct op of laat Telly Tasks je helpen om de taak duidelijker en kleiner te maken." : "Save it directly or let Telly Tasks help make it clearer and smaller."}</p>
     <div class="modal-actions stacked-actions">
       <button class="primary" onclick="quickSaveTaskFromStart(this.closest('dialog'))">${nl ? "Snel toevoegen" : "Quick add"}</button>
@@ -3830,18 +3851,26 @@ function openTaskStartDialog() {
   setTimeout(() => document.getElementById("taskStartTitle")?.focus(), 80);
 }
 
+function updateTaskStartDateLabel(){
+  const nl=currentLanguage()==="nl";
+  const waiting=document.getElementById("taskStartBucket")?.value==="waiting";
+  const label=document.getElementById("taskStartDateLabel");
+  if(label) label.textContent=waiting?(nl?"Opvolgdatum (optioneel)":"Follow-up date (optional)"):(nl?"Datum of deadline (optioneel)":"Date or deadline (optional)");
+}
+
 function taskStartValues() {
   return {
     title: document.getElementById("taskStartTitle")?.value.trim() || "",
-    bucket: document.getElementById("taskStartBucket")?.value || "today"
+    bucket: document.getElementById("taskStartBucket")?.value || "today",
+    dueDate: document.getElementById("taskStartDate")?.value || ""
   };
 }
 
 function quickSaveTaskFromStart(dialog) {
   const nl = currentLanguage() === "nl";
-  const { title, bucket } = taskStartValues();
+  const { title, bucket, dueDate } = taskStartValues();
   if (!title) return alert(nl ? "Vul eerst een naam voor de taak in." : "Enter a task name first.");
-  state.tasks.unshift(normalizeTask({ id: uid(), title, bucket, subtasks: [] }));
+  state.tasks.unshift(normalizeTask({ id: uid(), title, bucket, dueDate, subtasks: [] }));
   taskFilter = bucket;
   saveState(state);
   dialog?.remove();
@@ -3884,9 +3913,9 @@ const GUIDANCE_QUESTIONS = [
 
 function beginGuidanceFromStart(dialog) {
   const nl = currentLanguage() === "nl";
-  const { title, bucket } = taskStartValues();
+  const { title, bucket, dueDate } = taskStartValues();
   if (!title) return alert(nl ? "Vul eerst een naam voor de taak in." : "Enter a task name first.");
-  guidanceDraft = { title, initialBucket:bucket, step:0, answers:{} };
+  guidanceDraft = { title, initialBucket:bucket, dueDate, step:0, answers:{} };
   dialog?.remove();
   openGuidanceStep();
 }
@@ -4034,8 +4063,17 @@ function openGuidanceResult() {
 
     <div class="guidance-result-controls">
       <div>
-        <label for="guidanceFirstStep">${nl?"Eerste kleine stap (optioneel)":"First small step (optional)"}</label>
-        <input id="guidanceFirstStep" maxlength="160" value="${escapeHtml(currentNext)}" placeholder="${nl?"Bijvoorbeeld: één plank leegmaken":"For example: clear one shelf"}" />
+        <label>${nl?"Kleine stappen (optioneel)":"Small steps (optional)"}</label>
+        <div id="guidanceStepList" class="guidance-step-list">
+          <div class="guidance-step-row">
+            <input class="guidance-step-input" maxlength="160" value="${escapeHtml(currentNext)}" placeholder="${nl?"Bijvoorbeeld: één plank leegmaken":"For example: clear one shelf"}" />
+          </div>
+        </div>
+        <button type="button" class="guidance-add-step" onclick="addGuidanceStepField()">${nl?"+ Nog een stap toevoegen":"+ Add another step"}</button>
+      </div>
+      <div>
+        <label for="guidanceDate">${nl?"Datum of opvolgdatum (optioneel)":"Date or follow-up date (optional)"}</label>
+        <input id="guidanceDate" type="date" value="${escapeHtml(guidanceDraft.dueDate||existingTask?.dueDate||"")}" />
       </div>
       <div>
         <label for="guidanceBucket">${nl?"Plaats in":"Place under"}</label>
@@ -4062,13 +4100,26 @@ function openGuidanceResult() {
   dialog.showModal();
 }
 
+function addGuidanceStepField(){
+  const nl=currentLanguage()==="nl";
+  const list=document.getElementById("guidanceStepList");
+  if(!list) return;
+  const row=document.createElement("div");
+  row.className="guidance-step-row";
+  row.innerHTML=`<input class="guidance-step-input" maxlength="160" placeholder="${nl?"Nog een kleine stap":"Another small step"}" />
+    <button type="button" aria-label="${nl?"Stap verwijderen":"Remove step"}" onclick="this.parentElement.remove()">×</button>`;
+  list.appendChild(row);
+  requestAnimationFrame(()=>row.querySelector("input")?.focus());
+}
+
 function guidanceBackFromResult(dialog){ dialog?.remove(); guidanceDraft.step=GUIDANCE_QUESTIONS.length-1; openGuidanceStep(); }
 
 function saveGuidedTask(dialog,useSuggestion=true) {
   const nl=currentLanguage()==="nl";
   if(!guidanceDraft) return;
   const selectedBucket=document.getElementById("guidanceBucket")?.value||"later";
-  const firstStepTitle=document.getElementById("guidanceFirstStep")?.value.trim()||"";
+  const selectedDueDate=document.getElementById("guidanceDate")?.value||"";
+  const stepTitles=[...document.querySelectorAll(".guidance-step-input")].map(input=>input.value.trim()).filter(Boolean);
   const outcome=guidanceOutcome(guidanceDraft,nl);
   const targetBucket=useSuggestion ? selectedBucket : guidanceDraft.initialBucket;
   const guidanceData={
@@ -4084,14 +4135,17 @@ function saveGuidedTask(dialog,useSuggestion=true) {
     const task=state.tasks.find(t=>t.id===guidanceDraft.taskId);
     if(!task) return;
     if(useSuggestion) task.bucket=targetBucket;
+    task.dueDate=selectedDueDate;
 
-    if(firstStepTitle){
-      let next=task.subtasks?.find(s=>s.id===task.nextStepId && !s.completed);
-      if(next) next.title=firstStepTitle;
-      else {
-        const sub=normalizeSubtask({id:uid(),title:firstStepTitle});
-        task.subtasks=[...(task.subtasks||[]),sub];
-        task.nextStepId=sub.id;
+    if(stepTitles.length){
+      const existingNext=task.subtasks?.find(s=>s.id===task.nextStepId && !s.completed);
+      const titlesToAdd=[...stepTitles];
+      if(existingNext) existingNext.title=titlesToAdd.shift();
+      const newSubs=titlesToAdd.map(title=>normalizeSubtask({id:uid(),title}));
+      task.subtasks=[...(task.subtasks||[]),...newSubs];
+      if(!task.nextStepId){
+        const firstOpen=(task.subtasks||[]).find(s=>!s.completed);
+        task.nextStepId=firstOpen?.id||"";
       }
     }
 
@@ -4099,9 +4153,9 @@ function saveGuidedTask(dialog,useSuggestion=true) {
     task.updatedAt=new Date().toISOString();
     taskFilter=task.bucket;
   } else {
-    const subtasks=firstStepTitle?[normalizeSubtask({id:uid(),title:firstStepTitle})]:[];
+    const subtasks=stepTitles.map(title=>normalizeSubtask({id:uid(),title}));
     const task=normalizeTask({
-      id:uid(), title:guidanceDraft.title, bucket:targetBucket, subtasks,
+      id:uid(), title:guidanceDraft.title, bucket:targetBucket, dueDate:selectedDueDate, subtasks,
       nextStepId:subtasks[0]?.id||"",
       guidance:guidanceData
     });
@@ -4155,6 +4209,7 @@ function beginGuidanceForTask(taskId){
     taskId,
     title:task.title,
     initialBucket:task.bucket,
+    dueDate:task.dueDate||"",
     step:0,
     answers:{...(task.guidance?.answers||{})}
   };
@@ -4179,6 +4234,8 @@ function openTaskEditor(taskId = "") {
         <option value="later" ${task?.bucket === "later" ? "selected" : ""}>${nl ? "Later" : "Later"}</option>
         <option value="waiting" ${task?.bucket === "waiting" ? "selected" : ""}>${nl ? "Wachten op" : "Waiting on"}</option>
       </select>
+      <label for="taskDueDate">${nl ? "Datum of opvolgdatum (optioneel)" : "Date or follow-up date (optional)"}</label>
+      <input id="taskDueDate" type="date" value="${escapeHtml(task?.dueDate||"")}" />
       <div class="modal-actions stacked-actions">
         <button class="primary" onclick="saveTaskFromDialog('${taskId}', this.closest('dialog'))">${nl ? "Wijzigingen bewaren" : "Save changes"}</button>
         <button onclick="this.closest('dialog').remove()">${nl ? "Annuleren" : "Cancel"}</button>
@@ -4193,6 +4250,7 @@ function saveTaskFromDialog(taskId, dialog) {
   const nl = currentLanguage() === "nl";
   const title = document.getElementById("taskTitle")?.value.trim() || "";
   const bucket = document.getElementById("taskBucket")?.value || "today";
+  const dueDate = document.getElementById("taskDueDate")?.value || "";
   if (!title) {
     alert(nl ? "Vul eerst een naam voor de taak in." : "Enter a task name first.");
     return;
@@ -4202,6 +4260,7 @@ function saveTaskFromDialog(taskId, dialog) {
     if (!task) return;
     task.title = title;
     task.bucket = bucket;
+    task.dueDate = dueDate;
     task.updatedAt = new Date().toISOString();
   } else {
     state.tasks.unshift(normalizeTask({ id: uid(), title, bucket, subtasks: [] }));
@@ -4405,7 +4464,7 @@ function taskCardHtml(task) {
   return `<div class="task-card ${completed ? "completed" : ""}">
     <div class="task-row">
       <button class="task-complete-btn ${completed ? "done" : ""}" onclick="toggleTaskComplete('${task.id}')" aria-label="${completed ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}">${completed ? "✓" : ""}</button>
-      <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p>${task.guidance ? `<span class="guidance-badge">✓ ${nl ? "Begeleid" : "Guided"}</span>` : ""}</div>
+      <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${task.dueDate ? ` · ${escapeHtml(taskDateLabel(task,nl))}` : ""}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p>${task.guidance ? `<span class="guidance-badge">✓ ${nl ? "Begeleid" : "Guided"}</span>` : ""}</div>
       ${!completed ? `<button class="task-quick-add" onclick="openSubtaskEditor('${task.id}')" aria-label="${nl ? "Subtaak toevoegen" : "Add subtask"}">+</button>` : ""}
       <button class="task-menu-btn" onclick="openTaskMenu('${task.id}')" aria-label="${nl ? "Meer opties" : "More options"}">•••</button>
     </div>
@@ -4441,6 +4500,23 @@ function taskAttentionHtml(bucketCounts, nl) {
   </div>`;
 }
 
+function taskEmptyStateHtml(nl,bucketCounts,totalTasks){
+  if(totalTasks===0){
+    return `<div class="task-empty"><strong>${nl?"Nog geen taken":"No tasks yet"}</strong>${nl?"Tik op + om je eerste taak toe te voegen.":"Tap + to add your first task."}</div>`;
+  }
+  if(taskFilter==="today"){
+    const bits=[];
+    if(bucketCounts.later) bits.push(nl?`${bucketCounts.later} ${bucketCounts.later===1?"taak":"taken"} voor later`:`${bucketCounts.later} ${bucketCounts.later===1?"task":"tasks"} for later`);
+    if(bucketCounts.waiting) bits.push(nl?`${bucketCounts.waiting} ${bucketCounts.waiting===1?"taak waarop je wacht":"taken waarop je wacht"}`:`${bucketCounts.waiting} ${bucketCounts.waiting===1?"task you are waiting on":"tasks you are waiting on"}`);
+    const detail=bits.length?(nl?`Je hebt nog ${bits.join(" en ")}.`:`You still have ${bits.join(" and ")}.`):(nl?"Vandaag staat er niets gepland.":"Nothing is planned for today.");
+    return `<div class="task-empty"><strong>${nl?"Geen taken voor vandaag":"No tasks for today"}</strong>${detail}</div>`;
+  }
+  if(taskFilter==="later"){
+    return `<div class="task-empty"><strong>${nl?"Geen taken voor later":"No tasks for later"}</strong>${nl?"Alles staat nu bij Vandaag of Wachten op.":"Everything is currently under Today or Waiting on."}</div>`;
+  }
+  return `<div class="task-empty"><strong>${nl?"Je wacht nergens op":"You are not waiting on anything"}</strong>${nl?"Er zijn momenteel geen taken afhankelijk van iemand anders.":"No tasks currently depend on someone else."}</div>`;
+}
+
 function renderHome() {
   ensureNormalizedTasks();
   const nl = currentLanguage() === "nl";
@@ -4458,7 +4534,7 @@ function renderHome() {
     </div>
     <div class="section-title"><span>${filterLabels[taskFilter]}</span><span class="task-filter-count">${activeTasks.length}</span></div>
     <div class="task-list">
-      ${activeTasks.length ? activeTasks.map(taskCardHtml).join("") : `<div class="task-empty"><strong>${nl ? "Nog geen taken" : "No tasks yet"}</strong>${nl ? "Tik op + om je eerste taak toe te voegen." : "Tap + to add your first task."}</div>`}
+      ${activeTasks.length ? activeTasks.map(taskCardHtml).join("") : taskEmptyStateHtml(nl,bucketCounts,state.tasks.filter(t=>t.status!=="completed").length)}
     </div>
     ${taskAttentionHtml(bucketCounts, nl)}
     ${completedTasks.length ? `<div class="section-title" style="margin-top:20px"><span>${nl ? "Afgerond" : "Completed"}</span><span class="task-filter-count">${completedTasks.length}</span></div><div class="task-list">${completedTasks.map(taskCardHtml).join("")}</div>` : ""}
