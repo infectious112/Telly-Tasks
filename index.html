@@ -1792,6 +1792,15 @@ body {
 .guidance-start-note{color:var(--muted);font-size:calc(10px * var(--scale));line-height:1.4;margin:4px 0 10px}
 @media (max-width:380px){.guidance-choice-grid.two{grid-template-columns:1fr}}
 
+.guidance-decision-grid{display:grid;gap:9px;margin:12px 0}
+.guidance-decision-card{padding:12px 13px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.guidance-decision-card small{display:block;color:var(--muted);font-size:calc(9px * var(--scale));margin-bottom:4px}
+.guidance-decision-card strong{display:block;color:var(--text);font-size:calc(12px * var(--scale));line-height:1.35}
+.guidance-badge{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--theme-accent) 32%,var(--line));background:color-mix(in srgb,var(--theme-accent) 9%,transparent);color:var(--theme-accent);font-size:calc(8.5px * var(--scale));font-weight:800}
+.guidance-result-controls{display:grid;gap:9px;margin:12px 0}
+.guidance-result-note{color:var(--muted);font-size:calc(9.5px * var(--scale));line-height:1.4}
+
+
 
 
 /* Telly Tasks 0.3.0-alpha.2 — compact update, clearer import and quick subtask */
@@ -1821,7 +1830,7 @@ body {
 .import-choice .choice-btn span { margin-top:3px; color:var(--muted); font-size:calc(11px * var(--scale)); font-weight:500; line-height:1.35; }
 
 
-/* Telly Tasks 0.4.0-alpha.1 — Help mij op weg */
+/* Telly Tasks 0.4.0-alpha.2 — Duidelijke uitkomst */
 .task-progress-head > span {
   display:block!important;
   width:auto!important;
@@ -1918,9 +1927,9 @@ dialog .help-hero-icon { margin-bottom:7px!important; }
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.4.0-alpha.1";
-const TJ_RELEASE = "Help mij op weg";
-const TJ_BUILD = "20260716-TT13";
+const TJ_VERSION = "0.4.0-alpha.2";
+const TJ_RELEASE = "Duidelijke uitkomst";
+const TJ_BUILD = "20260716-TT14";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3384,10 +3393,10 @@ const HELP_ARTICLES_NL = {
       <div class="release-card current">
         <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
-          <li>Nieuwe keuze tussen Snel toevoegen en Help mij op weg</li>
-          <li>De vijf vaste vragen helpen een taak verduidelijken en plannen</li>
-          <li>De uitkomst wordt bij de taak opgeslagen en blijft later terug te lezen</li>
-          <li>Een optionele eerste kleine stap kan direct als subtaak worden toegevoegd</li>
+          <li>De uitkomst is duidelijk verdeeld in besluit, planning, genoeg voor vandaag en eerste stap</li>
+          <li>Je kunt categorie en eerste stap aanpassen voordat je opslaat</li>
+          <li>Begeleide taken krijgen een subtiel label op de taakkaart</li>
+          <li>Bestaande taken kunnen opnieuw door de vijf vragen worden beoordeeld</li>
         </ul>
       </div>
     `
@@ -3593,7 +3602,7 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.4.0-alpha.1</strong><span>Help mij op weg · Build 20260716-TT13</span><ul><li>Begeleide taakflow met vijf vragen</li><li>Vaste beslisregels zonder AI</li><li>Voorstel en eerste stap opslaan bij de taak</li></ul></div><div class="release-card"><strong>0.3.0-alpha.4</strong><span>Blijft in beeld · Build 20260716-TT12</span><ul><li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li><li>Rustige gezamenlijke aandachtkaart toegevoegd</li><li>Subtiel duidelijkere aantallen bij beide filters</li></ul></div><div class="release-card"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card current"><strong>0.4.0-alpha.2</strong><span>Duidelijke uitkomst · Build 20260716-TT14</span><ul><li>Uitkomst overzichtelijk gestructureerd</li><li>Voorstel vóór opslaan aanpasbaar</li><li>Begeleid-label en opnieuw beoordelen toegevoegd</li></ul></div><div class="release-card"><strong>0.4.0-alpha.1</strong><span>Help mij op weg · Build 20260716-TT13</span><ul><li>Begeleide taakflow met vijf vragen</li><li>Vaste beslisregels zonder AI</li><li>Voorstel en eerste stap opslaan bij de taak</li></ul></div><div class="release-card"><strong>0.3.0-alpha.4</strong><span>Blijft in beeld · Build 20260716-TT12</span><ul><li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li><li>Rustige gezamenlijke aandachtkaart toegevoegd</li><li>Subtiel duidelijkere aantallen bij beide filters</li></ul></div><div class="release-card"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
         <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
@@ -3955,26 +3964,96 @@ function guidanceAnswerLabel(key,value,nl) {
   return option?(nl?option[1]:option[2]):"";
 }
 
+
+function guidanceWhenLabel(value,nl){
+  const map={
+    today:nl?"Vandaag":"Today",
+    week:nl?"Deze week":"This week",
+    later:nl?"Later":"Later",
+    none:nl?"Geen deadline":"No deadline"
+  };
+  return map[value]||map.later;
+}
+function guidanceDoLabel(value,nl){
+  const map={
+    finish:nl?"Helemaal uitvoeren":"Finish it",
+    start:nl?"Alleen beginnen":"Only start",
+    prepare:nl?"Alleen voorbereiden":"Only prepare",
+    decide:nl?"Alleen een besluit nemen":"Only decide",
+    schedule:nl?"Alleen inplannen":"Only schedule"
+  };
+  return map[value]||map.start;
+}
+function guidanceBucketLabel(value,nl){
+  return value==="today"?(nl?"Vandaag":"Today"):value==="waiting"?(nl?"Wachten op":"Waiting on"):(nl?"Later":"Later");
+}
+function guidanceFocusLabel(draft,nl){
+  const a=draft.answers||{};
+  if(a.this==="big") return nl?"Taak opdelen in kleine stappen":"Break task into small steps";
+  if(a.this==="vague") return nl?"Taak eerst concreter maken":"Clarify the task first";
+  if(a.who==="delegate") return nl?"Overdragen en opvolgen":"Delegate and follow up";
+  if(a.who==="help") return nl?"Hulp vragen bij één stap":"Ask for help with one step";
+  return guidanceDoLabel(a.do,nl);
+}
+
 function openGuidanceResult() {
   if(!guidanceDraft) return;
   const nl=currentLanguage()==="nl";
   const outcome=guidanceOutcome(guidanceDraft,nl);
+  const existingTask=guidanceDraft.taskId ? state.tasks.find(t=>t.id===guidanceDraft.taskId) : null;
+  const currentNext=existingTask?.subtasks?.find(s=>s.id===existingTask.nextStepId && !s.completed)?.title || "";
   const dialog=document.createElement("dialog");
   dialog.className="task-dialog";
   dialog.innerHTML=`<div class="modal">
-    <div class="eyebrow">${nl?"Jouw voorstel":"Your suggestion"}</div>
+    <div class="eyebrow">${nl?"Jouw uitkomst":"Your outcome"}</div>
     <h2>${escapeHtml(guidanceDraft.title)}</h2>
-    <div class="guidance-advice"><strong>${nl?"Telly Tasks stelt voor:":"Telly Tasks suggests:"}</strong><ul>${outcome.advice.map(item=>`<li>${item}</li>`).join("")}</ul></div>
-    <label for="guidanceFirstStep">${nl?"Eerste kleine stap (optioneel)":"First small step (optional)"}</label>
-    <input id="guidanceFirstStep" maxlength="160" placeholder="${nl?"Bijvoorbeeld: één plank leegmaken":"For example: clear one shelf"}" />
-    <label>${nl?"Plaats in":"Place under"}</label>
-    <select id="guidanceBucket">
-      <option value="today" ${outcome.bucket==="today"?"selected":""}>${nl?"Vandaag":"Today"}</option>
-      <option value="later" ${outcome.bucket==="later"?"selected":""}>${nl?"Later":"Later"}</option>
-      <option value="waiting" ${outcome.bucket==="waiting"?"selected":""}>${nl?"Wachten op":"Waiting on"}</option>
-    </select>
+
+    <div class="guidance-decision-grid">
+      <div class="guidance-decision-card">
+        <small>${nl?"Wat is besloten?":"What was decided?"}</small>
+        <strong>${escapeHtml(guidanceFocusLabel(guidanceDraft,nl))}</strong>
+      </div>
+      <div class="guidance-decision-card">
+        <small>${nl?"Waar komt de taak?":"Where will the task go?"}</small>
+        <strong>${escapeHtml(guidanceBucketLabel(outcome.bucket,nl))}</strong>
+      </div>
+      <div class="guidance-decision-card">
+        <small>${nl?"Wat is vandaag genoeg?":"What is enough for today?"}</small>
+        <strong>${escapeHtml(guidanceDoLabel(guidanceDraft.answers.do,nl))}</strong>
+      </div>
+      <div class="guidance-decision-card">
+        <small>${nl?"Wanneer?":"When?"}</small>
+        <strong>${escapeHtml(guidanceWhenLabel(guidanceDraft.answers.when,nl))}</strong>
+      </div>
+    </div>
+
+    <div class="guidance-advice">
+      <strong>${nl?"Advies":"Advice"}</strong>
+      <ul>${outcome.advice.map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul>
+    </div>
+
+    <div class="guidance-result-controls">
+      <div>
+        <label for="guidanceFirstStep">${nl?"Eerste kleine stap (optioneel)":"First small step (optional)"}</label>
+        <input id="guidanceFirstStep" maxlength="160" value="${escapeHtml(currentNext)}" placeholder="${nl?"Bijvoorbeeld: één plank leegmaken":"For example: clear one shelf"}" />
+      </div>
+      <div>
+        <label for="guidanceBucket">${nl?"Plaats in":"Place under"}</label>
+        <select id="guidanceBucket">
+          <option value="today" ${outcome.bucket==="today"?"selected":""}>${nl?"Vandaag":"Today"}</option>
+          <option value="later" ${outcome.bucket==="later"?"selected":""}>${nl?"Later":"Later"}</option>
+          <option value="waiting" ${outcome.bucket==="waiting"?"selected":""}>${nl?"Wachten op":"Waiting on"}</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="guidance-result-note">${nl
+      ?"Je kunt de voorgestelde plek en eerste stap hierboven aanpassen voordat je opslaat."
+      :"You can adjust the suggested location and first step before saving."}</p>
+
     <div class="modal-actions stacked-actions">
-      <button class="primary" onclick="saveGuidedTask(this.closest('dialog'))">${nl?"Voorstel gebruiken":"Use suggestion"}</button>
+      <button class="primary" onclick="saveGuidedTask(this.closest('dialog'),true)">${existingTask?(nl?"Uitkomst toepassen":"Apply outcome"):(nl?"Voorstel gebruiken":"Use suggestion")}</button>
+      <button onclick="saveGuidedTask(this.closest('dialog'),false)">${existingTask?(nl?"Antwoorden bewaren, taak niet verplaatsen":"Save answers, keep task location"):(nl?"Toch direct opslaan":"Save directly instead")}</button>
       <button onclick="guidanceBackFromResult(this.closest('dialog'))">${nl?"Vorige vraag aanpassen":"Change previous answer"}</button>
       <button onclick="cancelGuidance(this.closest('dialog'))">${nl?"Annuleren":"Cancel"}</button>
     </div>
@@ -3985,20 +4064,51 @@ function openGuidanceResult() {
 
 function guidanceBackFromResult(dialog){ dialog?.remove(); guidanceDraft.step=GUIDANCE_QUESTIONS.length-1; openGuidanceStep(); }
 
-function saveGuidedTask(dialog) {
+function saveGuidedTask(dialog,useSuggestion=true) {
   const nl=currentLanguage()==="nl";
   if(!guidanceDraft) return;
-  const bucket=document.getElementById("guidanceBucket")?.value||"later";
+  const selectedBucket=document.getElementById("guidanceBucket")?.value||"later";
   const firstStepTitle=document.getElementById("guidanceFirstStep")?.value.trim()||"";
   const outcome=guidanceOutcome(guidanceDraft,nl);
-  const subtasks=firstStepTitle?[normalizeSubtask({id:uid(),title:firstStepTitle})]:[];
-  const task=normalizeTask({
-    id:uid(), title:guidanceDraft.title, bucket, subtasks,
-    nextStepId:subtasks[0]?.id||"",
-    guidance:{completedAt:new Date().toISOString(),answers:{...guidanceDraft.answers},advice:outcome.advice,version:1}
-  });
-  state.tasks.unshift(task);
-  taskFilter=bucket;
+  const targetBucket=useSuggestion ? selectedBucket : guidanceDraft.initialBucket;
+  const guidanceData={
+    completedAt:new Date().toISOString(),
+    answers:{...guidanceDraft.answers},
+    advice:outcome.advice,
+    appliedSuggestion:!!useSuggestion,
+    selectedBucket,
+    version:2
+  };
+
+  if(guidanceDraft.taskId){
+    const task=state.tasks.find(t=>t.id===guidanceDraft.taskId);
+    if(!task) return;
+    if(useSuggestion) task.bucket=targetBucket;
+
+    if(firstStepTitle){
+      let next=task.subtasks?.find(s=>s.id===task.nextStepId && !s.completed);
+      if(next) next.title=firstStepTitle;
+      else {
+        const sub=normalizeSubtask({id:uid(),title:firstStepTitle});
+        task.subtasks=[...(task.subtasks||[]),sub];
+        task.nextStepId=sub.id;
+      }
+    }
+
+    task.guidance=guidanceData;
+    task.updatedAt=new Date().toISOString();
+    taskFilter=task.bucket;
+  } else {
+    const subtasks=firstStepTitle?[normalizeSubtask({id:uid(),title:firstStepTitle})]:[];
+    const task=normalizeTask({
+      id:uid(), title:guidanceDraft.title, bucket:targetBucket, subtasks,
+      nextStepId:subtasks[0]?.id||"",
+      guidance:guidanceData
+    });
+    state.tasks.unshift(task);
+    taskFilter=targetBucket;
+  }
+
   saveState(state);
   dialog?.remove();
   guidanceDraft=null;
@@ -4015,14 +4125,40 @@ function openGuidanceSummary(taskId) {
   dialog.innerHTML=`<div class="modal">
     <div class="eyebrow">${nl?"Uitkomst begeleiding":"Guidance outcome"}</div>
     <h2>${escapeHtml(task.title)}</h2>
+    <span class="guidance-badge">✓ ${nl?"Begeleid":"Guided"}</span>
+
+    <div class="guidance-decision-grid">
+      <div class="guidance-decision-card"><small>${nl?"Wat is besloten?":"What was decided?"}</small><strong>${escapeHtml(guidanceFocusLabel({answers},nl))}</strong></div>
+      <div class="guidance-decision-card"><small>${nl?"Waar staat de taak?":"Where is the task?"}</small><strong>${escapeHtml(guidanceBucketLabel(task.bucket,nl))}</strong></div>
+      <div class="guidance-decision-card"><small>${nl?"Wat is genoeg?":"What is enough?"}</small><strong>${escapeHtml(guidanceDoLabel(answers.do,nl))}</strong></div>
+      <div class="guidance-decision-card"><small>${nl?"Wanneer?":"When?"}</small><strong>${escapeHtml(guidanceWhenLabel(answers.when,nl))}</strong></div>
+    </div>
+
     <div class="guidance-summary">
       ${GUIDANCE_QUESTIONS.map(q=>`<div class="guidance-summary-row"><small>${(nl?q.nl:q.en).replace(/<[^>]*>/g,"")}</small><strong>${escapeHtml(guidanceAnswerLabel(q.key,answers[q.key],nl))}</strong></div>`).join("")}
     </div>
-    <div class="guidance-advice"><strong>${nl?"Voorstel":"Suggestion"}</strong><ul>${(task.guidance.advice||[]).map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>
-    <div class="modal-actions stacked-actions"><button onclick="this.closest('dialog').remove()">${nl?"Sluiten":"Close"}</button></div>
+    <div class="guidance-advice"><strong>${nl?"Advies":"Advice"}</strong><ul>${(task.guidance.advice||[]).map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>
+
+    <div class="modal-actions stacked-actions">
+      <button class="primary" onclick="this.closest('dialog').remove();beginGuidanceForTask('${taskId}')">${nl?"Taak opnieuw beoordelen":"Review task again"}</button>
+      <button onclick="this.closest('dialog').remove()">${nl?"Sluiten":"Close"}</button>
+    </div>
   </div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
+}
+
+function beginGuidanceForTask(taskId){
+  const task=state.tasks.find(t=>t.id===taskId);
+  if(!task) return;
+  guidanceDraft={
+    taskId,
+    title:task.title,
+    initialBucket:task.bucket,
+    step:0,
+    answers:{...(task.guidance?.answers||{})}
+  };
+  openGuidanceStep();
 }
 
 function openTaskEditor(taskId = "") {
@@ -4098,6 +4234,7 @@ function openTaskMenu(taskId) {
     ${progress.total ? `<p class="menu-note">${progress.completed} ${nl ? "van" : "of"} ${progress.total} ${nl ? "stappen klaar" : "steps complete"} · ${progress.percent}%</p>` : ""}
     ${task.status !== "completed" ? `<button onclick="this.closest('dialog').remove();openSubtaskEditor('${taskId}')">${nl ? "Subtaak toevoegen" : "Add subtask"}</button>` : ""}
     ${task.guidance ? `<button onclick="this.closest('dialog').remove();openGuidanceSummary('${taskId}')">${nl ? "Uitkomst begeleiding bekijken" : "View guidance outcome"}</button>` : ""}
+    <button onclick="this.closest('dialog').remove();beginGuidanceForTask('${taskId}')">${task.guidance ? (nl ? "Taak opnieuw beoordelen" : "Review task again") : (nl ? "Help mij op weg" : "Help me get started")}</button>
     <button onclick="this.closest('dialog').remove();openTaskEditor('${taskId}')">${nl ? "Bewerken" : "Edit"}</button>
     <button onclick="this.closest('dialog').remove();toggleTaskComplete('${taskId}')">${task.status === "completed" ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}</button>
     <button onclick="moveTask('${taskId}','today',this.closest('dialog'))">${nl ? "Naar Vandaag" : "Move to Today"}</button>
@@ -4268,7 +4405,7 @@ function taskCardHtml(task) {
   return `<div class="task-card ${completed ? "completed" : ""}">
     <div class="task-row">
       <button class="task-complete-btn ${completed ? "done" : ""}" onclick="toggleTaskComplete('${task.id}')" aria-label="${completed ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}">${completed ? "✓" : ""}</button>
-      <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p></div>
+      <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p>${task.guidance ? `<span class="guidance-badge">✓ ${nl ? "Begeleid" : "Guided"}</span>` : ""}</div>
       ${!completed ? `<button class="task-quick-add" onclick="openSubtaskEditor('${task.id}')" aria-label="${nl ? "Subtaak toevoegen" : "Add subtask"}">+</button>` : ""}
       <button class="task-menu-btn" onclick="openTaskMenu('${task.id}')" aria-label="${nl ? "Meer opties" : "More options"}">•••</button>
     </div>
