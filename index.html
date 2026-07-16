@@ -1721,6 +1721,88 @@ body {
 .import-choice .choice-btn strong, .import-choice .choice-btn span { display:block; }
 .import-choice .choice-btn span { margin-top:3px; color:var(--muted); font-size:calc(11px * var(--scale)); font-weight:500; line-height:1.35; }
 
+
+/* Telly Tasks 0.3.0-alpha.3 — responsive dialogs and accessible progress */
+.task-progress-head > span {
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  background:transparent!important;
+  color:var(--muted)!important;
+  padding:0!important;
+  border:0!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+}
+.task-progress-head > strong {
+  flex:0 0 auto;
+  color:var(--text)!important;
+  background:transparent!important;
+  line-height:1.35!important;
+}
+.task-progress-bar {
+  height:8px!important;
+  background:color-mix(in srgb,var(--text) 12%,transparent)!important;
+  border:1px solid color-mix(in srgb,var(--text) 20%,transparent)!important;
+}
+.task-progress-fill {
+  background:linear-gradient(90deg,var(--theme-accent2),var(--theme-accent))!important;
+}
+:root[data-theme="midnight-gold"] .task-progress-fill {
+  background:linear-gradient(90deg,#f3d58e,#c69a3e)!important;
+}
+:root[data-theme="emerald-elite"] .task-progress-fill {
+  background:linear-gradient(90deg,#55dda0,#11b96f)!important;
+}
+:root[data-theme="arctic-white"] .task-progress-bar {
+  background:#e7e9ee!important;
+  border-color:#c6cbd4!important;
+}
+:root[data-theme="arctic-white"] .task-progress-fill {
+  background:linear-gradient(90deg,#d9b96a,#b8892f)!important;
+}
+
+/* Keep every dialog inside the usable viewport, including compact iPhones. */
+dialog,
+dialog[open] {
+  box-sizing:border-box!important;
+  width:min(390px, calc(100vw - 24px))!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:calc(100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom)))!important;
+  margin:auto!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+dialog .modal,
+.tj-update-dialog .modal {
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  max-height:calc(100dvh - max(36px, env(safe-area-inset-top)) - max(36px, env(safe-area-inset-bottom)))!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  padding:14px!important;
+  margin:0!important;
+}
+dialog .modal h2 { margin-bottom:8px!important; }
+dialog .settings-row { min-height:48px!important; padding:10px 12px!important; margin-bottom:7px!important; }
+dialog .modal-actions { margin-top:10px!important; gap:7px!important; }
+dialog .modal-actions button { min-height:42px!important; padding:9px 12px!important; }
+dialog .help-hero-icon { margin-bottom:7px!important; }
+.import-choice .choice-btn { padding:10px 12px!important; }
+.import-choice .choice-btn span { line-height:1.3!important; }
+
+@media (max-height: 720px) {
+  dialog .modal,
+  .tj-update-dialog .modal { padding:11px!important; }
+  dialog .help-hero-icon { width:44px!important; height:44px!important; font-size:23px!important; margin-bottom:5px!important; }
+  dialog h2, .tj-update-dialog h2 { font-size:calc(20px * var(--scale))!important; margin:4px 0 6px!important; }
+  dialog .help-copy { margin:0 0 8px!important; line-height:1.35!important; }
+  dialog .info-card { padding:8px 10px!important; min-height:0!important; }
+  dialog .settings-row { min-height:44px!important; padding:8px 10px!important; }
+  dialog .modal-actions button { min-height:39px!important; }
+}
+
 </style>
 </head>
 <body>
@@ -1737,9 +1819,9 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.3.0-alpha.2";
-const TJ_RELEASE = "Vlotter werken";
-const TJ_BUILD = "20260716-TT10";
+const TJ_VERSION = "0.3.0-alpha.3";
+const TJ_RELEASE = "Past op elk scherm";
+const TJ_BUILD = "20260716-TT11";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3411,7 +3493,7 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card current"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
         <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
@@ -3425,7 +3507,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Voeg subtaken direct toe met de plusknop bij een hoofdtaak" : "Add subtasks directly with the plus button on a main task"}</li><li>${nl ? "Back-ups kunnen nu betrouwbaar alle huidige taken vervangen" : "Backups can now reliably replace all current tasks"}</li><li>${nl ? "De update-pop-up en voortgangsweergave zijn compacter en ruimer gemaakt" : "The update popup and progress display are now more compact and spacious"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Voortgangstekst staat nu altijd duidelijk boven de balk" : "Progress text now always sits clearly above the bar"}</li><li>${nl ? "Beter contrast voor voortgang in alle thema’s" : "Improved progress contrast in every theme"}</li><li>${nl ? "Pop-ups passen nu beter op kleinere schermen en kunnen intern scrollen" : "Dialogs now fit smaller screens and scroll internally when needed"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
