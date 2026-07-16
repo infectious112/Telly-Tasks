@@ -1694,6 +1694,33 @@ body {
 .subtask-form input { width:100%; }
 .task-dialog-menu .menu-note { color:var(--muted); font-size:calc(12px * var(--scale)); margin:-4px 0 10px; }
 
+
+/* Telly Tasks 0.3.0-alpha.2 — compact update, clearer import and quick subtask */
+.tj-update-dialog .modal {
+  width:min(420px, calc(100vw - 28px));
+  max-height:calc(100dvh - 32px);
+  overflow:auto;
+  padding:18px !important;
+}
+.tj-update-dialog .help-hero-icon { width:52px; height:52px; font-size:27px; margin-bottom:8px; }
+.tj-update-dialog h2 { margin:6px 0 8px; font-size:calc(23px * var(--scale)); }
+.tj-update-dialog .help-copy { margin:0 0 10px; }
+.tj-update-dialog .info-card { padding:10px 12px; min-height:0; }
+.tj-update-dialog .modal-actions { margin-top:12px; gap:8px; }
+.tj-update-dialog .modal-actions button { min-height:42px; }
+.task-quick-add {
+  width:30px!important; height:30px!important; min-width:30px!important; padding:0!important;
+  border-radius:999px!important; display:grid!important; place-items:center;
+  color:var(--theme-accent)!important; background:color-mix(in srgb,var(--theme-accent) 10%,transparent)!important;
+  border:1px solid color-mix(in srgb,var(--theme-accent) 34%,var(--line))!important; font-size:18px!important; font-weight:800!important;
+}
+.task-progress { height:auto!important; min-height:0!important; overflow:visible!important; border-radius:0!important; background:transparent!important; }
+.task-progress-head { min-height:18px; line-height:1.25; }
+.task-progress-bar { width:100%; }
+.import-choice .choice-btn { text-align:left; padding:12px 13px; }
+.import-choice .choice-btn strong, .import-choice .choice-btn span { display:block; }
+.import-choice .choice-btn span { margin-top:3px; color:var(--muted); font-size:calc(11px * var(--scale)); font-weight:500; line-height:1.35; }
+
 </style>
 </head>
 <body>
@@ -1710,9 +1737,9 @@ body {
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.3.0-alpha.1";
-const TJ_RELEASE = "Kleine stappen";
-const TJ_BUILD = "20260716-TT09";
+const TJ_VERSION = "0.3.0-alpha.2";
+const TJ_RELEASE = "Vlotter werken";
+const TJ_BUILD = "20260716-TT10";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -1814,47 +1841,75 @@ function importJsonFile(file, state, onDone) {
       const looksLikeTaskArray = Array.isArray(data) && data.every(item => item && typeof item === "object" && ("title" in item || "bucket" in item));
       const importedTasks = looksLikeTaskArray ? data : data?.tasks;
 
-      if (!Array.isArray(importedTasks)) {
-        throw new Error("No tasks found");
-      }
+      if (!Array.isArray(importedTasks)) throw new Error("No tasks found");
 
-      const tasks = importedTasks
-        .map(normalizeTask)
-        .filter(task => task.title);
+      const tasks = importedTasks.map(normalizeTask).filter(task => task.title);
+      if (!tasks.length && importedTasks.length) throw new Error("No readable tasks");
 
-      const add = confirm(nl
-        ? "Back-up importeren?\n\nOK = Taken toevoegen aan de huidige lijst.\nAnnuleren = Huidige gegevens vervangen."
-        : "Import backup?\n\nOK = Add tasks to the current list.\nCancel = Replace current data.");
-
-      if (add) {
-        const ids = new Set((state.tasks || []).map(task => task.id));
-        tasks.forEach(task => {
-          if (ids.has(task.id)) task.id = uid();
-          ids.add(task.id);
-          state.tasks.push(task);
-        });
-      } else {
-        if (!confirm(nl ? "Alle huidige taken vervangen?" : "Replace all current tasks?")) return;
-        state.tasks = tasks;
-        if (data && !Array.isArray(data) && data.settings && typeof data.settings === "object") {
-          state.settings = { ...state.settings, ...data.settings };
-          applyTheme(state.settings.theme || "midnight-gold");
-          applyInterfaceSize(state.settings.interfaceSize || "standard");
-        }
-      }
-
-      state.settings = state.settings || {};
-      state.settings.lastDataChangeAt = new Date().toISOString();
-      saveState(state, false);
-      alert(nl ? `${tasks.length} ${tasks.length === 1 ? "taak geïmporteerd" : "taken geïmporteerd"}.` : `${tasks.length} ${tasks.length === 1 ? "task imported" : "tasks imported"}.`);
-      onDone();
+      openImportChoiceDialog(tasks, state, onDone);
     } catch (error) {
       console.error(error);
       alert(nl ? "Importeren mislukt. In dit bestand zijn geen leesbare Telly Tasks-gegevens gevonden." : "Import failed. No readable Telly Tasks data was found in this file.");
     }
   };
 
+  reader.onerror = () => {
+    const nl = currentLanguage() === "nl";
+    alert(nl ? "Het bestand kon niet worden gelezen." : "The file could not be read.");
+  };
+
   reader.readAsText(file);
+}
+
+function openImportChoiceDialog(tasks, state, onDone) {
+  const nl = currentLanguage() === "nl";
+  const dialog = document.createElement("dialog");
+  dialog.className = "task-dialog";
+  dialog.innerHTML = `<div class="modal task-dialog-menu import-choice">
+    <div class="eyebrow">${nl ? "Back-up importeren" : "Import backup"}</div>
+    <h2>${tasks.length} ${tasks.length === 1 ? (nl ? "taak gevonden" : "task found") : (nl ? "taken gevonden" : "tasks found")}</h2>
+    <p class="help-copy">${nl ? "Kies wat er met je huidige taken moet gebeuren." : "Choose what should happen to your current tasks."}</p>
+    <button class="choice-btn" onclick="applyTaskImport('add', this.closest('dialog'))"><strong>${nl ? "Toevoegen aan huidige taken" : "Add to current tasks"}</strong><span>${nl ? "Je huidige taken blijven staan. De taken uit de back-up worden erbij gezet." : "Your current tasks stay. Tasks from the backup are added."}</span></button>
+    <button class="choice-btn" onclick="applyTaskImport('replace', this.closest('dialog'))"><strong>${nl ? "Huidige taken vervangen" : "Replace current tasks"}</strong><span>${nl ? "Alle huidige taken worden verwijderd en vervangen door de taken uit deze back-up." : "All current tasks are removed and replaced by the tasks in this backup."}</span></button>
+    <button onclick="this.closest('dialog').remove()">${nl ? "Annuleren" : "Cancel"}</button>
+  </div>`;
+  dialog._importTasks = tasks;
+  dialog._importState = state;
+  dialog._onDone = onDone;
+  document.body.appendChild(dialog);
+  dialog.showModal();
+}
+
+function applyTaskImport(mode, dialog) {
+  const nl = currentLanguage() === "nl";
+  const tasks = dialog?._importTasks || [];
+  const targetState = dialog?._importState || state;
+  if (!Array.isArray(tasks)) return;
+
+  if (mode === "replace") {
+    if (!confirm(nl
+      ? "Alle huidige taken verwijderen en vervangen door deze back-up?"
+      : "Remove all current tasks and replace them with this backup?")) return;
+    targetState.tasks = tasks.map(normalizeTask);
+  } else {
+    targetState.tasks = Array.isArray(targetState.tasks) ? targetState.tasks : [];
+    const ids = new Set(targetState.tasks.map(task => task.id));
+    tasks.forEach(sourceTask => {
+      const task = normalizeTask(sourceTask);
+      if (ids.has(task.id)) task.id = uid();
+      ids.add(task.id);
+      targetState.tasks.push(task);
+    });
+  }
+
+  targetState.settings = targetState.settings || {};
+  targetState.settings.lastDataChangeAt = new Date().toISOString();
+  saveState(targetState, false);
+  dialog?.remove();
+  alert(nl
+    ? `${tasks.length} ${tasks.length === 1 ? "taak geïmporteerd" : "taken geïmporteerd"}.`
+    : `${tasks.length} ${tasks.length === 1 ? "task imported" : "tasks imported"}.`);
+  if (typeof dialog?._onDone === "function") dialog._onDone();
 }
 
 function normalizeCounter(counter) {
@@ -2100,7 +2155,8 @@ async function checkForUpdates(manual = false) {
 function showUpdateDialog(version, build) {
   const dialog = document.createElement("dialog");
   dialog.className = "tj-update-dialog";
-  dialog.innerHTML = `<div class="modal"><div class="help-hero-icon">🎉</div><h2>Update available</h2><p class="help-copy">A newer Telly Tasks build is available.</p><div class="info-card"><span>Version</span><strong>${version}</strong></div><div class="info-card"><span>Build</span><strong>${build}</strong></div><div class="modal-actions stacked-actions"><button class="primary" onclick="installLatestUpdate()">Update Now</button><button onclick="dismissUpdate('${build}', this.closest('dialog'))">Later</button></div></div>`;
+  const nl = currentLanguage() === "nl";
+  dialog.innerHTML = `<div class="modal"><div class="help-hero-icon">🎉</div><h2>${nl ? "Update beschikbaar" : "Update available"}</h2><p class="help-copy">${nl ? "Er staat een nieuwere versie van Telly Tasks klaar." : "A newer Telly Tasks build is available."}</p><div class="info-card"><span>${nl ? "Versie" : "Version"}</span><strong>${version}</strong></div><div class="info-card"><span>Build</span><strong>${build}</strong></div><div class="modal-actions stacked-actions"><button class="primary" onclick="installLatestUpdate()">${nl ? "Nu bijwerken" : "Update now"}</button><button onclick="dismissUpdate('${build}', this.closest('dialog'))">${nl ? "Later" : "Later"}</button></div></div>`;
   document.body.appendChild(dialog); dialog.showModal();
 }
 
@@ -3355,7 +3411,7 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card current"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
         <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
@@ -3369,7 +3425,7 @@ function showReleaseOverlayIfNeeded() {
   const nl = currentLanguage() === "nl";
   const dialog = document.createElement("dialog");
   dialog.className = "release-overlay";
-  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Grote taken kunnen nu worden opgedeeld in subtaken" : "Large tasks can now be divided into subtasks"}</li><li>${nl ? "Voortgang wordt automatisch berekend in stappen en procenten" : "Progress is calculated automatically in steps and percentages"}</li><li>${nl ? "Je kunt één openstaande subtaak als volgende stap aanwijzen" : "You can mark one open subtask as the next step"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
+  dialog.innerHTML = `<div class="modal release-overlay-card"><div class="help-hero-icon">✓</div><div class="eyebrow">${nl ? "Telly Tasks bijgewerkt" : "Telly Tasks updated"}</div><h2>${nl ? "Nieuw in deze versie" : "What’s New"}</h2><p class="help-copy"><strong>${TJ_VERSION}</strong><br>${TJ_RELEASE}</p><ul class="release-highlights"><li>${nl ? "Voeg subtaken direct toe met de plusknop bij een hoofdtaak" : "Add subtasks directly with the plus button on a main task"}</li><li>${nl ? "Back-ups kunnen nu betrouwbaar alle huidige taken vervangen" : "Backups can now reliably replace all current tasks"}</li><li>${nl ? "De update-pop-up en voortgangsweergave zijn compacter en ruimer gemaakt" : "The update popup and progress display are now more compact and spacious"}</li></ul><div class="modal-actions stacked-actions"><button class="primary" onclick="acknowledgeRelease(this.closest('dialog'))">${nl ? "Doorgaan" : "Continue"}</button></div></div>`;
   document.body.appendChild(dialog);
   dialog.showModal();
 }
@@ -3794,6 +3850,7 @@ function taskCardHtml(task) {
     <div class="task-row">
       <button class="task-complete-btn ${completed ? "done" : ""}" onclick="toggleTaskComplete('${task.id}')" aria-label="${completed ? (nl ? "Herstellen" : "Restore") : (nl ? "Afronden" : "Complete")}">${completed ? "✓" : ""}</button>
       <div class="task-main"><h2>${escapeHtml(task.title)}</h2><p>${taskBucketLabel(task.bucket, nl)}${completed ? ` · ${nl ? "Afgerond" : "Completed"}` : ""}</p></div>
+      ${!completed ? `<button class="task-quick-add" onclick="openSubtaskEditor('${task.id}')" aria-label="${nl ? "Subtaak toevoegen" : "Add subtask"}">+</button>` : ""}
       <button class="task-menu-btn" onclick="openTaskMenu('${task.id}')" aria-label="${nl ? "Meer opties" : "More options"}">•••</button>
     </div>
     ${progress.total ? `<div class="task-progress"><div class="task-progress-head"><span>${progress.completed} ${nl ? "van" : "of"} ${progress.total} ${nl ? "stappen klaar" : "steps complete"}</span><strong>${progress.percent}%</strong></div><div class="task-progress-bar"><div class="task-progress-fill" style="width:${progress.percent}%"></div></div></div>` : ""}
