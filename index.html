@@ -1578,6 +1578,84 @@ html[lang="nl"] .roadmap-step.current {
 
 .task-empty { padding:26px 18px; text-align:center; border:1px dashed var(--line); border-radius:18px; color:var(--muted); }
 .task-empty strong { display:block; color:var(--text); margin-bottom:5px; }
+
+.task-attention {
+  margin-top:14px;
+  border:1px solid color-mix(in srgb,var(--theme-accent) 26%,var(--line));
+  background:linear-gradient(140deg,
+    color-mix(in srgb,var(--theme-accent) 8%,var(--panel-strong)),
+    var(--panel));
+  border-radius:calc(16px * var(--scale));
+  padding:calc(13px * var(--scale));
+}
+.task-attention-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.task-attention-head strong {
+  display:block;
+  font-size:calc(13px * var(--scale));
+}
+.task-attention-head span {
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:calc(10px * var(--scale));
+  line-height:1.35;
+}
+.task-attention-actions {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.task-attention-actions button {
+  min-width:0;
+  min-height:42px;
+  padding:8px 10px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:color-mix(in srgb,var(--theme-accent) 6%,var(--panel));
+  border-color:color-mix(in srgb,var(--theme-accent) 22%,var(--line));
+}
+.task-attention-actions button:disabled {
+  display:none;
+}
+.task-attention-label {
+  min-width:0;
+  text-align:left;
+  font-size:calc(11px * var(--scale));
+  font-weight:780;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.task-attention-count {
+  flex:0 0 auto;
+  min-width:22px;
+  height:22px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  padding:0 6px;
+  color:var(--text);
+  background:color-mix(in srgb,var(--theme-accent) 18%,transparent);
+  font-size:calc(10px * var(--scale));
+  font-weight:850;
+}
+.task-segment button.pending .filter-count {
+  color:var(--text);
+  background:color-mix(in srgb,var(--theme-accent) 20%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--theme-accent) 18%,transparent);
+}
+@media (max-width:380px) {
+  .task-attention-actions { grid-template-columns:1fr; }
+}
 .task-form label { display:block; margin:12px 0 6px; font-weight:750; }
 .task-form input, .task-form select { width:100%; box-sizing:border-box; }
 .task-dialog .modal { max-width:460px; }
@@ -1722,7 +1800,7 @@ body {
 .import-choice .choice-btn span { margin-top:3px; color:var(--muted); font-size:calc(11px * var(--scale)); font-weight:500; line-height:1.35; }
 
 
-/* Telly Tasks 0.3.0-alpha.3 — responsive dialogs and accessible progress */
+/* Telly Tasks 0.3.0-alpha.4 — Later and Waiting on stay visible */
 .task-progress-head > span {
   display:block!important;
   width:auto!important;
@@ -1819,9 +1897,9 @@ dialog .help-hero-icon { margin-bottom:7px!important; }
 
   <script>
 const TJ_STORAGE_KEY = "telly-tasks-v1";
-const TJ_VERSION = "0.3.0-alpha.3";
-const TJ_RELEASE = "Past op elk scherm";
-const TJ_BUILD = "20260716-TT11";
+const TJ_VERSION = "0.3.0-alpha.4";
+const TJ_RELEASE = "Blijft in beeld";
+const TJ_BUILD = "20260716-TT12";
 const TJ_CONTACT_EMAIL = "my.telly.journal@gmail.com";
 const TJ_STATUS = "Alpha";
 
@@ -3285,9 +3363,9 @@ const HELP_ARTICLES_NL = {
       <div class="release-card current">
         <strong>Versie ${TJ_VERSION}</strong><span>${TJ_RELEASE} · Build ${TJ_BUILD}</span>
         <ul>
-          <li>Back-ups met taken kunnen weer betrouwbaar worden geïmporteerd</li>
-          <li>Vandaag, Later en Wachten op staan nu evenwichtig naast elkaar</li>
-          <li>Elk filter toont subtiel hoeveel actieve taken erin staan</li>
+          <li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li>
+          <li>Een rustige overzichtskaart toont hoeveel taken nog aandacht vragen</li>
+          <li>De aantallen bij Later en Wachten op vallen subtiel beter op</li>
         </ul>
       </div>
     `
@@ -3493,7 +3571,7 @@ function renderReleaseHistory() {
       <div class="eyebrow">Vorige versies</div>
       <h1>Versiegeschiedenis</h1>
       <div class="help-body release-history">
-        <div class="release-card current"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
+        <div class="release-card current"><strong>0.3.0-alpha.4</strong><span>Blijft in beeld · Build 20260716-TT12</span><ul><li>Later en Wachten op blijven zichtbaar vanuit Vandaag</li><li>Rustige gezamenlijke aandachtkaart toegevoegd</li><li>Subtiel duidelijkere aantallen bij beide filters</li></ul></div><div class="release-card"><strong>0.3.0-alpha.3</strong><span>Past op elk scherm · Build 20260716-TT11</span><ul><li>Voortgangstekst altijd los en leesbaar boven de balk</li><li>Verbeterd contrast in alle thema’s</li><li>Alle pop-ups compacter en responsief op kleinere schermen</li></ul></div><div class="release-card"><strong>0.3.0-alpha.2</strong><span>Vlotter werken · Build 20260716-TT10</span><ul><li>Directe plusknop voor subtaken</li><li>Import vervangen betrouwbaar en duidelijker</li><li>Compactere update-pop-up en ruimere voortgang</li></ul></div><div class="release-card"><strong>0.3.0-alpha.1</strong><span>Kleine stappen · Build 20260716-TT09</span><ul><li>Subtaken toevoegen, bewerken en afronden</li><li>Automatische voortgang in aantal en percentage</li><li>Volgende stap aanwijzen</li></ul></div><div class="release-card"><strong>0.2.0-alpha.2</strong><span>Betrouwbare basis · Build 20260715-TT08</span><ul><li>Import van takenback-ups hersteld</li><li>Drie gelijkwaardige taakfilters</li><li>Subtiele aantallen per filter</li></ul></div>
         <div class="release-card"><strong>0.2.0-alpha.1</strong><span>Hoofdtaken · Build 20260715-TT07</span><ul><li>Hoofdtaken toevoegen en lokaal opslaan</li><li>Bewerken, verplaatsen, afronden en herstellen</li><li>Verwijderen via het driepuntjesmenu</li></ul></div>
         <div class="release-card"><strong>0.1.0-alpha.6</strong><span>Volledig vrij scrollen</span><ul><li>Veilige boven- en onderranden</li><li>Correct scrollen bij lange schermen</li></ul></div>
       </div>
@@ -3941,6 +4019,32 @@ function taskCardHtml(task) {
   </div>`;
 }
 
+function taskAttentionHtml(bucketCounts, nl) {
+  if (taskFilter !== "today" || (!bucketCounts.later && !bucketCounts.waiting)) return "";
+  const total = bucketCounts.later + bucketCounts.waiting;
+  const subtitle = nl
+    ? `${total} ${total === 1 ? "taak vraagt" : "taken vragen"} nog aandacht buiten Vandaag.`
+    : `${total} ${total === 1 ? "task needs" : "tasks need"} attention outside Today.`;
+  return `<div class="task-attention">
+    <div class="task-attention-head">
+      <div>
+        <strong>${nl ? "Nog aandacht nodig" : "Still needs attention"}</strong>
+        <span>${subtitle}</span>
+      </div>
+    </div>
+    <div class="task-attention-actions">
+      <button ${bucketCounts.later ? "" : "disabled"} onclick="setTaskFilter('later')">
+        <span class="task-attention-label">${nl ? "Later bekijken" : "View Later"}</span>
+        <span class="task-attention-count">${bucketCounts.later}</span>
+      </button>
+      <button ${bucketCounts.waiting ? "" : "disabled"} onclick="setTaskFilter('waiting')">
+        <span class="task-attention-label">${nl ? "Wachten op bekijken" : "View Waiting on"}</span>
+        <span class="task-attention-count">${bucketCounts.waiting}</span>
+      </button>
+    </div>
+  </div>`;
+}
+
 function renderHome() {
   ensureNormalizedTasks();
   const nl = currentLanguage() === "nl";
@@ -3953,13 +4057,14 @@ function renderHome() {
     ${renderHeader("Telly Tasks", nl ? "Maak grote taken kleiner en begin met één duidelijke stap." : "Make large tasks smaller and start with one clear step.", `<button class="icon-btn primary" onclick="openTaskEditor()" aria-label="${nl ? "Nieuwe taak" : "New task"}">+</button>`)}
     <div class="segment task-segment">
       <button class="${taskFilter === "today" ? "active" : ""}" onclick="setTaskFilter('today')"><span class="filter-label">${nl ? "Vandaag" : "Today"}</span><span class="filter-count">${bucketCounts.today}</span></button>
-      <button class="${taskFilter === "later" ? "active" : ""}" onclick="setTaskFilter('later')"><span class="filter-label">${nl ? "Later" : "Later"}</span><span class="filter-count">${bucketCounts.later}</span></button>
-      <button class="${taskFilter === "waiting" ? "active" : ""}" onclick="setTaskFilter('waiting')"><span class="filter-label">${nl ? "Wachten op" : "Waiting on"}</span><span class="filter-count">${bucketCounts.waiting}</span></button>
+      <button class="${taskFilter === "later" ? "active" : ""} ${bucketCounts.later ? "pending" : ""}" onclick="setTaskFilter('later')"><span class="filter-label">${nl ? "Later" : "Later"}</span><span class="filter-count">${bucketCounts.later}</span></button>
+      <button class="${taskFilter === "waiting" ? "active" : ""} ${bucketCounts.waiting ? "pending" : ""}" onclick="setTaskFilter('waiting')"><span class="filter-label">${nl ? "Wachten op" : "Waiting on"}</span><span class="filter-count">${bucketCounts.waiting}</span></button>
     </div>
     <div class="section-title"><span>${filterLabels[taskFilter]}</span><span class="task-filter-count">${activeTasks.length}</span></div>
     <div class="task-list">
       ${activeTasks.length ? activeTasks.map(taskCardHtml).join("") : `<div class="task-empty"><strong>${nl ? "Nog geen taken" : "No tasks yet"}</strong>${nl ? "Tik op + om je eerste taak toe te voegen." : "Tap + to add your first task."}</div>`}
     </div>
+    ${taskAttentionHtml(bucketCounts, nl)}
     ${completedTasks.length ? `<div class="section-title" style="margin-top:20px"><span>${nl ? "Afgerond" : "Completed"}</span><span class="task-filter-count">${completedTasks.length}</span></div><div class="task-list">${completedTasks.map(taskCardHtml).join("")}</div>` : ""}
   `;
   app.scrollTo(0, 0);
